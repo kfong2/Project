@@ -10,6 +10,7 @@ fun Nav(){
     val navController = rememberNavController()
     NavHost(navController = navController, startDestination = "Login"){
 
+
         composable(route = "Login"){
             LoginScreen(navController)
         }
@@ -18,12 +19,12 @@ fun Nav(){
             RegistationScreen(navController)
         }
 
-        composable(route = "Profile"){
-            ProfileScreen(navController)
+        composable(route = "Account"){
+            Account(navController)
         }
 
         composable(route = "Dashboard"){
-            UserDashboard(navController)
+            Dashboard(navController)
         }
     }
 }

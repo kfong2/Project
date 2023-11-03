@@ -54,7 +54,7 @@ import androidx.navigation.NavHostController
 fun RegistationScreen(navController: NavHostController) {
     Card(
         modifier = Modifier
-            .padding(10.dp)
+            .padding(5.dp)
             .fillMaxSize()
 //            .height(100.dp)
 //            .aspectRatio(1.5f),
