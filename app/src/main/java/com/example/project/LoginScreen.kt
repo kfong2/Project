@@ -18,6 +18,7 @@ import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Info
+import androidx.compose.material.icons.outlined.Email
 import androidx.compose.material.icons.outlined.Lock
 import androidx.compose.material.icons.outlined.Person
 import androidx.compose.material.icons.outlined.Send
@@ -28,6 +29,7 @@ import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
@@ -44,12 +46,16 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
+import androidx.compose.ui.text.font.FontStyle
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 
 @OptIn(ExperimentalComposeUiApi::class, ExperimentalMaterial3Api::class)
@@ -68,110 +74,130 @@ fun LoginScreen(navController: NavHostController) {
             modifier = Modifier.fillMaxSize(),
             contentAlignment = Alignment.Center
         ){
-            var newTextValue by remember {
-                mutableStateOf("")
-            }
+            var userEmail by remember { mutableStateOf("") }
+//            var isValidEmail by remember { mutableStateOf(true) }
+//            val inValidEmailMessage = "Please enter a valid email."
 
-            val context = LocalContext.current
+            var userPassword by remember { mutableStateOf("") }
+
+
+
+//            val context = LocalContext.current
             val keyboardController = LocalSoftwareKeyboardController.current
             val focusManager = LocalFocusManager.current
 
             Column (
                 horizontalAlignment = Alignment.CenterHorizontally
-//                verticalArrangement = Arrangement.spacedBy(25.dp)
             ) {
-                TextField (value = newTextValue, onValueChange = {
-                    newTextValue = it
+
+                Text(
+                    text = "Login",
+                    fontSize = 30.sp,
+                    fontWeight = FontWeight.Bold
+                )
+
+                OutlinedTextField (value = userEmail, onValueChange = {
+                    userEmail = it
                 },
-                    label = { Text(text = "Enter Your Username") },
-                    // maxLines = 1
+                    label = { Text(text = "Email") },
                     singleLine = true,
-                    modifier = Modifier.width(300.dp),
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(25.dp),
+                    shape = RoundedCornerShape(10.dp),
                     placeholder = { Text(text = "user@mail.com") },
-//                visualTransformation = PasswordVisualTransformation()
                     leadingIcon = {
-                        Icon(imageVector = Icons.Outlined.Person, contentDescription = "")
-                    },
-                    trailingIcon = {
-                        IconButton(onClick = {
-                            Toast.makeText(context, newTextValue, Toast.LENGTH_SHORT).show()
-                        }
-                        ) {
-                            Icon(imageVector = Icons.Outlined.Send, contentDescription = "")
-                        }
+                        Icon(imageVector = Icons.Outlined.Email, contentDescription = "")
                     }
                 )
 
-                Spacer(modifier = Modifier.size(25.dp))
+//                isValidEmail = isValidEmail(userEmail)
+//
+//                if (!isValidEmail) {
+//                    Text(
+//                        text = "Invalid email address",
+//                        color = MaterialTheme.colorScheme.error
+//                    )
+//                }
 
 
-                OutlinedTextField (value = newTextValue, onValueChange = {
-                    newTextValue = it
+
+                OutlinedTextField (value = userPassword, onValueChange = {
+                    userPassword = it
                 },
-                    label = { Text(text = "Enter Your Pasword") },
+                    label = { Text(text = "Enter Your Password") },
                     singleLine = true,
-                    modifier = Modifier.width(300.dp),
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(25.dp, 0.dp, 25.dp, 0.dp),
+                    shape = RoundedCornerShape(10.dp),
                     placeholder = { Text(text = "********") },
                     visualTransformation = PasswordVisualTransformation(),
                     leadingIcon = {
                         Icon(imageVector = Icons.Outlined.Lock, contentDescription = "")
                     },
-                    trailingIcon = {
-                        IconButton(onClick = {
-                            Toast.makeText(context, newTextValue, Toast.LENGTH_SHORT).show()
-                        }
-                        ) {
-                            Icon(imageVector = Icons.Outlined.Send, contentDescription = "")
-                        }
-                    },
                     keyboardOptions = KeyboardOptions( // Set Keyboard
-                        capitalization = KeyboardCapitalization.Characters,
-                        keyboardType = KeyboardType.Phone,
+                        keyboardType = KeyboardType.Text,
                         imeAction = ImeAction.Send
                     ),
                     keyboardActions = KeyboardActions(
                         onSend = {
                             keyboardController?.hide() // keyboard will be hidden after clicked send
-                            Toast.makeText(context, "send button pressed", Toast.LENGTH_LONG).show()
+//                            Toast.makeText(context, "send button pressed", Toast.LENGTH_LONG).show()
                             focusManager.clearFocus() // disabled the focus
                         }
                     )
                 )
 
-                Spacer(modifier = Modifier.size(25.dp))
+                Box(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(0.dp, 0.dp, 25.dp, 0.dp)
+                        .height(30.dp),
+                    contentAlignment = Alignment.CenterEnd
+                ){
+                    TextButton(
+                        onClick = { navController.navigate("") }
+                    ) {
+                        Text(
+                            text = "Forgot Password?"
+                            , fontSize = 10.sp
+                            , fontStyle = FontStyle.Italic
+                        )
+                    }
+                }
 
 
                 Button(
-                    onClick = { /*TODO*/ },
+                    onClick = {navController.navigate("Dashboard") },
                     shape = RoundedCornerShape(10.dp)
                 ) {
                     Text(text = "Login")
                 }
 
-                Spacer(modifier = Modifier.size(25.dp))
-
-
+                Spacer(modifier = Modifier.size(35.dp))
 
                 Text(text = "Don't have an account?")
 
                 TextButton(
                     onClick = { navController.navigate("Registration") }
                 ) {
-                    Text(text = "Register", color = Color.LightGray)
+                    Text(text = "Register")
                 }
-
-    }
-
-
-
-
-
+            }
         }
     }
 }
 
+
+//@Composable
+//fun isValidEmail(email: String): Boolean {
+//    val emailRegex = Regex("^\\S+@\\S+\\.\\S+\$")
+//    return emailRegex.matches(email)
+//}
+
+
 @Preview (showBackground = true)
 @Composable
 fun AppPreview() {
-//    LoginScreen()
 }

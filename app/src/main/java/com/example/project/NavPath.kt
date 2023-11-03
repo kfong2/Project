@@ -18,8 +18,12 @@ fun Nav(){
             RegistationScreen(navController)
         }
 
-//        composable(route = "C"){
-//            ScreenC(navController)
-//        }
+        composable(route = "Profile"){
+            ProfileScreen(navController)
+        }
+
+        composable(route = "Dashboard"){
+            UserDashboard(navController)
+        }
     }
 }
