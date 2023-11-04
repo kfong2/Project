@@ -49,25 +49,29 @@ fun RegistrationScreen(navController: NavHostController, loginViewModel: LoginVi
                 InputComponent(
                     labelValue = "First Name",
                     iconName = Icons.Outlined.Person,
-                    onTextSelected = { loginViewModel.onEvent(UIEvent.FirstNameChanged(it)) }
+                    onTextSelected = { loginViewModel.onEvent(UIEvent.FirstNameChanged(it)) },
+                    errorStatus = loginViewModel.registrationUIState.value.firstNameError
                 )
 
                 InputComponent(
                     labelValue = "Last Name",
                     iconName = Icons.Outlined.Person,
-                    onTextSelected = { loginViewModel.onEvent(UIEvent.LastNameChanged(it)) }
+                    onTextSelected = { loginViewModel.onEvent(UIEvent.LastNameChanged(it)) },
+                    errorStatus = loginViewModel.registrationUIState.value.lastNameError
                 )
 
                 InputComponent(
                     labelValue = "Email",
                     iconName = Icons.Outlined.Email,
-                    onTextSelected = { loginViewModel.onEvent(UIEvent.EmailChanged(it)) }
+                    onTextSelected = { loginViewModel.onEvent(UIEvent.EmailChanged(it)) },
+                    errorStatus = loginViewModel.registrationUIState.value.emailError
                 )
 
                 PasswordComponent(
                     labelValue = "Password",
                     iconName = Icons.Outlined.Lock,
-                    onTextSelected = { loginViewModel.onEvent(UIEvent.PasswordChanged(it)) }
+                    onTextSelected = { loginViewModel.onEvent(UIEvent.PasswordChanged(it)) },
+                    errorStatus = loginViewModel.registrationUIState.value.passwordError
                 )
 
                 TermsComponent("By signing up you accept our privacy policy and terms of use.")

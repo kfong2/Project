@@ -46,14 +46,18 @@ fun LoginScreen(navController: NavHostController, loginViewModel: LoginViewModel
                 InputComponent(
                     labelValue = "Email",
                     iconName = Icons.Outlined.Email,
-                    onTextSelected = { loginViewModel.onEvent(UIEvent.EmailChanged(it)) }
+                    onTextSelected = {  }
+//                    onTextSelected = { loginViewModel.onEvent(UIEvent.EmailChanged(it)) },
+//                    errorStatus = loginViewModel.registrationUIState.value.emailError
                 )
 
 
                 PasswordComponent(
                     labelValue = "Password",
                     iconName = Icons.Outlined.Lock,
-                    onTextSelected = { loginViewModel.onEvent(UIEvent.PasswordChanged(it)) }
+                    onTextSelected = {  }
+//                    onTextSelected = { loginViewModel.onEvent(UIEvent.PasswordChanged(it)) },
+//                    errorStatus = loginViewModel.registrationUIState.value.passwordError
                 )
 
                 AlignRightTextComponent(navController, value = "Forgot Password?", nextScreen = "Register")

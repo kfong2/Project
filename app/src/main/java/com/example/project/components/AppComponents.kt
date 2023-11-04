@@ -63,7 +63,12 @@ fun HeadingComponent(value : String){
 
 @OptIn(ExperimentalComposeUiApi::class, ExperimentalMaterial3Api::class)
 @Composable
-fun InputComponent(labelValue: String, iconName: ImageVector, onTextSelected : (String) -> Unit){
+fun InputComponent(
+    labelValue: String,
+    iconName: ImageVector,
+    onTextSelected : (String) -> Unit,
+    errorStatus : Boolean = false
+){
 
     var input by remember { mutableStateOf("") }
 
@@ -90,14 +95,20 @@ fun InputComponent(labelValue: String, iconName: ImageVector, onTextSelected : (
         keyboardOptions = KeyboardOptions( // Set Keyboard
             keyboardType = KeyboardType.Text,
             imeAction = ImeAction.Next
-        )
+        ),
+        isError = !errorStatus
     )
 }
 
 
 @OptIn(ExperimentalComposeUiApi::class, ExperimentalMaterial3Api::class)
 @Composable
-fun PasswordComponent(labelValue: String, iconName: ImageVector, onTextSelected : (String) -> Unit){
+fun PasswordComponent(
+    labelValue: String,
+    iconName: ImageVector,
+    onTextSelected : (String) -> Unit,
+    errorStatus : Boolean = false
+){
 
     var password by remember { mutableStateOf("") }
 
@@ -151,7 +162,8 @@ fun PasswordComponent(labelValue: String, iconName: ImageVector, onTextSelected 
         ),
         keyboardActions = KeyboardActions{
             localFocusManager.clearFocus()
-        }
+        },
+        isError = !errorStatus
     )
 }
 
@@ -198,7 +210,7 @@ fun TermsComponent(value : String){
 fun ButtonComponent(navController: NavHostController, value: String, nextScreen : String, onButtonClicked : () -> Unit){
     Button(
         onClick = {
-            navController.navigate(nextScreen)
+//            navController.navigate(nextScreen)
             onButtonClicked.invoke()
         },
         shape = RoundedCornerShape(10.dp),
