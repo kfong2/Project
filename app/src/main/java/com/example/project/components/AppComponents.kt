@@ -2,19 +2,20 @@ package com.example.project.components
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Visibility
 import androidx.compose.material.icons.filled.VisibilityOff
 import androidx.compose.material3.Button
 import androidx.compose.material3.Checkbox
+import androidx.compose.material3.Divider
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -32,6 +33,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
@@ -41,7 +43,6 @@ import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
-
 
 
 @Composable
@@ -57,6 +58,7 @@ fun HeadingComponent(value : String){
         fontStyle = FontStyle.Normal,
     )
 }
+
 
 @OptIn(ExperimentalComposeUiApi::class, ExperimentalMaterial3Api::class)
 @Composable
@@ -83,10 +85,11 @@ fun InputComponent(labelValue: String, iconName: ImageVector){
         },
         keyboardOptions = KeyboardOptions( // Set Keyboard
             keyboardType = KeyboardType.Text,
-            imeAction = ImeAction.Send
+            imeAction = ImeAction.Next
         )
     )
 }
+
 
 @OptIn(ExperimentalComposeUiApi::class, ExperimentalMaterial3Api::class)
 @Composable
@@ -95,6 +98,8 @@ fun PasswordComponent(labelValue: String, iconName: ImageVector){
     var password by remember { mutableStateOf("") }
 
     var passwordVisible by remember { mutableStateOf(false) } // password is not visible
+
+    val localFocusManager = LocalFocusManager.current
 
     OutlinedTextField (
         value = password,
@@ -127,7 +132,7 @@ fun PasswordComponent(labelValue: String, iconName: ImageVector){
             }
 
             IconButton(onClick = { passwordVisible = !passwordVisible } ){
-                Icon(imageVector = iconImage, contentDescription = "description")
+                Icon(imageVector = iconImage, contentDescription = description)
             }
         },
 
@@ -135,14 +140,18 @@ fun PasswordComponent(labelValue: String, iconName: ImageVector){
 
         keyboardOptions = KeyboardOptions( // Set Keyboard
             keyboardType = KeyboardType.Password,
-            imeAction = ImeAction.Send
-        )
+            imeAction = ImeAction.Done
+        ),
+        keyboardActions = KeyboardActions{
+            localFocusManager.clearFocus()
+        }
     )
 }
 
+
 @OptIn(ExperimentalComposeUiApi::class, ExperimentalMaterial3Api::class)
 @Composable
-fun ResetPasswordComponent(navController: NavHostController){
+fun AlignRightTextComponent(navController: NavHostController, value: String, nextScreen : String){
     Box(
         modifier = Modifier
             .fillMaxWidth()
@@ -151,16 +160,17 @@ fun ResetPasswordComponent(navController: NavHostController){
         contentAlignment = Alignment.CenterEnd
     ){
         TextButton(
-            onClick = { navController.navigate("") }
+            onClick = { navController.navigate(nextScreen) }
         ) {
             Text(
-                text = "Forgot Password?"
+                text = value
                 , fontSize = 10.sp
                 , fontStyle = FontStyle.Italic
             )
         }
     }
 }
+
 
 @Composable
 fun TermsComponent(value : String){
@@ -181,10 +191,20 @@ fun TermsComponent(value : String){
 fun ButtonComponent(navController: NavHostController, value: String, nextScreen : String){
     Button(
         onClick = { navController.navigate(nextScreen) },
-        shape = RoundedCornerShape(10.dp)
+        shape = RoundedCornerShape(10.dp),
     ) {
         Text(text = value)
     }
+}
+
+@Composable
+fun DividerComponent(){
+    Divider(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(30.dp, 60.dp, 30.dp, 15.dp),
+        thickness = 1.dp
+    )
 }
 
 
