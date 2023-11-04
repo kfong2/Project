@@ -17,6 +17,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import com.example.project.components.ButtonComponent
 import com.example.project.components.DividerComponent
@@ -25,10 +26,12 @@ import com.example.project.components.InputComponent
 import com.example.project.components.LoginOrRegComponent
 import com.example.project.components.PasswordComponent
 import com.example.project.components.TermsComponent
+import com.example.project.data.LoginViewModel
+import com.example.project.data.UIEvent
 
 @OptIn(ExperimentalComposeUiApi::class, ExperimentalMaterial3Api::class)
 @Composable
-fun RegistrationScreen(navController: NavHostController) {
+fun RegistrationScreen(navController: NavHostController, loginViewModel: LoginViewModel = viewModel()) {
     Card(
         modifier = Modifier
             .padding(5.dp)
@@ -38,37 +41,45 @@ fun RegistrationScreen(navController: NavHostController) {
             modifier = Modifier.fillMaxSize(),
             contentAlignment = Alignment.Center
         ){
-//            var userFirst by remember { mutableStateOf("") }
-//
-//            var userLast by remember { mutableStateOf("") }
-//
-//            var userEmail by remember { mutableStateOf("") }
-//
-//            var userPassword by remember { mutableStateOf("") }
-//
-////            val context = LocalContext.current
-//            val keyboardController = LocalSoftwareKeyboardController.current
-//            val focusManager = LocalFocusManager.current
-
             Column (
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
-
                 HeadingComponent("Register to PointGrow")
 
-                InputComponent("First Name", Icons.Outlined.Person)
+                InputComponent(
+                    labelValue = "First Name",
+                    iconName = Icons.Outlined.Person,
+                    onTextSelected = { loginViewModel.onEvent(UIEvent.FirstNameChanged(it)) }
+                )
 
-                InputComponent("Last Name", Icons.Outlined.Person)
+                InputComponent(
+                    labelValue = "Last Name",
+                    iconName = Icons.Outlined.Person,
+                    onTextSelected = { loginViewModel.onEvent(UIEvent.LastNameChanged(it)) }
+                )
 
-                InputComponent("Email", Icons.Outlined.Email)
+                InputComponent(
+                    labelValue = "Email",
+                    iconName = Icons.Outlined.Email,
+                    onTextSelected = { loginViewModel.onEvent(UIEvent.EmailChanged(it)) }
+                )
 
-                PasswordComponent("Password", Icons.Outlined.Lock)
+                PasswordComponent(
+                    labelValue = "Password",
+                    iconName = Icons.Outlined.Lock,
+                    onTextSelected = { loginViewModel.onEvent(UIEvent.PasswordChanged(it)) }
+                )
 
                 TermsComponent("By signing up you accept our privacy policy and terms of use.")
 
                 Spacer(modifier = Modifier.height(20.dp))
                 
-                ButtonComponent(navController, value = "Register", nextScreen = "Dashboard")
+                ButtonComponent(
+                    navController,
+                    value = "Register",
+                    nextScreen = "Dashboard",
+                    onButtonClicked = { loginViewModel.onEvent(UIEvent.RegisterButtonClicked) }
+                )
 
                 DividerComponent()
 

@@ -43,6 +43,7 @@ import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
+import com.example.project.data.UIEvent
 
 
 @Composable
@@ -62,13 +63,16 @@ fun HeadingComponent(value : String){
 
 @OptIn(ExperimentalComposeUiApi::class, ExperimentalMaterial3Api::class)
 @Composable
-fun InputComponent(labelValue: String, iconName: ImageVector){
+fun InputComponent(labelValue: String, iconName: ImageVector, onTextSelected : (String) -> Unit){
 
     var input by remember { mutableStateOf("") }
 
     OutlinedTextField (
         value = input,
-        onValueChange = { input = it},
+        onValueChange = {
+            input = it
+            onTextSelected(it)
+        },
         label = { Text(text = labelValue) },
         modifier = Modifier
             .fillMaxWidth()
@@ -93,7 +97,7 @@ fun InputComponent(labelValue: String, iconName: ImageVector){
 
 @OptIn(ExperimentalComposeUiApi::class, ExperimentalMaterial3Api::class)
 @Composable
-fun PasswordComponent(labelValue: String, iconName: ImageVector){
+fun PasswordComponent(labelValue: String, iconName: ImageVector, onTextSelected : (String) -> Unit){
 
     var password by remember { mutableStateOf("") }
 
@@ -103,7 +107,10 @@ fun PasswordComponent(labelValue: String, iconName: ImageVector){
 
     OutlinedTextField (
         value = password,
-        onValueChange = { password = it},
+        onValueChange = {
+            password = it
+            onTextSelected(it)
+        },
         label = { Text(text = labelValue) },
         modifier = Modifier
             .fillMaxWidth()
@@ -188,9 +195,12 @@ fun TermsComponent(value : String){
 
 
 @Composable
-fun ButtonComponent(navController: NavHostController, value: String, nextScreen : String){
+fun ButtonComponent(navController: NavHostController, value: String, nextScreen : String, onButtonClicked : () -> Unit){
     Button(
-        onClick = { navController.navigate(nextScreen) },
+        onClick = {
+            navController.navigate(nextScreen)
+            onButtonClicked.invoke()
+        },
         shape = RoundedCornerShape(10.dp),
     ) {
         Text(text = value)

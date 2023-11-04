@@ -21,11 +21,14 @@ import com.example.project.components.HeadingComponent
 import com.example.project.components.InputComponent
 import com.example.project.components.LoginOrRegComponent
 import com.example.project.components.PasswordComponent
+import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.project.data.LoginViewModel
+import com.example.project.data.UIEvent
 
 
 //@OptIn(ExperimentalComposeUiApi::class, ExperimentalMaterial3Api::class)
 @Composable
-fun LoginScreen(navController: NavHostController) {
+fun LoginScreen(navController: NavHostController, loginViewModel: LoginViewModel = viewModel()) {
     Card(
         modifier = Modifier
             .padding(5.dp)
@@ -40,13 +43,27 @@ fun LoginScreen(navController: NavHostController) {
             ) {
                 HeadingComponent("Login")
 
-                InputComponent("Email", Icons.Outlined.Email)
+                InputComponent(
+                    labelValue = "Email",
+                    iconName = Icons.Outlined.Email,
+                    onTextSelected = { loginViewModel.onEvent(UIEvent.EmailChanged(it)) }
+                )
 
-                PasswordComponent("Password", Icons.Outlined.Lock)
+
+                PasswordComponent(
+                    labelValue = "Password",
+                    iconName = Icons.Outlined.Lock,
+                    onTextSelected = { loginViewModel.onEvent(UIEvent.PasswordChanged(it)) }
+                )
 
                 AlignRightTextComponent(navController, value = "Forgot Password?", nextScreen = "Register")
 
-                ButtonComponent(navController, value = "Login", nextScreen = "Dashboard")
+                ButtonComponent(
+                    navController,
+                    value = "Login",
+                    nextScreen = "Dashboard",
+                    onButtonClicked = { loginViewModel.onEvent(UIEvent.RegisterButtonClicked) }
+                )
 
                 DividerComponent()
 
