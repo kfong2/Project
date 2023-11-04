@@ -1,9 +1,13 @@
-package com.example.project
+package com.example.project.navigation
 
 import androidx.compose.runtime.Composable
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.example.project.Account
+import com.example.project.Dashboard
+import com.example.project.LoginScreen
+import com.example.project.RegistrationScreen
 
 @Composable
 fun Nav(){
@@ -15,8 +19,8 @@ fun Nav(){
             LoginScreen(navController)
         }
 
-        composable(route = "Registration"){
-            RegistationScreen(navController)
+        composable(route = "Register"){
+            RegistrationScreen(navController)
         }
 
         composable(route = "Account"){

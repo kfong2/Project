@@ -94,14 +94,14 @@ data class NavItemState(
 fun Dashboard(navController: NavHostController) {
     val items = listOf(
         NavItemState(
-            title = "Home",
+            title = "Dashboard",
             selectedIcon = Icons.Filled.Home,
             unselectedIcon = Icons.Outlined.Home
 //            hasBadge = false
 ////            badgeNum = 0
         ),
         NavItemState(
-            title = "Inbox",
+            title = "Register",
             selectedIcon = Icons.Filled.Email,
             unselectedIcon = Icons.Outlined.Email
 //            hasBadge = true,
@@ -124,7 +124,7 @@ fun Dashboard(navController: NavHostController) {
                     modifier = Modifier.fillMaxWidth(),
 //                    contentAlignment = Alignment.Center
                 ){
-                    Text(text = "Point Grow")
+                    Text(text = "PointGrow")
 
                 }
             },
@@ -169,7 +169,9 @@ fun Dashboard(navController: NavHostController) {
                 items.forEachIndexed { index, item ->
                     NavigationBarItem(
                         selected = bottomNavState == index,
-                        onClick = { bottomNavState = index },
+//                        onClick = { bottomNavState = index, navController.navigate("Account")},
+                        onClick = { navController.navigate(item.title)},
+
                         icon = {
 //                            BadgedBox(badge = {
 //                                if (item.hasBadge) Badge {}
