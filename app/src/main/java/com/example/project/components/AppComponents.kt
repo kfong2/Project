@@ -1,5 +1,8 @@
+@file:OptIn(ExperimentalMaterial3Api::class)
+
 package com.example.project.components
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
@@ -11,6 +14,8 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Logout
+import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material.icons.filled.Visibility
 import androidx.compose.material.icons.filled.VisibilityOff
 import androidx.compose.material3.Button
@@ -24,6 +29,7 @@ import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.TextFieldDefaults
+import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -32,6 +38,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.text.font.FontStyle
@@ -42,7 +49,6 @@ import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.navigation.NavHostController
 
 
 @Composable
@@ -68,7 +74,6 @@ fun InputComponent(
     onTextSelected : (String) -> Unit,
     errorStatus : Boolean = false
 ){
-
     var input by remember { mutableStateOf("") }
 
     OutlinedTextField (
@@ -108,7 +113,6 @@ fun PasswordComponent(
     onTextSelected : (String) -> Unit,
     errorStatus : Boolean = false
 ){
-
     var password by remember { mutableStateOf("") }
 
     var passwordVisible by remember { mutableStateOf(false) } // password is not visible
@@ -169,7 +173,7 @@ fun PasswordComponent(
 
 @OptIn(ExperimentalComposeUiApi::class, ExperimentalMaterial3Api::class)
 @Composable
-fun AlignRightTextComponent(navController: NavHostController, value: String, nextScreen : String){
+fun AlignRightTextComponent(value: String){
     Box(
         modifier = Modifier
             .fillMaxWidth()
@@ -178,7 +182,7 @@ fun AlignRightTextComponent(navController: NavHostController, value: String, nex
         contentAlignment = Alignment.CenterEnd
     ){
         TextButton(
-            onClick = { navController.navigate(nextScreen) }
+            onClick = { }
         ) {
             Text(
                 text = value
@@ -207,13 +211,12 @@ fun TermsComponent(value : String){
 
 @Composable
 fun ButtonComponent(
-    value: String, nextScreen : String,
+    value: String,
     onButtonClicked : () -> Unit,
     isEnabled : Boolean = false
 ){
     Button(
         onClick = {
-//            navController.navigate(nextScreen)
             onButtonClicked.invoke()
         },
         shape = RoundedCornerShape(10.dp),
@@ -229,30 +232,31 @@ fun DividerComponent(){
         modifier = Modifier
             .fillMaxWidth()
             .padding(30.dp, 60.dp, 30.dp, 15.dp),
-        thickness = 1.dp
+        thickness = 1.dp,
+        color = MaterialTheme.colorScheme.tertiary
     )
 }
 
 
 @Composable
-fun LoginOrRegComponent(value : String, nextScreen : String){
+fun TextButtonComponent(message : String, action : () -> Unit, buttonText : String){
     Row(
         modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(start = 30.dp, end = 30.dp),
+            .fillMaxWidth()
+            .padding(start = 30.dp, end = 30.dp),
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.Center
     ){
         Text(
-            text = value,
+            text = message,
             fontSize = 14.sp
         )
 
         TextButton(
-            onClick = {  }
+            onClick = action
         ) {
             Text(
-                text = nextScreen,
+                text = buttonText,
                 fontSize = 14.sp
             )
         }
@@ -261,24 +265,60 @@ fun LoginOrRegComponent(value : String, nextScreen : String){
 }
 
 
-@OptIn(ExperimentalComposeUiApi::class, ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun CheckboxComponent(value : String, onCheckedChange : (Boolean) -> Unit){
-    Row(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(start = 20.dp),
-//            .height(55.dp),
-        verticalAlignment = Alignment.CenterVertically
-    ){
-        var checkedState by remember { mutableStateOf(false)}
+fun AppToolbar(toolbarTitle : String, logoutButtonClicked : () -> Unit){
+    TopAppBar(
+        title = {
+            Text(text = toolbarTitle)
+        },
+        navigationIcon = {
+            Icon(
+                imageVector = Icons.Filled.Menu,
+                contentDescription = "Menu",
+//                tint = Color.White,
 
-        Checkbox(
-            checked = checkedState,
-            onCheckedChange = {
-                checkedState != checkedState
-                onCheckedChange.invoke(it)
-            })
-        TermsComponent(value)
-    }
+//                modifier = Modifier.clickable {  }
+            )
+        },
+        actions = {
+            IconButton(
+                onClick = {
+                    logoutButtonClicked()
+                }
+            ) {
+                Icon(
+                    imageVector = Icons.Filled.Logout,
+                    contentDescription = "Logout"
+                )
+            }
+
+        }
+    )
 }
+
+
+
+
+
+//@OptIn(ExperimentalComposeUiApi::class, ExperimentalMaterial3Api::class)
+//@Composable
+//fun CheckboxComponent(value : String, onCheckedChange : (Boolean) -> Unit){
+//    Row(
+//        modifier = Modifier
+//            .fillMaxWidth()
+//            .padding(start = 20.dp),
+////            .height(55.dp),
+//        verticalAlignment = Alignment.CenterVertically
+//    ){
+//        var checkedState by remember { mutableStateOf(false)}
+//
+//        Checkbox(
+//            checked = checkedState,
+//            onCheckedChange = {
+//                checkedState != checkedState
+//                onCheckedChange.invoke(it)
+//            })
+//        TermsComponent(value)
+//    }
+//}

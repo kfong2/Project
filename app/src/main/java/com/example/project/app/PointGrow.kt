@@ -9,8 +9,11 @@ import androidx.compose.ui.graphics.Color
 import com.example.project.Dashboard
 import com.example.project.LoginScreen
 import com.example.project.RegistrationScreen
+import com.example.project.data.LoginViewModel
 import com.example.project.navigation.PointGrowRouter
 import com.example.project.navigation.Screen
+import com.example.project.data.RegistrationViewModel
+
 
 @Composable
 fun PointGrow(){
@@ -21,7 +24,7 @@ fun PointGrow(){
         Crossfade(targetState = PointGrowRouter.currentScreen) {currentState ->
             when(currentState.value){
                 is Screen.LoginScreen ->{
-                    LoginScreen()
+                    LoginScreen(loginViewModel = LoginViewModel())
                 }
 
                 is Screen.RegistrationScreen ->{
@@ -29,7 +32,7 @@ fun PointGrow(){
                 }
 
                 is Screen.Dashboard ->{
-                    Dashboard()
+                    Dashboard(registrationViewModel = RegistrationViewModel())
                 }
 
             }            

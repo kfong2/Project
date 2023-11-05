@@ -19,20 +19,22 @@ import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
-import androidx.navigation.NavHostController
 import com.example.project.components.ButtonComponent
 import com.example.project.components.DividerComponent
 import com.example.project.components.HeadingComponent
 import com.example.project.components.InputComponent
-import com.example.project.components.LoginOrRegComponent
+//import com.example.project.components.LoginOrRegComponent
 import com.example.project.components.PasswordComponent
 import com.example.project.components.TermsComponent
-import com.example.project.data.LoginViewModel
-import com.example.project.data.UIEvent
+import com.example.project.components.TextButtonComponent
+import com.example.project.data.RegistrationViewModel
+import com.example.project.data.RegistrationUIEvent
+import com.example.project.navigation.PointGrowRouter
+import com.example.project.navigation.Screen
 
 @OptIn(ExperimentalComposeUiApi::class, ExperimentalMaterial3Api::class)
 @Composable
-fun RegistrationScreen(loginViewModel: LoginViewModel = viewModel()) {
+fun RegistrationScreen(registrationViewModel: RegistrationViewModel = viewModel()) {
     Card(
         modifier = Modifier
             .padding(5.dp)
@@ -50,29 +52,29 @@ fun RegistrationScreen(loginViewModel: LoginViewModel = viewModel()) {
                 InputComponent(
                     labelValue = "First Name",
                     iconName = Icons.Outlined.Person,
-                    onTextSelected = { loginViewModel.onEvent(UIEvent.FirstNameChanged(it)) },
-                    errorStatus = loginViewModel.registrationUIState.value.firstNameError
+                    onTextSelected = { registrationViewModel.onEvent(RegistrationUIEvent.FirstNameChanged(it)) },
+                    errorStatus = registrationViewModel.registrationUIState.value.firstNameError
                 )
 
                 InputComponent(
                     labelValue = "Last Name",
                     iconName = Icons.Outlined.Person,
-                    onTextSelected = { loginViewModel.onEvent(UIEvent.LastNameChanged(it)) },
-                    errorStatus = loginViewModel.registrationUIState.value.lastNameError
+                    onTextSelected = { registrationViewModel.onEvent(RegistrationUIEvent.LastNameChanged(it)) },
+                    errorStatus = registrationViewModel.registrationUIState.value.lastNameError
                 )
 
                 InputComponent(
                     labelValue = "Email",
                     iconName = Icons.Outlined.Email,
-                    onTextSelected = { loginViewModel.onEvent(UIEvent.EmailChanged(it)) },
-                    errorStatus = loginViewModel.registrationUIState.value.emailError
+                    onTextSelected = { registrationViewModel.onEvent(RegistrationUIEvent.EmailChanged(it)) },
+                    errorStatus = registrationViewModel.registrationUIState.value.emailError
                 )
 
                 PasswordComponent(
                     labelValue = "Password",
                     iconName = Icons.Outlined.Lock,
-                    onTextSelected = { loginViewModel.onEvent(UIEvent.PasswordChanged(it)) },
-                    errorStatus = loginViewModel.registrationUIState.value.passwordError
+                    onTextSelected = { registrationViewModel.onEvent(RegistrationUIEvent.PasswordChanged(it)) },
+                    errorStatus = registrationViewModel.registrationUIState.value.passwordError
                 )
 
                 TermsComponent("By signing up you accept our privacy policy and terms of use.")
@@ -81,20 +83,24 @@ fun RegistrationScreen(loginViewModel: LoginViewModel = viewModel()) {
                 
                 ButtonComponent(
                     value = "Register",
-                    nextScreen = "Dashboard",
-                    onButtonClicked = { loginViewModel.onEvent(UIEvent.RegisterButtonClicked) },
-                    isEnabled = loginViewModel.allValidationsPassed.value // true = enable the button
+                    onButtonClicked = { registrationViewModel.onEvent(RegistrationUIEvent.RegisterButtonClicked) },
+                    isEnabled = registrationViewModel.allValidationsPassed.value // true = enable the button
                 )
 
                 DividerComponent()
 
-                LoginOrRegComponent(value = "Already have an account?", nextScreen = "Login")
+                TextButtonComponent(
+                    message = "Already have an account?",
+                    action = { PointGrowRouter.navigateTo(Screen.LoginScreen)},
+                    buttonText = "Login"
+                )
 
             }
 
-            if (loginViewModel.signUpInProgress.value) {
+            if (registrationViewModel.signUpInProgress.value) {
                 CircularProgressIndicator()
             }
+
         }
     }
 }
