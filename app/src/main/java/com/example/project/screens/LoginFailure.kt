@@ -29,13 +29,12 @@ fun LoginFailure(){
             Column (
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                HeadingComponent("Login Failed?")
-
+                HeadingComponent("Login Failed")
 
                 DividerComponent()
 
                 TextButtonComponent(
-                    message = "Try Again",
+                    message = "Try Again?",
                     action = { PointGrowRouter.navigateTo(Screen.Login)},
                     buttonText = "Login"
                 )
