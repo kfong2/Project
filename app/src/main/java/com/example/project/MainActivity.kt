@@ -3,7 +3,7 @@ package com.example.project
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import com.example.project.navigation.Nav
+import com.example.project.app.PointGrow
 import com.example.project.ui.theme.ProjectTheme
 
 class MainActivity : ComponentActivity() {
@@ -11,7 +11,7 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         setContent {
             ProjectTheme {
-                Nav()
+                PointGrow()
             }
         }
     }

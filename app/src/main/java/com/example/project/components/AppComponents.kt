@@ -43,7 +43,6 @@ import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
-import com.example.project.data.UIEvent
 
 
 @Composable
@@ -198,8 +197,8 @@ fun TermsComponent(value : String){
         modifier = Modifier
             .fillMaxWidth()
             .heightIn(min = 5.dp)
-            .padding(30.dp, 10.dp, 30.dp, 5.dp),
-        fontSize = 12.sp,
+            .padding(40.dp, 10.dp, 40.dp, 5.dp),
+        fontSize = 13.sp,
         fontWeight = FontWeight.Normal,
         fontStyle = FontStyle.Normal,
     )
@@ -207,13 +206,18 @@ fun TermsComponent(value : String){
 
 
 @Composable
-fun ButtonComponent(navController: NavHostController, value: String, nextScreen : String, onButtonClicked : () -> Unit){
+fun ButtonComponent(
+    value: String, nextScreen : String,
+    onButtonClicked : () -> Unit,
+    isEnabled : Boolean = false
+){
     Button(
         onClick = {
 //            navController.navigate(nextScreen)
             onButtonClicked.invoke()
         },
         shape = RoundedCornerShape(10.dp),
+        enabled = isEnabled
     ) {
         Text(text = value)
     }
@@ -231,7 +235,7 @@ fun DividerComponent(){
 
 
 @Composable
-fun LoginOrRegComponent(navController: NavHostController, value : String, nextScreen : String){
+fun LoginOrRegComponent(value : String, nextScreen : String){
     Row(
         modifier = Modifier
                     .fillMaxWidth()
@@ -245,7 +249,7 @@ fun LoginOrRegComponent(navController: NavHostController, value : String, nextSc
         )
 
         TextButton(
-            onClick = { navController.navigate(nextScreen) }
+            onClick = {  }
         ) {
             Text(
                 text = nextScreen,
@@ -259,7 +263,7 @@ fun LoginOrRegComponent(navController: NavHostController, value : String, nextSc
 
 @OptIn(ExperimentalComposeUiApi::class, ExperimentalMaterial3Api::class)
 @Composable
-fun CheckboxComponent(value : String){
+fun CheckboxComponent(value : String, onCheckedChange : (Boolean) -> Unit){
     Row(
         modifier = Modifier
             .fillMaxWidth()
@@ -273,7 +277,8 @@ fun CheckboxComponent(value : String){
             checked = checkedState,
             onCheckedChange = {
                 checkedState != checkedState
+                onCheckedChange.invoke(it)
             })
-//        SmallTextComponent(value)
+        TermsComponent(value)
     }
 }

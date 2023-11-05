@@ -91,7 +91,7 @@ data class NavItemState(
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @OptIn(ExperimentalComposeUiApi::class, ExperimentalMaterial3Api::class)
 @Composable
-fun Dashboard(navController: NavHostController) {
+fun Dashboard() {
     val items = listOf(
         NavItemState(
             title = "Dashboard",
@@ -170,7 +170,7 @@ fun Dashboard(navController: NavHostController) {
                     NavigationBarItem(
                         selected = bottomNavState == index,
 //                        onClick = { bottomNavState = index, navController.navigate("Account")},
-                        onClick = { navController.navigate(item.title)},
+                        onClick = { },
 
                         icon = {
 //                            BadgedBox(badge = {

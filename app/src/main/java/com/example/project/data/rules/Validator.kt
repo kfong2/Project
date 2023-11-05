@@ -26,7 +26,6 @@ object Validator {
             (!password.isNullOrEmpty() && password.length >= 6)
         )
     }
-
 }
 
 data class ValidationResult(

@@ -13,7 +13,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.navigation.NavHostController
 import com.example.project.components.AlignRightTextComponent
 import com.example.project.components.ButtonComponent
 import com.example.project.components.DividerComponent
@@ -28,7 +27,7 @@ import com.example.project.data.UIEvent
 
 //@OptIn(ExperimentalComposeUiApi::class, ExperimentalMaterial3Api::class)
 @Composable
-fun LoginScreen(navController: NavHostController, loginViewModel: LoginViewModel = viewModel()) {
+fun LoginScreen(loginViewModel: LoginViewModel = viewModel()) {
     Card(
         modifier = Modifier
             .padding(5.dp)
@@ -60,10 +59,10 @@ fun LoginScreen(navController: NavHostController, loginViewModel: LoginViewModel
 //                    errorStatus = loginViewModel.registrationUIState.value.passwordError
                 )
 
-                AlignRightTextComponent(navController, value = "Forgot Password?", nextScreen = "Register")
+//                AlignRightTextComponent(value = "Forgot Password?", nextScreen = "Register")
 
                 ButtonComponent(
-                    navController,
+//                    navController,
                     value = "Login",
                     nextScreen = "Dashboard",
                     onButtonClicked = { loginViewModel.onEvent(UIEvent.RegisterButtonClicked) }
@@ -71,7 +70,7 @@ fun LoginScreen(navController: NavHostController, loginViewModel: LoginViewModel
 
                 DividerComponent()
 
-                LoginOrRegComponent(navController, value = "Don't have an account?", nextScreen = "Register")
+                LoginOrRegComponent(value = "Don't have an account?", nextScreen = "Register")
            }
         }
     }
