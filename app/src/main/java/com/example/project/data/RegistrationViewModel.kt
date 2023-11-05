@@ -125,6 +125,7 @@ class RegistrationViewModel : ViewModel(){
                 }
             }
             .addOnFailureListener {
+                PointGrowRouter.navigateTo(Screen.RegFailure)
                 Log.d(TAG, "Inside_OnFailureListener")
                 Log.d(TAG, "Exception = ${it.message}")
                 Log.d(TAG, "Exception = ${it.localizedMessage}")
@@ -141,7 +142,7 @@ class RegistrationViewModel : ViewModel(){
         val authStateListener = AuthStateListener{
             if(it.currentUser == null){
                 Log.d(TAG, "Inside_signedOut")
-                PointGrowRouter.navigateTo(Screen.LoginScreen)
+                PointGrowRouter.navigateTo(Screen.Login)
             }
             else{
                 Log.d(TAG, "Inside_notSignedOut")

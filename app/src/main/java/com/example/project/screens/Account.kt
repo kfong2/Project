@@ -1,4 +1,4 @@
-package com.example.project
+package com.example.project.screens
 
 import android.widget.Toast
 import androidx.compose.foundation.layout.Arrangement

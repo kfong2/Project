@@ -1,4 +1,4 @@
-package com.example.project
+package com.example.project.screens
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -20,19 +20,16 @@ import com.example.project.components.HeadingComponent
 import com.example.project.components.InputComponent
 //import com.example.project.components.LoginOrRegComponent
 import com.example.project.components.PasswordComponent
-import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.project.components.TextButtonComponent
 import com.example.project.data.LoginUIEvent
 import com.example.project.data.LoginViewModel
-import com.example.project.data.RegistrationViewModel
-import com.example.project.data.RegistrationUIEvent
 import com.example.project.navigation.PointGrowRouter
 import com.example.project.navigation.Screen
 
 
 //@OptIn(ExperimentalComposeUiApi::class, ExperimentalMaterial3Api::class)
 @Composable
-fun LoginScreen(loginViewModel: LoginViewModel) {
+fun Login(loginViewModel: LoginViewModel) {
     Card(
         modifier = Modifier
             .padding(5.dp)
@@ -73,7 +70,7 @@ fun LoginScreen(loginViewModel: LoginViewModel) {
 
                 TextButtonComponent(
                     message = "Don't have an account?",
-                    action = { PointGrowRouter.navigateTo(Screen.RegistrationScreen) },
+                    action = { PointGrowRouter.navigateTo(Screen.Registration) },
                     buttonText = "Register"
                 )
 

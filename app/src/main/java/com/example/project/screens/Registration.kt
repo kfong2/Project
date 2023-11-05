@@ -1,4 +1,4 @@
-package com.example.project
+package com.example.project.screens
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -34,7 +34,7 @@ import com.example.project.navigation.Screen
 
 @OptIn(ExperimentalComposeUiApi::class, ExperimentalMaterial3Api::class)
 @Composable
-fun RegistrationScreen(registrationViewModel: RegistrationViewModel = viewModel()) {
+fun Registration(registrationViewModel: RegistrationViewModel = viewModel()) {
     Card(
         modifier = Modifier
             .padding(5.dp)
@@ -91,7 +91,7 @@ fun RegistrationScreen(registrationViewModel: RegistrationViewModel = viewModel(
 
                 TextButtonComponent(
                     message = "Already have an account?",
-                    action = { PointGrowRouter.navigateTo(Screen.LoginScreen)},
+                    action = { PointGrowRouter.navigateTo(Screen.Login)},
                     buttonText = "Login"
                 )
 

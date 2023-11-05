@@ -81,10 +81,10 @@ class LoginViewModel : ViewModel() {
                 }
             }
             .addOnFailureListener {
+                PointGrowRouter.navigateTo(Screen.LoginFailure)
                 Log.d(TAG, "Inside_loginFailure")
                 Log.d(TAG, "${it.localizedMessage}")
                 loginInProgress.value = false
-
             }
     }
 
