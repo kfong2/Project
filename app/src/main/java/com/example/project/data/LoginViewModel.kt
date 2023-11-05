@@ -3,7 +3,11 @@ package com.example.project.data
 import android.util.Log
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
+import androidx.navigation.NavHostController
 import com.example.project.data.rules.Validator
+import com.example.project.navigation.PointGrowRouter
+import com.example.project.navigation.Screen
+import com.google.firebase.auth.FirebaseAuth
 
 class LoginViewModel : ViewModel(){
 
@@ -12,38 +16,39 @@ class LoginViewModel : ViewModel(){
 
     private val TAG = LoginViewModel:: class.simpleName
 
-    fun onEvent(event : UIEvent){
-        validateDataWithRules()
+    var allValidationsPassed = mutableStateOf(false)
 
+    var signUpInProgress = mutableStateOf(false)
+
+    fun onEvent(event : UIEvent){
         when (event){
             is UIEvent.FirstNameChanged -> {
                 registrationUIState.value = registrationUIState.value.copy(firstName = event.firstName)
-
+                validateDataWithRules()
                 printState()
             }
 
             is UIEvent.LastNameChanged -> {
                 registrationUIState.value = registrationUIState.value.copy(lastName = event.lastName)
-
+                validateDataWithRules()
                 printState()
             }
 
             is UIEvent.EmailChanged -> {
                 registrationUIState.value = registrationUIState.value.copy(email = event.email)
-
+                validateDataWithRules()
                 printState()
             }
 
             is UIEvent.PasswordChanged -> {
                 registrationUIState.value = registrationUIState.value.copy(password = event.password)
-
+                validateDataWithRules()
                 printState()
             }
 
             is UIEvent.RegisterButtonClicked -> {
                 signUp()
             }
-
         }
     }
 
@@ -51,7 +56,10 @@ class LoginViewModel : ViewModel(){
         Log.d(TAG, "Inside_signUp")
         printState()
 
-        validateDataWithRules()
+        createUserInFireBase(
+            email = registrationUIState.value.email,
+            password = registrationUIState.value.password
+        )
 
     }
 
@@ -87,9 +95,11 @@ class LoginViewModel : ViewModel(){
             firstNameError = fNameResult.status,
             lastNameError = lNameResult.status,
             emailError = emailResult.status,
-            passwordError = passwordResult.status
-
+            passwordError = passwordResult.status,
         )
+
+        // check if all validations passed
+        allValidationsPassed.value = fNameResult.status && lNameResult.status && emailResult.status && passwordResult.status
 
     }
 
@@ -97,4 +107,29 @@ class LoginViewModel : ViewModel(){
         Log.d(TAG, "Inside_printState")
         Log.d(TAG, registrationUIState.value.toString())
     }
+
+
+    // will be called when using signUp()
+    private fun createUserInFireBase(email: String, password: String){
+        signUpInProgress.value = true
+
+        FirebaseAuth.getInstance()
+            .createUserWithEmailAndPassword(email, password)
+            .addOnCompleteListener {
+                Log.d(TAG, "Inside_OnCompleteListener")
+                Log.d(TAG, "isSuccessful = ${it.isSuccessful}")
+
+                if(it.isSuccessful){
+                    PointGrowRouter.navigateTo(Screen.Dashboard)
+                    signUpInProgress.value = false
+                }
+            }
+            .addOnFailureListener {
+                Log.d(TAG, "Inside_OnFailureListener")
+                Log.d(TAG, "Exception = ${it.message}")
+                Log.d(TAG, "Exception = ${it.localizedMessage}")
+            }
+
+    }
+
 }

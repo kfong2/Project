@@ -11,6 +11,7 @@ import androidx.compose.material.icons.outlined.Email
 import androidx.compose.material.icons.outlined.Lock
 import androidx.compose.material.icons.outlined.Person
 import androidx.compose.material3.Card
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -31,7 +32,7 @@ import com.example.project.data.UIEvent
 
 @OptIn(ExperimentalComposeUiApi::class, ExperimentalMaterial3Api::class)
 @Composable
-fun RegistrationScreen(navController: NavHostController, loginViewModel: LoginViewModel = viewModel()) {
+fun RegistrationScreen(loginViewModel: LoginViewModel = viewModel()) {
     Card(
         modifier = Modifier
             .padding(5.dp)
@@ -79,16 +80,20 @@ fun RegistrationScreen(navController: NavHostController, loginViewModel: LoginVi
                 Spacer(modifier = Modifier.height(20.dp))
                 
                 ButtonComponent(
-                    navController,
                     value = "Register",
                     nextScreen = "Dashboard",
-                    onButtonClicked = { loginViewModel.onEvent(UIEvent.RegisterButtonClicked) }
+                    onButtonClicked = { loginViewModel.onEvent(UIEvent.RegisterButtonClicked) },
+                    isEnabled = loginViewModel.allValidationsPassed.value // true = enable the button
                 )
 
                 DividerComponent()
 
-                LoginOrRegComponent(navController, value = "Already have an account?", nextScreen = "Login")
+                LoginOrRegComponent(value = "Already have an account?", nextScreen = "Login")
 
+            }
+
+            if (loginViewModel.signUpInProgress.value) {
+                CircularProgressIndicator()
             }
         }
     }
