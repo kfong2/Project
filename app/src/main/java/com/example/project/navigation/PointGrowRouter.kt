@@ -14,7 +14,7 @@ sealed class Screen(){
 }
 
 object PointGrowRouter {
-    val currentScreen : MutableState<Screen> = mutableStateOf(Screen.Login)
+    val currentScreen : MutableState<Screen> = mutableStateOf(Screen.Dashboard)
 
     fun navigateTo(destination: Screen){
         currentScreen.value = destination

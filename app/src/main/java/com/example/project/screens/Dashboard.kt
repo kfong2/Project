@@ -1,7 +1,12 @@
 package com.example.project.screens
 
 import android.annotation.SuppressLint
+import androidx.compose.foundation.background
+import androidx.compose.foundation.border
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -11,7 +16,10 @@ import androidx.compose.material.icons.filled.Face
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.outlined.Email
 import androidx.compose.material.icons.outlined.Face
+import androidx.compose.material.icons.outlined.Favorite
 import androidx.compose.material.icons.outlined.Home
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -26,13 +34,21 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import com.example.project.components.AppToolbar
+import com.example.project.components.ButtonWithIconAndMessageComponent
+import com.example.project.components.HeadingComponent
+import com.example.project.components.MessageComponent
+import com.example.project.components.SubheadingComponent
+import com.example.project.components.TextButtonComponent
+import com.example.project.data.RegistrationUIEvent
 import com.example.project.data.RegistrationViewModel
 
 data class NavItemState(
@@ -87,17 +103,9 @@ fun Dashboard(registrationViewModel: RegistrationViewModel) {
                 items.forEachIndexed { index, item ->
                     NavigationBarItem(
                         selected = bottomNavState == index,
-//                        onClick = { bottomNavState = index, navController.navigate("Account")},
                         onClick = { },
 
                         icon = {
-//                            BadgedBox(badge = {
-//                                if (item.hasBadge) Badge {}
-//                                if (item.badgeNum != 0) Badge {
-//                                    Text(text = item.badgeNum.toString())
-//                                }
-//                            }
-//                            ) {
                             Icon(
                                 imageVector = if (bottomNavState == index) item.selectedIcon
                                 else item.unselectedIcon,
@@ -124,10 +132,20 @@ fun Dashboard(registrationViewModel: RegistrationViewModel) {
         ){
 
             Column (
-                modifier = Modifier.padding(contentPadding)
+                modifier = Modifier
+                    .padding(contentPadding)
             ) {
 
-                Text(text = "Content")
+                HeadingComponent("Welcome back,")
+                HeadingComponent("User Name")
+                Row (
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.SpaceAround
+                ) {
+                    SubheadingComponent(value = "1,005")
+                    Text(text = " Points")
+                }
+
             }
 
         }

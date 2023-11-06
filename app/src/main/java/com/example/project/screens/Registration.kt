@@ -23,9 +23,10 @@ import com.example.project.components.ButtonComponent
 import com.example.project.components.DividerComponent
 import com.example.project.components.HeadingComponent
 import com.example.project.components.InputComponent
+import com.example.project.components.MessageComponent
 //import com.example.project.components.LoginOrRegComponent
 import com.example.project.components.PasswordComponent
-import com.example.project.components.TermsComponent
+//import com.example.project.components.TermsComponent
 import com.example.project.components.TextButtonComponent
 import com.example.project.data.RegistrationViewModel
 import com.example.project.data.RegistrationUIEvent
@@ -77,7 +78,7 @@ fun Registration(registrationViewModel: RegistrationViewModel = viewModel()) {
                     errorStatus = registrationViewModel.registrationUIState.value.passwordError
                 )
 
-                TermsComponent("By signing up you accept our privacy policy and terms of use.")
+                MessageComponent("By signing up you accept our privacy policy and terms of use.")
 
                 Spacer(modifier = Modifier.height(20.dp))
                 

@@ -2,14 +2,17 @@
 
 package com.example.project.components
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
@@ -47,6 +50,7 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 
@@ -65,6 +69,20 @@ fun HeadingComponent(value : String){
     )
 }
 
+@Composable
+fun SubheadingComponent(value : String){
+    Text(
+        text = value,
+        modifier = Modifier
+//            .fillMaxWidth()
+            .heightIn(min = 30.dp)
+            .padding(start = 30.dp, top = 3.dp),
+        fontSize = 18.sp,
+        fontWeight = FontWeight.Bold,
+        fontStyle = FontStyle.Normal,
+        color = MaterialTheme.colorScheme.tertiary
+    )
+}
 
 @OptIn(ExperimentalComposeUiApi::class, ExperimentalMaterial3Api::class)
 @Composable
@@ -195,7 +213,7 @@ fun AlignRightTextComponent(value: String){
 
 
 @Composable
-fun TermsComponent(value : String){
+fun MessageComponent(value : String){
     Text(
         text = value,
         modifier = Modifier
@@ -225,6 +243,54 @@ fun ButtonComponent(
         Text(text = value)
     }
 }
+
+@Composable
+fun ButtonWithIconAndMessageComponent(
+    value: String,
+    iconName: ImageVector,
+    points: String,
+    message: String,
+    onButtonClicked : () -> Unit,
+    isEnabled : Boolean = false
+){
+    Button(
+        onClick = {
+            onButtonClicked.invoke()
+        },
+        modifier = Modifier.fillMaxWidth(0.5f),
+        shape = RoundedCornerShape(10.dp),
+        enabled = isEnabled
+    ) {
+        Column (
+            modifier = Modifier.fillMaxWidth(),
+            verticalArrangement = Arrangement.Center,
+            horizontalAlignment = Alignment.CenterHorizontally
+        ){
+            Text(
+                text = value,
+                fontSize = 20.sp,
+                color = MaterialTheme.colorScheme.tertiary
+                )
+            Icon(
+                imageVector = iconName,
+                contentDescription = "",
+                modifier = Modifier.size(50.dp),
+                tint = Color(0xFFBB7E7A)
+            )
+            Text(
+                text = points,
+                fontSize = 15.sp)
+            Text(text = "Points")
+            Text(
+                text = message,
+                textAlign = TextAlign.Center
+            )
+        }
+
+    }
+}
+
+
 
 @Composable
 fun DividerComponent(){
@@ -297,6 +363,11 @@ fun AppToolbar(toolbarTitle : String, logoutButtonClicked : () -> Unit){
     )
 }
 
+
+@Composable
+fun LazyRowComponent(){
+
+}
 
 
 
