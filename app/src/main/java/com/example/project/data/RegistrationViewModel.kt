@@ -11,11 +11,16 @@ import com.google.firebase.auth.FirebaseAuth.AuthStateListener
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.database.ktx.database
 import com.google.firebase.ktx.Firebase
+import java.text.SimpleDateFormat
+import java.util.Date
+import java.util.Locale
 
 data class UserData(
     val firstName: String,
     val lastName: String,
-    val email: String
+    val email: String,
+    val accumulatedPoints: Int = 0,
+    val registrationDate: String
 )
 
 class RegistrationViewModel : ViewModel(){
@@ -132,16 +137,15 @@ class RegistrationViewModel : ViewModel(){
                 Log.d(TAG, "isSuccessful = ${it.isSuccessful}")
 
                 if(it.isSuccessful) {
-
                     val user = it.result?.user
                     if (user != null) {
                         val userData = UserData(
                             firstName = registrationUIState.value.firstName,
                             lastName = registrationUIState.value.lastName,
-                            email = email
+                            email = email,
+                            registrationDate = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(Date())
                         )
                         saveUserDataToFirebase(user, userData)
-                    
 
                     PointGrowRouter.navigateTo(Screen.Dashboard)
                     signUpInProgress.value = false
