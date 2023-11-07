@@ -81,6 +81,7 @@ dependencies {
 
     // View Model
     implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.6.2")
+    implementation("com.google.firebase:firebase-database:20.3.0")
 
 
     testImplementation("junit:junit:4.13.2")

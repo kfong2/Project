@@ -8,10 +8,22 @@ import com.example.project.navigation.PointGrowRouter
 import com.example.project.navigation.Screen
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseAuth.AuthStateListener
+import com.google.firebase.auth.FirebaseUser
+import com.google.firebase.database.ktx.database
+import com.google.firebase.ktx.Firebase
+
+data class UserData(
+    val firstName: String,
+    val lastName: String,
+    val email: String
+)
 
 class RegistrationViewModel : ViewModel(){
 
     private val TAG = RegistrationViewModel:: class.simpleName
+
+    private val database = Firebase.database
+    private val usersRef = database.getReference("users")
 
     // consists of all the items in RegistrationUIState
     var registrationUIState = mutableStateOf(RegistrationUIState())
@@ -119,9 +131,21 @@ class RegistrationViewModel : ViewModel(){
                 Log.d(TAG, "Inside_OnCompleteListener")
                 Log.d(TAG, "isSuccessful = ${it.isSuccessful}")
 
-                if(it.isSuccessful){
+                if(it.isSuccessful) {
+
+                    val user = it.result?.user
+                    if (user != null) {
+                        val userData = UserData(
+                            firstName = registrationUIState.value.firstName,
+                            lastName = registrationUIState.value.lastName,
+                            email = email
+                        )
+                        saveUserDataToFirebase(user, userData)
+                    
+
                     PointGrowRouter.navigateTo(Screen.Dashboard)
                     signUpInProgress.value = false
+                    }
                 }
             }
             .addOnFailureListener {
@@ -131,6 +155,11 @@ class RegistrationViewModel : ViewModel(){
                 Log.d(TAG, "Exception = ${it.localizedMessage}")
             }
 
+    }
+
+    private fun saveUserDataToFirebase(user: FirebaseUser, userData: UserData) {
+        val userUid = user.uid
+        usersRef.child(userUid).setValue(userData)
     }
 
     fun logout(){
