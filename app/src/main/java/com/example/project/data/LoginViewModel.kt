@@ -78,6 +78,7 @@ class LoginViewModel : ViewModel() {
                 if (it.isSuccessful){
                     PointGrowRouter.navigateTo(Screen.Dashboard)
                     loginInProgress.value = false
+                    allValidationsPassed.value = false // Reset the button to disabled
                 }
             }
             .addOnFailureListener {
