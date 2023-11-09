@@ -23,7 +23,7 @@ fun PointGrow(){
         modifier = Modifier.fillMaxSize(),
         color = Color.Transparent
     ) {
-        Crossfade(targetState = PointGrowRouter.currentScreen) {currentState ->
+        Crossfade(targetState = PointGrowRouter.currentScreen, label = "") { currentState ->
             when(currentState.value){
                 is Screen.Login ->{
                     Login(loginViewModel = LoginViewModel())
@@ -44,7 +44,6 @@ fun PointGrow(){
                 is Screen.RegFailure ->{
                     RegFailure()
                 }
-
             }            
         }
     }
