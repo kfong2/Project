@@ -147,18 +147,21 @@ class RegistrationViewModel : ViewModel(){
                         )
                         saveUserDataToFirebase(user, userData)
 
-                    PointGrowRouter.navigateTo(Screen.Dashboard)
-                    signUpInProgress.value = false
+                        PointGrowRouter.navigateTo(Screen.Dashboard)
+                        signUpInProgress.value = false
                     }
+
                 }
             }
             .addOnFailureListener {
                 PointGrowRouter.navigateTo(Screen.RegFailure)
+                signUpInProgress.value = false
+                allValidationsPassed.value = false // Reset the button to disabled
+                registrationUIState.value = RegistrationUIState() // Reset the fields
                 Log.d(TAG, "Inside_OnFailureListener")
                 Log.d(TAG, "Exception = ${it.message}")
                 Log.d(TAG, "Exception = ${it.localizedMessage}")
             }
-
     }
 
     private fun saveUserDataToFirebase(user: FirebaseUser, userData: UserData) {

@@ -36,9 +36,6 @@ import com.example.project.navigation.Screen
 @OptIn(ExperimentalComposeUiApi::class, ExperimentalMaterial3Api::class)
 @Composable
 fun Registration(registrationViewModel: RegistrationViewModel = viewModel()) {
-
-
-
     Card(
         modifier = Modifier
             .padding(5.dp)

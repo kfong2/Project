@@ -48,6 +48,7 @@ import com.example.project.components.HeadingComponent
 import com.example.project.components.MessageComponent
 import com.example.project.components.SubheadingComponent
 import com.example.project.components.TextButtonComponent
+import com.example.project.components.WelcomeBackComponent
 import com.example.project.data.RegistrationUIEvent
 import com.example.project.data.RegistrationViewModel
 
@@ -135,21 +136,8 @@ fun Dashboard(registrationViewModel: RegistrationViewModel) {
                 modifier = Modifier
                     .padding(contentPadding)
             ) {
-
-                HeadingComponent("Welcome back,")
-                HeadingComponent("User Name")
-                Row (
-                    verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.SpaceAround
-                ) {
-                    SubheadingComponent(value = "1,005")
-                    Text(text = " Points")
-                }
-
+//                WelcomeBackComponent(firstName = "L", points = 1005)
             }
-
-        }
-
-
+}
     }
 }
