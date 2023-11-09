@@ -149,6 +149,9 @@ class RegistrationViewModel : ViewModel(){
 
                         PointGrowRouter.navigateTo(Screen.Dashboard)
                         signUpInProgress.value = false
+                        allValidationsPassed.value = false // Reset the button to disabled
+                        registrationUIState.value = RegistrationUIState() // Reset the fields
+
                     }
 
                 }
@@ -179,6 +182,9 @@ class RegistrationViewModel : ViewModel(){
             if(it.currentUser == null){
                 Log.d(TAG, "Inside_signedOut")
                 PointGrowRouter.navigateTo(Screen.Login)
+                allValidationsPassed.value = false // Reset the button to disabled
+                registrationUIState.value = RegistrationUIState() // Reset the fields
+
             }
             else{
                 Log.d(TAG, "Inside_notSignedOut")
