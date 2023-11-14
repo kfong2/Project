@@ -146,7 +146,9 @@ class RegistrationViewModel(private val navController: NavHostController) : View
                         )
                         saveUserDataToFirebase(user, userData)
 
-                        navController.navigate("Dashboard")
+                        val uid = user.uid
+
+                        navController.navigate("Dashboard/$uid")
                         signUpInProgress.value = false
                         allValidationsPassed.value = false // Reset the button to disabled
                         registrationUIState.value = RegistrationUIState() // Reset the fields

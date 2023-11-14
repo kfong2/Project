@@ -68,7 +68,7 @@ fun Login(loginViewModel: LoginViewModel, navController: NavHostController) {
 
                 TextButtonComponent(
                     message = "Don't have an account?",
-                    action = { navController.navigate("Registration") },
+                    action = { navController.navigate("Register") },
                     buttonText = "Register"
                 )
 
