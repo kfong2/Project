@@ -9,7 +9,10 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
@@ -50,12 +53,14 @@ import androidx.navigation.NavHostController
 import com.example.project.components.AppToolbar
 import com.example.project.components.ButtonWithIconAndMessageComponent
 import com.example.project.components.HeadingComponent
+import com.example.project.components.LazyRowComponent
 import com.example.project.components.MessageComponent
 import com.example.project.components.SubheadingComponent
 import com.example.project.components.TextButtonComponent
 import com.example.project.components.WelcomeBackComponent
 import com.example.project.data.RegistrationUIEvent
 import com.example.project.data.RegistrationViewModel
+import com.example.project.data.RewardData
 import com.example.project.data.UserRecord
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
@@ -77,6 +82,8 @@ fun Dashboard(registrationViewModel: RegistrationViewModel, navController: NavHo
     var firstName by remember { mutableStateOf("") }
     var accumulatedPoints by remember { mutableStateOf(0) }
 
+    val rewardsList by remember { mutableStateOf(mutableListOf<RewardData>()) }
+
     // Fetch user data from Firebase when the screen is first created
     LaunchedEffect(uid) {
 
@@ -88,6 +95,11 @@ fun Dashboard(registrationViewModel: RegistrationViewModel, navController: NavHo
 
                 Log.d(TAG, "Fetched user data: firstName=$firstName, accumulatedPoints=$accumulatedPoints, uid: $uid")
             }
+        }
+
+        getRewardsDataFromFirebase { rewardsData ->
+            rewardsList.clear()
+            rewardsList.addAll(rewardsData)
         }
     }
 
@@ -168,6 +180,11 @@ fun Dashboard(registrationViewModel: RegistrationViewModel, navController: NavHo
                     .padding(contentPadding)
             ) {
                 WelcomeBackComponent(firstName = firstName, points = accumulatedPoints)
+
+                Spacer(modifier = Modifier.height(20.dp))
+                HeadingComponent("Latest Rewards")
+
+                LazyRowComponent(rewardsList = rewardsList , onItemClick = {} )
             }
 }
     }
@@ -187,6 +204,31 @@ fun getUserDataFromFirebase(uid: String, onResult: (UserRecord?) -> Unit) {
         override fun onCancelled(error: DatabaseError) {
             // Handle error
             onResult(null)
+        }
+    })
+}
+
+fun getRewardsDataFromFirebase(onResult: (List<RewardData>) -> Unit) {
+    val database = FirebaseDatabase.getInstance()
+    val rewardsRef = database.getReference("rewards")
+
+    rewardsRef.addListenerForSingleValueEvent(object : ValueEventListener {
+        override fun onDataChange(snapshot: DataSnapshot) {
+            val rewardsList = mutableListOf<RewardData>()
+
+            for (rewardSnapshot in snapshot.children) {
+                val reward = rewardSnapshot.getValue(RewardData::class.java)
+                reward?.let {
+                    rewardsList.add(it)
+                }
+            }
+
+            onResult(rewardsList)
+        }
+
+        override fun onCancelled(error: DatabaseError) {
+            // Handle error
+            onResult(emptyList()) // or null, depending on your error handling strategy
         }
     })
 }

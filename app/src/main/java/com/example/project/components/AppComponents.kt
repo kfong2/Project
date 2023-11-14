@@ -2,18 +2,21 @@
 
 package com.example.project.components
 
+import android.graphics.Paint.Align
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
@@ -56,6 +59,12 @@ import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.lazy.items
+import androidx.compose.material.icons.outlined.Discount
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
+import com.example.project.data.RewardData
 
 
 @Composable
@@ -369,43 +378,65 @@ fun AppToolbar(toolbarTitle : String, logoutButtonClicked : () -> Unit){
 
 @Composable
 fun WelcomeBackComponent(firstName: String, points: Int) {
-    HeadingComponent("Welcome back,")
-    HeadingComponent(firstName) // Display the user's first name
-    Row(
-        verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.SpaceAround
+    Card(
+        modifier = Modifier
+            .padding(8.dp)
+            .fillMaxWidth(),
+        elevation = CardDefaults.cardElevation(8.dp),
+        shape = RoundedCornerShape(8.dp)
     ) {
-        SubheadingComponent(value = "$points")
-        Text(text = " Points")
+        Column(
+            modifier = Modifier
+                .padding(16.dp) // Internal padding for the content inside the card
+        ) {
+            HeadingComponent("Welcome back,")
+            HeadingComponent(firstName) // Display the user's first name
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.SpaceAround
+            ) {
+                SubheadingComponent(value = "$points")
+                Text(text = " Points")
+            }
+        }
     }
 }
 
+
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun LazyRowComponent(){
-
+fun LazyRowComponent(rewardsList: List<RewardData>, onItemClick: (RewardData) -> Unit) {
+    LazyRow(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(16.dp),
+        content = {
+            items(rewardsList) { reward ->
+                // Use RewardItem directly here
+                Card(
+                    modifier = Modifier
+                        .padding(8.dp)
+                        .clickable(onClick = { onItemClick(reward) }),
+                    shape = RoundedCornerShape(8.dp),
+                    elevation = CardDefaults.cardElevation()
+                ) {
+                    Column(
+                        modifier = Modifier
+                            .padding(20.dp)
+                            .height(180.dp)
+                            .width(180.dp),
+                        horizontalAlignment = Alignment.CenterHorizontally,
+                        verticalArrangement = Arrangement.Center
+                    ) {
+                        Icon(imageVector = Icons.Outlined.Discount, contentDescription = "", modifier = Modifier.size(48.dp))
+                        Text(text = reward.rewardName, fontSize = 18.sp, fontWeight = FontWeight.Bold, softWrap = true, textAlign = TextAlign.Center)
+                        Spacer(modifier = Modifier.height(8.dp))
+                        Text(text = "Required Points: ${reward.requiredPoints}", fontSize = 16.sp)
+                        Spacer(modifier = Modifier.height(8.dp))
+                        Text(text = "Quantity: ${reward.quantity}", fontSize = 14.sp)
+                    }
+                }
+            }
+        }
+    )
 }
-
-
-
-
-//@OptIn(ExperimentalComposeUiApi::class, ExperimentalMaterial3Api::class)
-//@Composable
-//fun CheckboxComponent(value : String, onCheckedChange : (Boolean) -> Unit){
-//    Row(
-//        modifier = Modifier
-//            .fillMaxWidth()
-//            .padding(start = 20.dp),
-////            .height(55.dp),
-//        verticalAlignment = Alignment.CenterVertically
-//    ){
-//        var checkedState by remember { mutableStateOf(false)}
-//
-//        Checkbox(
-//            checked = checkedState,
-//            onCheckedChange = {
-//                checkedState != checkedState
-//                onCheckedChange.invoke(it)
-//            })
-//        TermsComponent(value)
-//    }
-//}
