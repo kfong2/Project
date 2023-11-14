@@ -9,14 +9,14 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavHostController
 import com.example.project.components.DividerComponent
 import com.example.project.components.HeadingComponent
 import com.example.project.components.TextButtonComponent
-import com.example.project.navigation.PointGrowRouter
-import com.example.project.navigation.Screen
+
 
 @Composable
-fun RegFailure(){
+fun RegFailure(navController: NavHostController){
     Card(
         modifier = Modifier
             .padding(5.dp)
@@ -36,13 +36,13 @@ fun RegFailure(){
 
                 TextButtonComponent(
                     message = "Already have an account?",
-                    action = { PointGrowRouter.navigateTo(Screen.Login)},
+                    action = { navController.navigate("Login")},
                     buttonText = "Login"
                 )
 
                 TextButtonComponent(
                     message = "Don't have an account?",
-                    action = { PointGrowRouter.navigateTo(Screen.Registration) },
+                    action = { navController.navigate("Registration") },
                     buttonText = "Register"
                 )
 

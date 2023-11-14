@@ -1,22 +1,50 @@
 package com.example.project.navigation
 
-import androidx.compose.runtime.MutableState
-import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.Composable
+import androidx.navigation.NavHostController
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import androidx.navigation.compose.rememberNavController
+import com.example.project.data.LoginViewModel
+import com.example.project.data.RegistrationViewModel
+import com.example.project.screens.Dashboard
+import com.example.project.screens.Login
+import com.example.project.screens.LoginFailure
+import com.example.project.screens.RegFailure
+import com.example.project.screens.Registration
 
-sealed class Screen(){
+@Composable
+fun PointGrowRouter(){
+    val navController = rememberNavController()
+    NavHost(navController = navController, startDestination = "Login"){
 
-    object Login : Screen ()
-    object Registration : Screen()
-    object Dashboard : Screen()
-    object LoginFailure : Screen()
-    object RegFailure : Screen()
 
+        composable(route = "Login"){
+            Login(loginViewModel = LoginViewModel(navController), navController)
+        }
+
+        composable(route = "Register"){
+            Registration(registrationViewModel = RegistrationViewModel(navController), navController)
+        }
+
+        composable(route = "Dashboard/{uid}") { backStackEntry ->
+            val arguments = requireNotNull(backStackEntry.arguments)
+            val uid = arguments.getString("uid", "")
+            Dashboard(registrationViewModel = RegistrationViewModel(navController), navController, uid)
+        }
+
+        composable(route = "LoginFailure"){
+            LoginFailure(navController)
+        }
+
+        composable(route = "RegFailure"){
+            RegFailure(navController)
+        }
+
+    }
 }
 
-object PointGrowRouter {
-    val currentScreen : MutableState<Screen> = mutableStateOf(Screen.Login)
-
-    fun navigateTo(destination: Screen){
-        currentScreen.value = destination
-    }
+@Composable
+fun navigateTo(route: String, navController: NavHostController) {
+    navController.navigate(route)
 }

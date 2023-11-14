@@ -3,9 +3,8 @@ package com.example.project.data
 import android.util.Log
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
+import androidx.navigation.NavHostController
 import com.example.project.data.rules.Validator
-import com.example.project.navigation.PointGrowRouter
-import com.example.project.navigation.Screen
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseAuth.AuthStateListener
 import com.google.firebase.auth.FirebaseUser
@@ -23,7 +22,7 @@ data class UserData(
     val registrationDate: String
 )
 
-class RegistrationViewModel : ViewModel(){
+class RegistrationViewModel(private val navController: NavHostController) : ViewModel(){
 
     private val TAG = RegistrationViewModel:: class.simpleName
 
@@ -147,7 +146,7 @@ class RegistrationViewModel : ViewModel(){
                         )
                         saveUserDataToFirebase(user, userData)
 
-                        PointGrowRouter.navigateTo(Screen.Dashboard)
+                        navController.navigate("Dashboard")
                         signUpInProgress.value = false
                         allValidationsPassed.value = false // Reset the button to disabled
                         registrationUIState.value = RegistrationUIState() // Reset the fields
@@ -157,7 +156,7 @@ class RegistrationViewModel : ViewModel(){
                 }
             }
             .addOnFailureListener {
-                PointGrowRouter.navigateTo(Screen.RegFailure)
+                navController.navigate("RegFailure")
                 signUpInProgress.value = false
                 allValidationsPassed.value = false // Reset the button to disabled
                 registrationUIState.value = RegistrationUIState() // Reset the fields
@@ -181,7 +180,7 @@ class RegistrationViewModel : ViewModel(){
         val authStateListener = AuthStateListener{
             if(it.currentUser == null){
                 Log.d(TAG, "Inside_signedOut")
-                PointGrowRouter.navigateTo(Screen.Login)
+                navController.navigate("Login")
                 allValidationsPassed.value = false // Reset the button to disabled
                 registrationUIState.value = RegistrationUIState() // Reset the fields
 

@@ -14,22 +14,20 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavHostController
 import com.example.project.components.ButtonComponent
 import com.example.project.components.DividerComponent
 import com.example.project.components.HeadingComponent
 import com.example.project.components.InputComponent
-//import com.example.project.components.LoginOrRegComponent
 import com.example.project.components.PasswordComponent
 import com.example.project.components.TextButtonComponent
 import com.example.project.data.LoginUIEvent
 import com.example.project.data.LoginViewModel
-import com.example.project.navigation.PointGrowRouter
-import com.example.project.navigation.Screen
 
 
 //@OptIn(ExperimentalComposeUiApi::class, ExperimentalMaterial3Api::class)
 @Composable
-fun Login(loginViewModel: LoginViewModel) {
+fun Login(loginViewModel: LoginViewModel, navController: NavHostController) {
     Card(
         modifier = Modifier
             .padding(5.dp)
@@ -70,7 +68,7 @@ fun Login(loginViewModel: LoginViewModel) {
 
                 TextButtonComponent(
                     message = "Don't have an account?",
-                    action = { PointGrowRouter.navigateTo(Screen.Registration) },
+                    action = { navController.navigate("Registration") },
                     buttonText = "Register"
                 )
 
@@ -83,8 +81,3 @@ fun Login(loginViewModel: LoginViewModel) {
     }
 }
 
-
-@Preview (showBackground = true)
-@Composable
-fun AppPreview() {
-}

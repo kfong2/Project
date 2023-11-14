@@ -1,6 +1,8 @@
 package com.example.project.screens
 
 import android.annotation.SuppressLint
+import android.content.ContentValues.TAG
+import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
@@ -30,8 +32,10 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -42,6 +46,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavHostController
 import com.example.project.components.AppToolbar
 import com.example.project.components.ButtonWithIconAndMessageComponent
 import com.example.project.components.HeadingComponent
@@ -51,6 +56,11 @@ import com.example.project.components.TextButtonComponent
 import com.example.project.components.WelcomeBackComponent
 import com.example.project.data.RegistrationUIEvent
 import com.example.project.data.RegistrationViewModel
+import com.example.project.data.UserRecord
+import com.google.firebase.database.DataSnapshot
+import com.google.firebase.database.DatabaseError
+import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.database.ValueEventListener
 
 data class NavItemState(
     val title : String,
@@ -62,7 +72,28 @@ data class NavItemState(
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @OptIn(ExperimentalComposeUiApi::class, ExperimentalMaterial3Api::class)
 @Composable
-fun Dashboard(registrationViewModel: RegistrationViewModel) {
+fun Dashboard(registrationViewModel: RegistrationViewModel, navController: NavHostController,  uid: String) {
+
+    var firstName by remember { mutableStateOf("") }
+    var accumulatedPoints by remember { mutableStateOf(0) }
+
+    // Fetch user data from Firebase when the screen is first created
+    LaunchedEffect(uid) {
+
+        Log.d(TAG, "LaunchedEffect - UID: $uid")
+        getUserDataFromFirebase(uid) { userRecord ->
+            userRecord?.let {
+                firstName = it.firstName
+                accumulatedPoints = it.accumulatedPoints
+
+                Log.d(TAG, "Fetched user data: firstName=$firstName, accumulatedPoints=$accumulatedPoints, uid: $uid")
+            }
+        }
+    }
+
+
+
+
     val items = listOf(
         NavItemState(
             title = "Dashboard",
@@ -136,8 +167,26 @@ fun Dashboard(registrationViewModel: RegistrationViewModel) {
                 modifier = Modifier
                     .padding(contentPadding)
             ) {
-//                WelcomeBackComponent(firstName = "L", points = 1005)
+                WelcomeBackComponent(firstName = firstName, points = accumulatedPoints)
             }
 }
     }
+}
+
+//@Composable
+fun getUserDataFromFirebase(uid: String, onResult: (UserRecord?) -> Unit) {
+    val database = FirebaseDatabase.getInstance()
+    val usersRef = database.getReference("users")
+
+    usersRef.child(uid).addListenerForSingleValueEvent(object : ValueEventListener {
+        override fun onDataChange(snapshot: DataSnapshot) {
+            val userRecord = snapshot.getValue(UserRecord::class.java)
+            onResult(userRecord)
+        }
+
+        override fun onCancelled(error: DatabaseError) {
+            // Handle error
+            onResult(null)
+        }
+    })
 }

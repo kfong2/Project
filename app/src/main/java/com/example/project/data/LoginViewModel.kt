@@ -3,12 +3,11 @@ package com.example.project.data
 import android.util.Log
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
+import androidx.navigation.NavHostController
 import com.example.project.data.rules.Validator
-import com.example.project.navigation.PointGrowRouter
-import com.example.project.navigation.Screen
 import com.google.firebase.auth.FirebaseAuth
 
-class LoginViewModel : ViewModel() {
+class LoginViewModel(private val navController: NavHostController) : ViewModel() {
 
     private val TAG = LoginViewModel:: class.simpleName
 
@@ -76,13 +75,19 @@ class LoginViewModel : ViewModel() {
                 Log.d(TAG, "${it.isSuccessful}")
 
                 if (it.isSuccessful){
-                    PointGrowRouter.navigateTo(Screen.Dashboard)
-                    loginInProgress.value = false
-                    allValidationsPassed.value = false // Reset the button to disabled
+
+                    val user = it.result?.user
+                    if (user != null) {
+                        val uid = user.uid
+
+                        navController.navigate("Dashboard/${uid}")
+                        loginInProgress.value = false
+                        allValidationsPassed.value = false // Reset the button to disabled
+                    }
                 }
             }
             .addOnFailureListener {
-                PointGrowRouter.navigateTo(Screen.LoginFailure)
+                navController.navigate("LoginFailure")
                 Log.d(TAG, "Inside_loginFailure")
                 Log.d(TAG, "${it.localizedMessage}")
                 loginInProgress.value = false

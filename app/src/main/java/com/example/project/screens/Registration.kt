@@ -19,23 +19,21 @@ import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavHostController
 import com.example.project.components.ButtonComponent
 import com.example.project.components.DividerComponent
 import com.example.project.components.HeadingComponent
 import com.example.project.components.InputComponent
 import com.example.project.components.MessageComponent
-//import com.example.project.components.LoginOrRegComponent
 import com.example.project.components.PasswordComponent
-//import com.example.project.components.TermsComponent
 import com.example.project.components.TextButtonComponent
 import com.example.project.data.RegistrationViewModel
 import com.example.project.data.RegistrationUIEvent
-import com.example.project.navigation.PointGrowRouter
-import com.example.project.navigation.Screen
+
 
 @OptIn(ExperimentalComposeUiApi::class, ExperimentalMaterial3Api::class)
 @Composable
-fun Registration(registrationViewModel: RegistrationViewModel = viewModel()) {
+fun Registration(registrationViewModel: RegistrationViewModel, navController: NavHostController) {
     Card(
         modifier = Modifier
             .padding(5.dp)
@@ -92,7 +90,7 @@ fun Registration(registrationViewModel: RegistrationViewModel = viewModel()) {
 
                 TextButtonComponent(
                     message = "Already have an account?",
-                    action = { PointGrowRouter.navigateTo(Screen.Login)},
+                    action = { navController.navigate("Login")},
                     buttonText = "Login"
                 )
 
