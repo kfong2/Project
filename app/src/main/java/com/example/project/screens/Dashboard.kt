@@ -3,14 +3,8 @@ package com.example.project.screens
 import android.annotation.SuppressLint
 import android.content.ContentValues.TAG
 import android.util.Log
-import androidx.compose.foundation.background
-import androidx.compose.foundation.border
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -21,10 +15,7 @@ import androidx.compose.material.icons.filled.Face
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.outlined.Email
 import androidx.compose.material.icons.outlined.Face
-import androidx.compose.material.icons.outlined.Favorite
 import androidx.compose.material.icons.outlined.Home
-import androidx.compose.material3.Card
-import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -41,37 +32,28 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import com.example.project.components.AppToolbar
-import com.example.project.components.ButtonWithIconAndMessageComponent
 import com.example.project.components.HeadingComponent
 import com.example.project.components.LazyRowComponent
-import com.example.project.components.MessageComponent
-import com.example.project.components.SubheadingComponent
 import com.example.project.components.TextButtonComponent
+import com.example.project.components.TextButtonWithMessageComponent
 import com.example.project.components.WelcomeBackComponent
-import com.example.project.data.RegistrationUIEvent
 import com.example.project.data.RegistrationViewModel
 import com.example.project.data.RewardData
-import com.example.project.data.UserRecord
-import com.google.firebase.database.DataSnapshot
-import com.google.firebase.database.DatabaseError
-import com.google.firebase.database.FirebaseDatabase
-import com.google.firebase.database.ValueEventListener
+import com.example.project.functions.getUserDataFromFirebase
+import com.example.project.functions.getRewardsDataFromFirebase
 
-data class NavItemState(
-    val title : String,
-    val selectedIcon : ImageVector,
-    val unselectedIcon : ImageVector
-)
+//data class NavItemState(
+//    val title : String,
+//    val selectedIcon : ImageVector,
+//    val unselectedIcon : ImageVector
+//)
 
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
@@ -182,53 +164,60 @@ fun Dashboard(registrationViewModel: RegistrationViewModel, navController: NavHo
                 WelcomeBackComponent(firstName = firstName, points = accumulatedPoints)
 
                 Spacer(modifier = Modifier.height(20.dp))
+
                 HeadingComponent("Latest Rewards")
 
                 LazyRowComponent(rewardsList = rewardsList , onItemClick = {} )
+
+                TextButtonComponent(
+                    action = { navController.navigate("Rewards") },
+                    buttonText = "See all Rewards"
+                )
+
             }
 }
     }
 }
 
-//@Composable
-fun getUserDataFromFirebase(uid: String, onResult: (UserRecord?) -> Unit) {
-    val database = FirebaseDatabase.getInstance()
-    val usersRef = database.getReference("users")
-
-    usersRef.child(uid).addListenerForSingleValueEvent(object : ValueEventListener {
-        override fun onDataChange(snapshot: DataSnapshot) {
-            val userRecord = snapshot.getValue(UserRecord::class.java)
-            onResult(userRecord)
-        }
-
-        override fun onCancelled(error: DatabaseError) {
-            // Handle error
-            onResult(null)
-        }
-    })
-}
-
-fun getRewardsDataFromFirebase(onResult: (List<RewardData>) -> Unit) {
-    val database = FirebaseDatabase.getInstance()
-    val rewardsRef = database.getReference("rewards")
-
-    rewardsRef.addListenerForSingleValueEvent(object : ValueEventListener {
-        override fun onDataChange(snapshot: DataSnapshot) {
-            val rewardsList = mutableListOf<RewardData>()
-
-            for (rewardSnapshot in snapshot.children) {
-                val reward = rewardSnapshot.getValue(RewardData::class.java)
-                reward?.let {
-                    rewardsList.add(it)
-                }
-            }
-
-            onResult(rewardsList)
-        }
-
-        override fun onCancelled(error: DatabaseError) {
-            // Handle error
-            onResult(emptyList()) // or null, depending on your error handling strategy
-        }
-    })
-}
+////@Composable
+//fun getUserDataFromFirebase(uid: String, onResult: (UserRecord?) -> Unit) {
+//    val database = FirebaseDatabase.getInstance()
+//    val usersRef = database.getReference("users")
+//
+//    usersRef.child(uid).addListenerForSingleValueEvent(object : ValueEventListener {
+//        override fun onDataChange(snapshot: DataSnapshot) {
+//            val userRecord = snapshot.getValue(UserRecord::class.java)
+//            onResult(userRecord)
+//        }
+//
+//        override fun onCancelled(error: DatabaseError) {
+//            // Handle error
+//            onResult(null)
+//        }
+//    })
+//}
+//
+//fun getRewardsDataFromFirebase(onResult: (List<RewardData>) -> Unit) {
+//    val database = FirebaseDatabase.getInstance()
+//    val rewardsRef = database.getReference("rewards")
+//
+//    rewardsRef.addListenerForSingleValueEvent(object : ValueEventListener {
+//        override fun onDataChange(snapshot: DataSnapshot) {
+//            val rewardsList = mutableListOf<RewardData>()
+//
+//            for (rewardSnapshot in snapshot.children) {
+//                val reward = rewardSnapshot.getValue(RewardData::class.java)
+//                reward?.let {
+//                    rewardsList.add(it)
+//                }
+//            }
+//
+//            onResult(rewardsList)
+//        }
+//
+//        override fun onCancelled(error: DatabaseError) {
+//            // Handle error
+//            onResult(emptyList()) // or null, depending on your error handling strategy
+//        }
+//    })
+//}

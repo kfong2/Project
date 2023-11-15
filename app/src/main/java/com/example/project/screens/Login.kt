@@ -12,7 +12,6 @@ import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import com.example.project.components.ButtonComponent
@@ -20,7 +19,7 @@ import com.example.project.components.DividerComponent
 import com.example.project.components.HeadingComponent
 import com.example.project.components.InputComponent
 import com.example.project.components.PasswordComponent
-import com.example.project.components.TextButtonComponent
+import com.example.project.components.TextButtonWithMessageComponent
 import com.example.project.data.LoginUIEvent
 import com.example.project.data.LoginViewModel
 
@@ -66,7 +65,7 @@ fun Login(loginViewModel: LoginViewModel, navController: NavHostController) {
 
                 DividerComponent()
 
-                TextButtonComponent(
+                TextButtonWithMessageComponent(
                     message = "Don't have an account?",
                     action = { navController.navigate("Register") },
                     buttonText = "Register"

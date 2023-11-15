@@ -18,7 +18,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import com.example.project.components.ButtonComponent
 import com.example.project.components.DividerComponent
@@ -26,7 +25,7 @@ import com.example.project.components.HeadingComponent
 import com.example.project.components.InputComponent
 import com.example.project.components.MessageComponent
 import com.example.project.components.PasswordComponent
-import com.example.project.components.TextButtonComponent
+import com.example.project.components.TextButtonWithMessageComponent
 import com.example.project.data.RegistrationViewModel
 import com.example.project.data.RegistrationUIEvent
 
@@ -88,7 +87,7 @@ fun Registration(registrationViewModel: RegistrationViewModel, navController: Na
 
                 DividerComponent()
 
-                TextButtonComponent(
+                TextButtonWithMessageComponent(
                     message = "Already have an account?",
                     action = { navController.navigate("Login")},
                     buttonText = "Login"

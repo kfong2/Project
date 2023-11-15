@@ -12,6 +12,7 @@ import com.example.project.screens.Login
 import com.example.project.screens.LoginFailure
 import com.example.project.screens.RegFailure
 import com.example.project.screens.Registration
+import com.example.project.screens.Rewards
 
 @Composable
 fun PointGrowRouter(){
@@ -27,12 +28,6 @@ fun PointGrowRouter(){
             Registration(registrationViewModel = RegistrationViewModel(navController), navController)
         }
 
-        composable(route = "Dashboard/{uid}") { backStackEntry ->
-            val arguments = requireNotNull(backStackEntry.arguments)
-            val uid = arguments.getString("uid", "")
-            Dashboard(registrationViewModel = RegistrationViewModel(navController), navController, uid)
-        }
-
         composable(route = "LoginFailure"){
             LoginFailure(navController)
         }
@@ -41,6 +36,15 @@ fun PointGrowRouter(){
             RegFailure(navController)
         }
 
+        composable(route = "Dashboard/{uid}") { backStackEntry ->
+            val arguments = requireNotNull(backStackEntry.arguments)
+            val uid = arguments.getString("uid", "")
+            Dashboard(registrationViewModel = RegistrationViewModel(navController), navController, uid)
+        }
+
+        composable(route = "Rewards") {
+            Rewards(registrationViewModel = RegistrationViewModel(navController), navController)
+        }
     }
 }
 

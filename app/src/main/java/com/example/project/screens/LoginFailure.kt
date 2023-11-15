@@ -12,7 +12,7 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import com.example.project.components.DividerComponent
 import com.example.project.components.HeadingComponent
-import com.example.project.components.TextButtonComponent
+import com.example.project.components.TextButtonWithMessageComponent
 
 
 @Composable
@@ -33,13 +33,13 @@ fun LoginFailure(navController: NavHostController){
 
                 DividerComponent()
 
-                TextButtonComponent(
+                TextButtonWithMessageComponent(
                     message = "Try Again?",
                     action = { navController.navigate("Login")},
                     buttonText = "Login"
                 )
 
-                TextButtonComponent(
+                TextButtonWithMessageComponent(
                     message = "Don't have an account?",
                     action = { navController.navigate("Registration") },
                     buttonText = "Register"
