@@ -40,9 +40,8 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import com.example.project.components.AppToolbar
 import com.example.project.components.HeadingComponent
-import com.example.project.components.LazyRowComponent
+import com.example.project.components.RewardsLazyRow
 import com.example.project.components.TextButtonComponent
-import com.example.project.components.TextButtonWithMessageComponent
 import com.example.project.components.WelcomeBackComponent
 import com.example.project.data.RegistrationViewModel
 import com.example.project.data.RewardData
@@ -167,7 +166,16 @@ fun Dashboard(registrationViewModel: RegistrationViewModel, navController: NavHo
 
                 HeadingComponent("Latest Rewards")
 
-                LazyRowComponent(rewardsList = rewardsList , onItemClick = {} )
+                RewardsLazyRow(rewardsList = rewardsList , onItemClick = {reward ->
+//                    Log.d("Navigation", "Navigating to Redeem with rewardId: $rewardId")
+//                    navController.navigate("Redeem/$rewardId")
+                    if (reward != null) {
+                        navController.navigate("Redeem/${reward.rewardId}")
+                    } else {
+                        // Handle the case where rewardId is null or empty
+                        navController.navigate("Rewards")
+
+                        Log.e("Navigation", "Invalid rewardId: ${reward.rewardId}")} })
 
                 TextButtonComponent(
                     action = { navController.navigate("Rewards") },

@@ -33,37 +33,35 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import com.example.project.components.AppToolbar
 import com.example.project.components.HeadingComponent
-import com.example.project.components.RewardsLazyColumn
-import com.example.project.data.RegistrationViewModel
+import com.example.project.components.RewardInfoCard
 import com.example.project.data.RewardData
 import com.example.project.functions.getRewardsDataFromFirebase
-
-
-data class NavItemState(
-    val title : String,
-    val selectedIcon : ImageVector,
-    val unselectedIcon : ImageVector
-)
+import com.example.project.data.RegistrationViewModel
 
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun Rewards(registrationViewModel: RegistrationViewModel, navController: NavHostController){
+fun Redeem(registrationViewModel: RegistrationViewModel, navController: NavHostController, rewardId: String,
+           onBackClicked: () -> Unit
+) {
+    var selectedReward: RewardData? by remember { mutableStateOf<RewardData?>(null) }
 
 
-    val rewardsList by remember { mutableStateOf(mutableListOf<RewardData>()) }
+    // Fetch selected reward data based on rewardId
+    LaunchedEffect(rewardId) {
+        Log.d("Navigation", "rewardId: $rewardId")
 
-    // Fetch user data from Firebase when the screen is first created
-    LaunchedEffect(rewardsList) {
-        getRewardsDataFromFirebase { rewardsData ->
-            rewardsList.clear()
-            rewardsList.addAll(rewardsData)
-        }
+        getRewardsDataFromFirebase { rewardsList ->
+            var selectedRewardData = rewardsList.find { it.rewardId == rewardId }
+            if (selectedRewardData != null) {
+                selectedReward = selectedRewardData
+            } else {
+                Log.e("Navigation", "Reward not found for rewardId: $rewardId")
+            }        }
     }
 
     val items = listOf(
@@ -126,33 +124,25 @@ fun Rewards(registrationViewModel: RegistrationViewModel, navController: NavHost
                 }
             }
         }
-    ){ contentPadding ->
+    ) { contentPadding ->
 
-        Surface (
+        Surface(
             modifier = Modifier.fillMaxWidth()
-        ){
+        ) {
 
-            Column (
+            Column(
                 modifier = Modifier
                     .padding(contentPadding)
             ) {
                 Spacer(modifier = Modifier.height(20.dp))
 
-                HeadingComponent("All Rewards")
+                HeadingComponent("Redeem Reward")
 
-                RewardsLazyColumn(rewardsList = rewardsList , onItemClick = { reward ->
-//                    Log.d("Navigation", "Navigating to Redeem with rewardId: $rewardId")
-//                    navController.navigate("Redeem/$rewardId")
-                    if (reward != null) {
-                        navController.navigate("Redeem/${reward.rewardId}")
-                    } else {
-                        // Handle the case where rewardId is null or empty
-                        navController.navigate("Rewards")
-
-                        Log.e("Navigation", "Invalid rewardId: ${reward.rewardId}")
-                    }
-            })
+                // Display the reward information
+                selectedReward?.let { reward ->
+                    RewardInfoCard(reward = reward)
+                }
+            }
         }
     }
-}}
-
+}

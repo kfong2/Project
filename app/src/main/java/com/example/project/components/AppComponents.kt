@@ -15,15 +15,23 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.Discount
 import androidx.compose.material.icons.filled.Logout
 import androidx.compose.material.icons.filled.Menu
+import androidx.compose.material.icons.filled.Remove
 import androidx.compose.material.icons.filled.Visibility
 import androidx.compose.material.icons.filled.VisibilityOff
+import androidx.compose.material.icons.outlined.Discount
 import androidx.compose.material3.Button
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Divider
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -45,6 +53,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalFocusManager
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
@@ -54,13 +63,8 @@ import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.compose.foundation.lazy.LazyRow
-import androidx.compose.foundation.lazy.items
-import androidx.compose.material.icons.outlined.Discount
-import androidx.compose.material3.Card
-import androidx.compose.material3.CardDefaults
+import androidx.core.text.isDigitsOnly
 import com.example.project.data.RewardData
-
 
 @Composable
 fun HeadingComponent(value : String){
@@ -420,14 +424,13 @@ fun WelcomeBackComponent(firstName: String, points: Int) {
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun LazyRowComponent(rewardsList: List<RewardData>, onItemClick: (RewardData) -> Unit) {
+fun RewardsLazyRow(rewardsList: List<RewardData>, onItemClick: (RewardData) -> Unit) {
     LazyRow(
         modifier = Modifier
             .fillMaxWidth()
             .padding(16.dp),
         content = {
             items(rewardsList) { reward ->
-                // Use RewardItem directly here
                 Card(
                     modifier = Modifier
                         .padding(8.dp)
@@ -459,14 +462,13 @@ fun LazyRowComponent(rewardsList: List<RewardData>, onItemClick: (RewardData) ->
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun LazyColumnComponent(rewardsList: List<RewardData>, onItemClick: (RewardData) -> Unit) {
+fun RewardsLazyColumn(rewardsList: List<RewardData>, onItemClick: (RewardData) -> Unit) {
     LazyColumn(
         modifier = Modifier
             .fillMaxWidth()
             .padding(16.dp),
         content = {
             items(rewardsList) { reward ->
-                // Use RewardItem directly here
                 Card(
                     modifier = Modifier
                         .padding(8.dp)
@@ -495,3 +497,81 @@ fun LazyColumnComponent(rewardsList: List<RewardData>, onItemClick: (RewardData)
     )
 }
 
+@OptIn(ExperimentalComposeUiApi::class, ExperimentalMaterial3Api::class)
+
+@Composable
+fun RewardInfoCard(reward: RewardData) {
+    var redeemQuantity by remember { mutableStateOf(0) }
+
+    Card(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(16.dp),
+        elevation = CardDefaults.cardElevation()
+    ) {
+        Column(
+            modifier = Modifier.padding(16.dp),
+            verticalArrangement = Arrangement.Center
+        ) {
+            Icon(imageVector = Icons.Filled.Discount, contentDescription = "",  modifier = Modifier.size(48.dp))
+            Text(
+                text = try {
+                    "${reward.rewardName}"
+                } catch (e: Exception) {
+                    // Log the exception
+                    e.printStackTrace()
+                    "Reward Name: N/A"
+                },
+                fontWeight = FontWeight.Bold,
+                fontSize = 18.sp
+            )
+            Spacer(modifier = Modifier.height(8.dp))
+            Text(text = "Required Points: ${reward.requiredPoints}", fontSize = 16.sp)
+            Spacer(modifier = Modifier.height(8.dp))
+            Text(text = "${reward.quantity} left", fontSize = 14.sp)
+
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(8.dp),
+                verticalAlignment = Alignment.CenterVertically
+//                horizontalArrangement = Arrangement.Center
+            ) {
+                IconButton(
+                    onClick = { if (redeemQuantity > 0) redeemQuantity-- },
+                    modifier = Modifier.size(24.dp)
+                ) {
+                    Icon(imageVector = Icons.Default.Remove, contentDescription = "Decrease Quantity")
+                }
+
+                // Input Box
+                OutlinedTextField(
+                    value = redeemQuantity.coerceAtMost(5).toString(),
+//                    value = redeemQuantity.toString(),
+                    onValueChange = {
+                        // Handle the case when the user enters non-numeric characters
+                        if (it.isDigitsOnly()) {
+//                            redeemQuantity = it.toInt()
+                            redeemQuantity = it.toInt().coerceIn(0, minOf(5, reward.quantity))
+                        }
+                    },
+                    label = { Text("Redeem Quantity") },
+                    keyboardOptions = KeyboardOptions.Default.copy(
+                        keyboardType = KeyboardType.Number
+                    ),
+                    modifier = Modifier
+                        .padding(8.dp)
+                        .width(150.dp),
+                    textStyle = TextStyle.Default.copy(fontSize = 16.sp)
+                )
+
+                IconButton(
+                    onClick = { redeemQuantity++ },
+                    modifier = Modifier.size(24.dp)
+                ) {
+                    Icon(imageVector = Icons.Default.Add, contentDescription = "Increase Quantity")
+                }
+            }
+        }
+    }
+}
