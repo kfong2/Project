@@ -9,6 +9,7 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -29,11 +30,13 @@ import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Discount
 import androidx.compose.material.icons.filled.Logout
 import androidx.compose.material.icons.filled.Menu
+import androidx.compose.material.icons.filled.PersonAdd
 import androidx.compose.material.icons.filled.Remove
 import androidx.compose.material.icons.filled.Visibility
 import androidx.compose.material.icons.filled.VisibilityOff
 import androidx.compose.material.icons.outlined.Discount
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Divider
@@ -250,6 +253,7 @@ fun MessageComponent(value: String) {
 @Composable
 fun ButtonComponent(
     value: String,
+    iconName: ImageVector,
     onButtonClicked: () -> Unit,
     isEnabled: Boolean = false,
     errorMessage: String? = null
@@ -258,10 +262,23 @@ fun ButtonComponent(
         onClick = {
             onButtonClicked.invoke()
         },
-        shape = RoundedCornerShape(10.dp),
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(16.dp),
+        colors = ButtonDefaults.buttonColors(),
+        contentPadding = PaddingValues(16.dp),
+        shape = MaterialTheme.shapes.medium,
+//        shape = RoundedCornerShape(10.dp),
         enabled = isEnabled
     ) {
-        Text(text = value)
+        Row(
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.Center
+        ) {
+            Icon(imageVector = iconName, contentDescription = value)
+            Spacer(modifier = Modifier.width(8.dp))
+            Text(text = value)
+        }
     }
 
     // Display an error message if provided
@@ -274,6 +291,74 @@ fun ButtonComponent(
         )
     }
 }
+
+
+@Composable
+fun LandingButtonComponent(
+    value: String,
+    iconName: ImageVector,
+    onButtonClicked: () -> Unit,
+    isEnabled: Boolean = false,
+    errorMessage: String? = null
+) {
+    Button(
+        onClick = {
+            onButtonClicked.invoke()
+        },
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(16.dp),
+        colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF9DC8B5)),
+        contentPadding = PaddingValues(16.dp),
+        shape = MaterialTheme.shapes.medium,
+//        shape = RoundedCornerShape(10.dp),
+        enabled = isEnabled
+    ) {
+        Row(
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.Center
+        ) {
+            Icon(imageVector = iconName, contentDescription = value)
+            Spacer(modifier = Modifier.width(8.dp))
+            Text(text = value)
+        }
+    }
+
+    // Display an error message if provided
+    errorMessage?.let {
+        Text(
+            text = it,
+            color = Color.Red,
+            fontSize = 14.sp,
+            modifier = Modifier.padding(top = 8.dp)
+        )
+    }
+}
+
+
+
+@Composable
+fun RegisterButton(onClick: () -> Unit) {
+    Button(
+        onClick = { onClick() },
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(16.dp),
+        colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFE2EEE4)),
+        contentPadding = PaddingValues(16.dp),
+        shape = MaterialTheme.shapes.medium
+    ) {
+        Row(
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.Center
+        ) {
+            Icon(imageVector = Icons.Default.PersonAdd, contentDescription = "Register")
+            Spacer(modifier = Modifier.width(8.dp))
+            Text(text = "Register")
+        }
+    }
+}
+
 
 @Composable
 fun ButtonWithIconAndMessageComponent(

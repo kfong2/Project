@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Lock
 import androidx.compose.material.icons.outlined.Email
 import androidx.compose.material.icons.outlined.Lock
 import androidx.compose.material3.Card
@@ -30,7 +31,7 @@ fun Login(loginViewModel: LoginViewModel, navController: NavHostController) {
     Card(
         modifier = Modifier
             .padding(5.dp)
-            .fillMaxSize()
+            .fillMaxSize(),
     ){
         Box(
             modifier = Modifier.fillMaxSize(),
@@ -59,6 +60,7 @@ fun Login(loginViewModel: LoginViewModel, navController: NavHostController) {
 
                 ButtonComponent(
                     value = "Login",
+                    iconName = Icons.Default.Lock,
                     onButtonClicked = { loginViewModel.onEvent(LoginUIEvent.LoginButtonClicked) },
                     isEnabled = loginViewModel.allValidationsPassed.value // true = enable the button
                 )

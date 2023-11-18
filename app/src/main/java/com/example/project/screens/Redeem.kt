@@ -15,10 +15,12 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.AddCircle
 import androidx.compose.material.icons.filled.Discount
 import androidx.compose.material.icons.filled.Email
 import androidx.compose.material.icons.filled.Face
 import androidx.compose.material.icons.filled.Home
+import androidx.compose.material.icons.filled.PersonAdd
 import androidx.compose.material.icons.filled.Remove
 import androidx.compose.material.icons.outlined.Email
 import androidx.compose.material.icons.outlined.Face
@@ -277,6 +279,7 @@ fun RewardInfoCard(
 
             ButtonComponent(
                 value = "Redeem",
+                iconName = Icons.Default.AddCircle,
                 onButtonClicked = {
                     // Check if the user has enough points
                     val requiredPoints = redeemQuantity * reward.requiredPoints
@@ -306,7 +309,7 @@ fun RewardInfoCard(
 
 fun updateAccumulatedPointsInFirebase(uid: String, newPoints: Int, onComplete: (Boolean) -> Unit) {
     val db = FirebaseFirestore.getInstance()
-    val data = hashMapOf("points" to newPoints)
+    val data = hashMapOf("accumulatedPoints" to newPoints)
 
     db.collection("users").document(uid).set(data)
         .addOnSuccessListener {

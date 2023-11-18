@@ -11,18 +11,25 @@ import com.example.project.data.LoginViewModel
 import com.example.project.data.RegistrationViewModel
 import com.example.project.screens.Account
 import com.example.project.screens.Dashboard
+import com.example.project.screens.Landing
 import com.example.project.screens.Login
 import com.example.project.screens.LoginFailure
 import com.example.project.screens.RegFailure
 import com.example.project.screens.Registration
 import com.example.project.screens.Rewards
 import com.example.project.screens.Redeem
+import com.example.project.screens.TestRetrieveUserDataScreen
+import com.example.project.screens.TestScreen
 
 
 @Composable
 fun PointGrowRouter() {
     val navController = rememberNavController()
-    NavHost(navController = navController, startDestination = "Login") {
+    NavHost(navController = navController, startDestination = "Landing") {
+
+        composable(route = "Landing") {
+            Landing(onLoginClicked = {}, onRegisterClicked = {}, navController)
+        }
 
 
         composable(route = "Login") {
@@ -107,6 +114,6 @@ fun PointGrowRouter() {
 }
 
 @Composable
-fun navigateTo(route: String, navController: NavHostController) {
+fun NavigateTo(route: String, navController: NavHostController) {
     navController.navigate(route)
 }

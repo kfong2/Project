@@ -7,6 +7,8 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Lock
+import androidx.compose.material.icons.filled.PersonAdd
 import androidx.compose.material.icons.outlined.Email
 import androidx.compose.material.icons.outlined.Lock
 import androidx.compose.material.icons.outlined.Person
@@ -81,6 +83,7 @@ fun Registration(registrationViewModel: RegistrationViewModel, navController: Na
                 
                 ButtonComponent(
                     value = "Register",
+                    iconName = Icons.Default.PersonAdd,
                     onButtonClicked = { registrationViewModel.onEvent(RegistrationUIEvent.RegisterButtonClicked) },
                     isEnabled = registrationViewModel.allValidationsPassed.value // true = enable the button
                 )
