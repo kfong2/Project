@@ -36,6 +36,7 @@ import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import com.example.project.components.AppToolbar
@@ -48,17 +49,23 @@ import com.example.project.data.RewardData
 import com.example.project.functions.getUserDataFromFirebase
 import com.example.project.functions.getRewardsDataFromFirebase
 
-//data class NavItemState(
-//    val title : String,
-//    val selectedIcon : ImageVector,
-//    val unselectedIcon : ImageVector
-//)
+data class NavItemState(
+    val title: String,
+    val selectedIcon: ImageVector,
+    val unselectedIcon: ImageVector
+)
 
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @OptIn(ExperimentalComposeUiApi::class, ExperimentalMaterial3Api::class)
 @Composable
-fun Dashboard(registrationViewModel: RegistrationViewModel, navController: NavHostController,  uid: String) {
+fun Dashboard(
+    registrationViewModel: RegistrationViewModel,
+    navController: NavHostController,
+    uid: String
+) {
+
+    var uid = uid
 
     var firstName by remember { mutableStateOf("") }
     var accumulatedPoints by remember { mutableStateOf(0) }
@@ -74,7 +81,10 @@ fun Dashboard(registrationViewModel: RegistrationViewModel, navController: NavHo
                 firstName = it.firstName
                 accumulatedPoints = it.accumulatedPoints
 
-                Log.d(TAG, "Fetched user data: firstName=$firstName, accumulatedPoints=$accumulatedPoints, uid: $uid")
+                Log.d(
+                    TAG,
+                    "Fetched user data: firstName=$firstName, accumulatedPoints=$accumulatedPoints, uid: $uid"
+                )
             }
         }
 
@@ -83,8 +93,6 @@ fun Dashboard(registrationViewModel: RegistrationViewModel, navController: NavHo
             rewardsList.addAll(rewardsData)
         }
     }
-
-
 
 
     val items = listOf(
@@ -105,30 +113,36 @@ fun Dashboard(registrationViewModel: RegistrationViewModel, navController: NavHo
         )
     )
 
-    var bottomNavState by rememberSaveable { mutableStateOf(0)}
+    var bottomNavState by rememberSaveable { mutableStateOf(0) }
 
-    Scaffold (
+    Scaffold(
         topBar = {
-             AppToolbar(
-                 toolbarTitle = "PointGrow",
-                 logoutButtonClicked = {
-                     registrationViewModel.logout()
-                 }
-             )
+            AppToolbar(
+                toolbarTitle = "PointGrow",
+                logoutButtonClicked = {
+                    registrationViewModel.logout()
+                }
+            )
         },
 
 
         bottomBar = {
-            NavigationBar (
+            NavigationBar(
                 modifier = Modifier
                     .padding(10.dp)
                     .clip(RoundedCornerShape(20.dp)),
-                containerColor = MaterialTheme.colorScheme.secondary.copy (alpha = .5f)
+                containerColor = MaterialTheme.colorScheme.secondary.copy(alpha = .5f)
             ) {
                 items.forEachIndexed { index, item ->
                     NavigationBarItem(
                         selected = bottomNavState == index,
-                        onClick = { },
+                        onClick = {
+                            when (item.title) {
+                                "Dashboard" -> navController.navigate("Dashboard/$uid")
+                                "Register" -> navController.navigate("Register/$uid")
+                                "Account" -> navController.navigate("Account/$uid")
+                            }
+                        },
 
                         icon = {
                             Icon(
@@ -136,27 +150,24 @@ fun Dashboard(registrationViewModel: RegistrationViewModel, navController: NavHo
                                 else item.unselectedIcon,
                                 contentDescription = item.title
                             )
-//                            }
                         },
                         label = {
                             Text(text = item.title)
                         },
                         colors = NavigationBarItemDefaults.colors(
-//                            selectedIconColor = Color(0xFF552A27),
                             selectedTextColor = Color(0xFF131F0D)
-//                            indicatorColor = Color(0xFFF1F1EA)
                         )
                     )
                 }
             }
         }
-    ){ contentPadding ->
+    ) { contentPadding ->
 
-        Surface (
+        Surface(
             modifier = Modifier.fillMaxWidth()
-        ){
+        ) {
 
-            Column (
+            Column(
                 modifier = Modifier
                     .padding(contentPadding)
             ) {
@@ -166,24 +177,25 @@ fun Dashboard(registrationViewModel: RegistrationViewModel, navController: NavHo
 
                 HeadingComponent("Latest Rewards")
 
-                RewardsLazyRow(rewardsList = rewardsList , onItemClick = {reward ->
+                RewardsLazyRow(rewardsList = rewardsList, onItemClick = { reward ->
 //                    Log.d("Navigation", "Navigating to Redeem with rewardId: $rewardId")
-//                    navController.navigate("Redeem/$rewardId")
                     if (reward != null) {
-                        navController.navigate("Redeem/${reward.rewardId}")
+                        navController.navigate("Redeem/${reward.rewardId}/$uid")
                     } else {
                         // Handle the case where rewardId is null or empty
-                        navController.navigate("Rewards")
+                        navController.navigate("Rewards/$uid")
 
-                        Log.e("Navigation", "Invalid rewardId: ${reward.rewardId}")} })
+                        Log.e("Navigation", "Invalid rewardId: ${reward.rewardId}")
+                    }
+                })
 
                 TextButtonComponent(
-                    action = { navController.navigate("Rewards") },
+                    action = { navController.navigate("Rewards/$uid") },
                     buttonText = "See all Rewards"
                 )
 
             }
-}
+        }
     }
 }
 

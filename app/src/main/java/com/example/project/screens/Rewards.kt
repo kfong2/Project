@@ -44,17 +44,19 @@ import com.example.project.data.RewardData
 import com.example.project.functions.getRewardsDataFromFirebase
 
 
-data class NavItemState(
-    val title : String,
-    val selectedIcon : ImageVector,
-    val unselectedIcon : ImageVector
-)
+//data class NavItemState(
+//    val title : String,
+//    val dest: String,
+//    val selectedIcon : ImageVector,
+//    val unselectedIcon : ImageVector
+//)
 
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun Rewards(registrationViewModel: RegistrationViewModel, navController: NavHostController){
+fun Rewards(registrationViewModel: RegistrationViewModel, navController: NavHostController, uid: String){
 
+    var uid = uid
 
     val rewardsList by remember { mutableStateOf(mutableListOf<RewardData>()) }
 
@@ -144,10 +146,10 @@ fun Rewards(registrationViewModel: RegistrationViewModel, navController: NavHost
 //                    Log.d("Navigation", "Navigating to Redeem with rewardId: $rewardId")
 //                    navController.navigate("Redeem/$rewardId")
                     if (reward != null) {
-                        navController.navigate("Redeem/${reward.rewardId}")
+                        navController.navigate("Redeem/${reward.rewardId}/$uid")
                     } else {
                         // Handle the case where rewardId is null or empty
-                        navController.navigate("Rewards")
+                        navController.navigate("Rewards/$uid")
 
                         Log.e("Navigation", "Invalid rewardId: ${reward.rewardId}")
                     }

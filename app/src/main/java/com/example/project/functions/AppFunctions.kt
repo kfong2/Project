@@ -1,11 +1,17 @@
 package com.example.project.functions
 
+import android.content.ContentValues.TAG
+import android.util.Log
 import com.example.project.data.RewardData
 import com.example.project.data.UserRecord
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
+import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.SetOptions
+import com.google.firebase.firestore.ktx.firestore
+import com.google.firebase.ktx.Firebase
 
 //@Composable
 fun getUserDataFromFirebase(uid: String, onResult: (UserRecord?) -> Unit) {
@@ -49,3 +55,34 @@ fun getRewardsDataFromFirebase(onResult: (List<RewardData>) -> Unit) {
         }
     })
 }
+
+//fun updateAccumulatedPointsInFirebase(uid: String, newPoints: Int) {
+//    val userReference = FirebaseFirestore.getInstance().collection("users").document(uid)
+//
+//    Log.d(TAG, "Updating user data. UID: $uid, New Points: $newPoints")
+//
+//    userReference.update("accumulatedPoints", newPoints)
+//        .addOnSuccessListener {
+//            // Update successful
+//            Log.d(TAG, "User data updated successfully")
+//        }
+//        .addOnFailureListener { e ->
+//            // Handle errors
+//            Log.e(TAG, "Error updating user data", e)
+//        }
+//}
+
+//fun updateAccumulatedPointsInFirebase(uid: String, newPoints: Int, onComplete: (Boolean) -> Unit) {
+//    val db = FirebaseFirestore.getInstance()
+//    val data = hashMapOf("points" to newPoints)
+//
+//    db.collection("users").document(uid).set(data)
+//        .addOnSuccessListener {
+//            Log.d(TAG, "User data updated successfully")
+//            onComplete(true) // Notify success
+//        }
+//        .addOnFailureListener { e ->
+//            Log.e(TAG, "Error updating user data", e)
+//            onComplete(false) // Notify failure
+//        }
+//}

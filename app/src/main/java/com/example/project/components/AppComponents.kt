@@ -2,6 +2,9 @@
 
 package com.example.project.components
 
+import android.content.ContentValues.TAG
+import android.util.Log
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -17,6 +20,7 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
@@ -50,9 +54,11 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalFocusManager
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
@@ -64,10 +70,15 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.core.text.isDigitsOnly
+import com.example.project.R
 import com.example.project.data.RewardData
+import com.example.project.data.UserRecord
+
+//import com.example.project.functions.updateAccumulatedPointsInFirebase
+
 
 @Composable
-fun HeadingComponent(value : String){
+fun HeadingComponent(value: String) {
     Text(
         text = value,
         modifier = Modifier
@@ -81,7 +92,7 @@ fun HeadingComponent(value : String){
 }
 
 @Composable
-fun SubheadingComponent(value : String){
+fun SubheadingComponent(value: String) {
     Text(
         text = value,
         modifier = Modifier
@@ -100,12 +111,12 @@ fun SubheadingComponent(value : String){
 fun InputComponent(
     labelValue: String,
     iconName: ImageVector,
-    onTextSelected : (String) -> Unit,
-    errorStatus : Boolean = false
-){
+    onTextSelected: (String) -> Unit,
+    errorStatus: Boolean = false
+) {
     var input by remember { mutableStateOf("") }
 
-    OutlinedTextField (
+    OutlinedTextField(
         value = input,
         onValueChange = {
             input = it
@@ -119,8 +130,8 @@ fun InputComponent(
         shape = RoundedCornerShape(10.dp),
         colors = TextFieldDefaults.outlinedTextFieldColors(
             focusedBorderColor = MaterialTheme.colorScheme.primary,
-            focusedLabelColor = MaterialTheme.colorScheme.primary.copy (alpha = .5f),
-            cursorColor = MaterialTheme.colorScheme.primary.copy (alpha = .7f)
+            focusedLabelColor = MaterialTheme.colorScheme.primary.copy(alpha = .5f),
+            cursorColor = MaterialTheme.colorScheme.primary.copy(alpha = .7f)
         ),
         leadingIcon = {
             Icon(imageVector = iconName, contentDescription = "")
@@ -139,16 +150,16 @@ fun InputComponent(
 fun PasswordComponent(
     labelValue: String,
     iconName: ImageVector,
-    onTextSelected : (String) -> Unit,
-    errorStatus : Boolean = false
-){
+    onTextSelected: (String) -> Unit,
+    errorStatus: Boolean = false
+) {
     var password by remember { mutableStateOf("") }
 
     var passwordVisible by remember { mutableStateOf(false) } // password is not visible
 
     val localFocusManager = LocalFocusManager.current
 
-    OutlinedTextField (
+    OutlinedTextField(
         value = password,
         onValueChange = {
             password = it
@@ -162,37 +173,37 @@ fun PasswordComponent(
         shape = RoundedCornerShape(10.dp),
         colors = TextFieldDefaults.outlinedTextFieldColors(
             focusedBorderColor = MaterialTheme.colorScheme.primary,
-            focusedLabelColor = MaterialTheme.colorScheme.primary.copy (alpha = .5f),
-            cursorColor = MaterialTheme.colorScheme.primary.copy (alpha = .7f)
+            focusedLabelColor = MaterialTheme.colorScheme.primary.copy(alpha = .5f),
+            cursorColor = MaterialTheme.colorScheme.primary.copy(alpha = .7f)
         ),
         leadingIcon = {
             Icon(imageVector = iconName, contentDescription = "")
         },
         trailingIcon = {
-            val iconImage = if(passwordVisible){
+            val iconImage = if (passwordVisible) {
                 Icons.Filled.Visibility
-            } else{
+            } else {
                 Icons.Filled.VisibilityOff
             }
 
-            var description = if(passwordVisible){
+            var description = if (passwordVisible) {
                 "Hide Password"
-            } else{
+            } else {
                 "Show Password"
             }
 
-            IconButton(onClick = { passwordVisible = !passwordVisible } ){
+            IconButton(onClick = { passwordVisible = !passwordVisible }) {
                 Icon(imageVector = iconImage, contentDescription = description)
             }
         },
 
-        visualTransformation = if(passwordVisible) VisualTransformation.None else PasswordVisualTransformation(),
+        visualTransformation = if (passwordVisible) VisualTransformation.None else PasswordVisualTransformation(),
 
         keyboardOptions = KeyboardOptions( // Set Keyboard
             keyboardType = KeyboardType.Password,
             imeAction = ImeAction.Done
         ),
-        keyboardActions = KeyboardActions{
+        keyboardActions = KeyboardActions {
             localFocusManager.clearFocus()
         },
         isError = !errorStatus
@@ -202,21 +213,19 @@ fun PasswordComponent(
 
 @OptIn(ExperimentalComposeUiApi::class, ExperimentalMaterial3Api::class)
 @Composable
-fun AlignRightTextComponent(value: String){
+fun AlignRightTextComponent(value: String) {
     Box(
         modifier = Modifier
             .fillMaxWidth()
             .padding(0.dp, 0.dp, 25.dp, 0.dp)
             .height(30.dp),
         contentAlignment = Alignment.CenterEnd
-    ){
+    ) {
         TextButton(
             onClick = { }
         ) {
             Text(
-                text = value
-                , fontSize = 10.sp
-                , fontStyle = FontStyle.Italic
+                text = value, fontSize = 10.sp, fontStyle = FontStyle.Italic
             )
         }
     }
@@ -224,7 +233,7 @@ fun AlignRightTextComponent(value: String){
 
 
 @Composable
-fun MessageComponent(value : String){
+fun MessageComponent(value: String) {
     Text(
         text = value,
         modifier = Modifier
@@ -241,9 +250,10 @@ fun MessageComponent(value : String){
 @Composable
 fun ButtonComponent(
     value: String,
-    onButtonClicked : () -> Unit,
-    isEnabled : Boolean = false
-){
+    onButtonClicked: () -> Unit,
+    isEnabled: Boolean = false,
+    errorMessage: String? = null
+) {
     Button(
         onClick = {
             onButtonClicked.invoke()
@@ -253,6 +263,16 @@ fun ButtonComponent(
     ) {
         Text(text = value)
     }
+
+    // Display an error message if provided
+    errorMessage?.let {
+        Text(
+            text = it,
+            color = Color.Red,
+            fontSize = 14.sp,
+            modifier = Modifier.padding(top = 8.dp)
+        )
+    }
 }
 
 @Composable
@@ -261,9 +281,9 @@ fun ButtonWithIconAndMessageComponent(
     iconName: ImageVector,
     points: String,
     message: String,
-    onButtonClicked : () -> Unit,
-    isEnabled : Boolean = false
-){
+    onButtonClicked: () -> Unit,
+    isEnabled: Boolean = false
+) {
     Button(
         onClick = {
             onButtonClicked.invoke()
@@ -272,16 +292,16 @@ fun ButtonWithIconAndMessageComponent(
         shape = RoundedCornerShape(10.dp),
         enabled = isEnabled
     ) {
-        Column (
+        Column(
             modifier = Modifier.fillMaxWidth(),
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally
-        ){
+        ) {
             Text(
                 text = value,
                 fontSize = 20.sp,
                 color = MaterialTheme.colorScheme.tertiary
-                )
+            )
             Icon(
                 imageVector = iconName,
                 contentDescription = "",
@@ -290,7 +310,8 @@ fun ButtonWithIconAndMessageComponent(
             )
             Text(
                 text = points,
-                fontSize = 15.sp)
+                fontSize = 15.sp
+            )
             Text(text = "Points")
             Text(
                 text = message,
@@ -302,9 +323,8 @@ fun ButtonWithIconAndMessageComponent(
 }
 
 
-
 @Composable
-fun DividerComponent(){
+fun DividerComponent() {
     Divider(
         modifier = Modifier
             .fillMaxWidth()
@@ -316,14 +336,14 @@ fun DividerComponent(){
 
 
 @Composable
-fun TextButtonWithMessageComponent(message : String, action : () -> Unit, buttonText : String){
+fun TextButtonWithMessageComponent(message: String, action: () -> Unit, buttonText: String) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
             .padding(start = 30.dp, end = 30.dp),
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.Center
-    ){
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.Center
+    ) {
         Text(
             text = message,
             fontSize = 14.sp
@@ -342,14 +362,14 @@ fun TextButtonWithMessageComponent(message : String, action : () -> Unit, button
 
 
 @Composable
-fun TextButtonComponent(action : () -> Unit, buttonText : String){
+fun TextButtonComponent(action: () -> Unit, buttonText: String) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
             .padding(start = 30.dp),
         verticalAlignment = Alignment.CenterVertically
 //        horizontalArrangement = Arrangement.Center
-    ){
+    ) {
         TextButton(
             onClick = action
         ) {
@@ -364,7 +384,7 @@ fun TextButtonComponent(action : () -> Unit, buttonText : String){
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun AppToolbar(toolbarTitle : String, logoutButtonClicked : () -> Unit){
+fun AppToolbar(toolbarTitle: String, logoutButtonClicked: () -> Unit) {
     TopAppBar(
         title = {
             Text(text = toolbarTitle)
@@ -446,8 +466,18 @@ fun RewardsLazyRow(rewardsList: List<RewardData>, onItemClick: (RewardData) -> U
                         horizontalAlignment = Alignment.CenterHorizontally,
                         verticalArrangement = Arrangement.Center
                     ) {
-                        Icon(imageVector = Icons.Outlined.Discount, contentDescription = "", modifier = Modifier.size(48.dp))
-                        Text(text = reward.rewardName, fontSize = 18.sp, fontWeight = FontWeight.Bold, softWrap = true, textAlign = TextAlign.Center)
+                        Icon(
+                            imageVector = Icons.Outlined.Discount,
+                            contentDescription = "",
+                            modifier = Modifier.size(48.dp)
+                        )
+                        Text(
+                            text = reward.rewardName,
+                            fontSize = 18.sp,
+                            fontWeight = FontWeight.Bold,
+                            softWrap = true,
+                            textAlign = TextAlign.Center
+                        )
                         Spacer(modifier = Modifier.height(8.dp))
                         Text(text = "Required Points: ${reward.requiredPoints}", fontSize = 16.sp)
                         Spacer(modifier = Modifier.height(8.dp))
@@ -484,8 +514,18 @@ fun RewardsLazyColumn(rewardsList: List<RewardData>, onItemClick: (RewardData) -
                         horizontalAlignment = Alignment.CenterHorizontally,
                         verticalArrangement = Arrangement.Center
                     ) {
-                        Icon(imageVector = Icons.Outlined.Discount, contentDescription = "", modifier = Modifier.size(48.dp))
-                        Text(text = reward.rewardName, fontSize = 18.sp, fontWeight = FontWeight.Bold, softWrap = true, textAlign = TextAlign.Center)
+                        Icon(
+                            imageVector = Icons.Outlined.Discount,
+                            contentDescription = "",
+                            modifier = Modifier.size(48.dp)
+                        )
+                        Text(
+                            text = reward.rewardName,
+                            fontSize = 18.sp,
+                            fontWeight = FontWeight.Bold,
+                            softWrap = true,
+                            textAlign = TextAlign.Center
+                        )
                         Spacer(modifier = Modifier.height(8.dp))
                         Text(text = "Required Points: ${reward.requiredPoints}", fontSize = 16.sp)
                         Spacer(modifier = Modifier.height(8.dp))
@@ -497,81 +537,258 @@ fun RewardsLazyColumn(rewardsList: List<RewardData>, onItemClick: (RewardData) -
     )
 }
 
-@OptIn(ExperimentalComposeUiApi::class, ExperimentalMaterial3Api::class)
 
 @Composable
-fun RewardInfoCard(reward: RewardData) {
-    var redeemQuantity by remember { mutableStateOf(0) }
+fun UserInfoTextComponent(greeting: String, message: String) {
+    Column {
+        Text(
+            text = greeting,
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(start = 10.dp, top = 2.dp),
+            fontSize = 16.sp,
+            fontWeight = FontWeight.Normal,
+            fontStyle = FontStyle.Normal,
+            color = MaterialTheme.colorScheme.tertiary
+        )
 
+        Text(
+            text = message,
+            modifier = Modifier
+                .fillMaxWidth()
+//            .heightIn(min = 30.dp)
+                .padding(start = 10.dp, top = 2.dp),
+            fontSize = 15.sp,
+            fontWeight = FontWeight.Normal,
+            fontStyle = FontStyle.Normal,
+            color = MaterialTheme.colorScheme.tertiary
+        )
+    }
+
+}
+
+
+@Composable
+fun UserInfoComponent(firstName: String, points: Int) {
     Card(
         modifier = Modifier
-            .fillMaxWidth()
-            .padding(16.dp),
-        elevation = CardDefaults.cardElevation()
+            .padding(10.dp)
+            .fillMaxWidth(),
+        elevation = CardDefaults.cardElevation(8.dp),
+        shape = RoundedCornerShape(8.dp)
     ) {
         Column(
-            modifier = Modifier.padding(16.dp),
-            verticalArrangement = Arrangement.Center
+            modifier = Modifier
+                .padding(10.dp) // Internal padding for the content inside the card
         ) {
-            Icon(imageVector = Icons.Filled.Discount, contentDescription = "",  modifier = Modifier.size(48.dp))
-            Text(
-                text = try {
-                    "${reward.rewardName}"
-                } catch (e: Exception) {
-                    // Log the exception
-                    e.printStackTrace()
-                    "Reward Name: N/A"
-                },
-                fontWeight = FontWeight.Bold,
-                fontSize = 18.sp
+            UserInfoTextComponent(
+                greeting = "Hello, $firstName",
+                message = "You currently have $points points ready to unlock fantastic rewards. Explore and redeem your favorites now!\""
             )
-            Spacer(modifier = Modifier.height(8.dp))
-            Text(text = "Required Points: ${reward.requiredPoints}", fontSize = 16.sp)
-            Spacer(modifier = Modifier.height(8.dp))
-            Text(text = "${reward.quantity} left", fontSize = 14.sp)
-
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(8.dp),
-                verticalAlignment = Alignment.CenterVertically
-//                horizontalArrangement = Arrangement.Center
-            ) {
-                IconButton(
-                    onClick = { if (redeemQuantity > 0) redeemQuantity-- },
-                    modifier = Modifier.size(24.dp)
-                ) {
-                    Icon(imageVector = Icons.Default.Remove, contentDescription = "Decrease Quantity")
-                }
-
-                // Input Box
-                OutlinedTextField(
-                    value = redeemQuantity.coerceAtMost(5).toString(),
-//                    value = redeemQuantity.toString(),
-                    onValueChange = {
-                        // Handle the case when the user enters non-numeric characters
-                        if (it.isDigitsOnly()) {
-//                            redeemQuantity = it.toInt()
-                            redeemQuantity = it.toInt().coerceIn(0, minOf(5, reward.quantity))
-                        }
-                    },
-                    label = { Text("Redeem Quantity") },
-                    keyboardOptions = KeyboardOptions.Default.copy(
-                        keyboardType = KeyboardType.Number
-                    ),
-                    modifier = Modifier
-                        .padding(8.dp)
-                        .width(150.dp),
-                    textStyle = TextStyle.Default.copy(fontSize = 16.sp)
-                )
-
-                IconButton(
-                    onClick = { redeemQuantity++ },
-                    modifier = Modifier.size(24.dp)
-                ) {
-                    Icon(imageVector = Icons.Default.Add, contentDescription = "Increase Quantity")
-                }
-            }
         }
     }
 }
+
+
+@Composable
+fun AccountGreeting(firstName: String, points: Int) {
+    
+    Row(
+        verticalAlignment = Alignment.CenterVertically
+    ){
+
+        Image(
+            painter = painterResource(R.drawable.profile),
+            contentDescription = null, // Provide a meaningful description
+            modifier = Modifier
+                .size(40.dp) // Adjust the size as needed
+                .clip(CircleShape) // Optional: Clip the image into a circle
+//                .align(Alignment.End) // Align the image to the end (right) of the column
+        )
+
+        Spacer(modifier = Modifier.width(10.dp))
+
+
+        Column(
+            modifier = Modifier
+                .padding(8.dp)
+                .fillMaxWidth()
+        ) {
+            
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                verticalAlignment = Alignment.CenterVertically
+            ){
+                Text(
+                    text = "Welcome back, $firstName",
+                    fontSize = 18.sp,
+                    fontWeight = FontWeight.Bold,
+                    fontStyle = FontStyle.Normal,
+                    color = MaterialTheme.colorScheme.tertiary
+                )
+            }
+            
+
+            Spacer(modifier = Modifier.height(10.dp))
+
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Text(
+                    text = "$points",
+                    fontSize = 16.sp,
+                    fontWeight = FontWeight.Bold,
+                    fontStyle = FontStyle.Normal,
+                    color = MaterialTheme.colorScheme.tertiary
+                )
+                Text(
+                    text = " Points",
+                    fontSize = 16.sp,
+                    fontWeight = FontWeight.Normal,
+                    fontStyle = FontStyle.Normal,
+                    color = MaterialTheme.colorScheme.tertiary
+                )
+                Spacer(modifier = Modifier.weight(1f)) // Add this spacer to push the image to the right
+            }
+
+
+        }  
+        
+        
+    }
+
+}
+
+@Composable
+fun ProfileInfoItem(label: String, value: String) {
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(8.dp),
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        Text(
+            text = "$label:",
+            fontWeight = FontWeight.Bold,
+            color = MaterialTheme.colorScheme.primary,
+            modifier = Modifier.width(120.dp)
+        )
+        Text(
+            text = value,
+            fontWeight = FontWeight.Bold,
+            color = Color.Black
+        )
+    }
+}
+
+
+//@Composable
+//fun RewardInfoCard(
+//    reward: RewardData,
+//    userRecord: UserRecord,
+//    uid: String,
+//    onUpdatePoints: (Int) -> Unit
+//) {
+//    var redeemQuantity by remember { mutableStateOf(0) }
+//
+//    var errorMessage by remember { mutableStateOf<String?>(null) }
+//
+//    Card(
+//        modifier = Modifier
+//            .fillMaxWidth()
+//            .padding(16.dp),
+//        elevation = CardDefaults.cardElevation()
+//    ) {
+//        Column(
+//            modifier = Modifier.padding(16.dp),
+//            verticalArrangement = Arrangement.Center
+//        ) {
+//            Icon(imageVector = Icons.Filled.Discount, contentDescription = "",  modifier = Modifier.size(48.dp))
+//            Text(
+//                text = try {
+//                    "${reward.rewardName}"
+//                } catch (e: Exception) {
+//                    // Log the exception
+//                    e.printStackTrace()
+//                    "Reward Name: N/A"
+//                },
+//                fontWeight = FontWeight.Bold,
+//                fontSize = 18.sp
+//            )
+//            Spacer(modifier = Modifier.height(8.dp))
+//            Text(text = "Required Points: ${reward.requiredPoints}", fontSize = 16.sp)
+//            Spacer(modifier = Modifier.height(8.dp))
+//            Text(text = "${reward.quantity} left", fontSize = 14.sp)
+//
+//            Row(
+//                modifier = Modifier
+//                    .fillMaxWidth()
+//                    .padding(8.dp),
+//                verticalAlignment = Alignment.CenterVertically
+////                horizontalArrangement = Arrangement.Center
+//            ) {
+//                IconButton(
+//                    onClick = { if (redeemQuantity > 0) redeemQuantity-- },
+//                    modifier = Modifier.size(24.dp)
+//                ) {
+//                    Icon(imageVector = Icons.Default.Remove, contentDescription = "Decrease Quantity")
+//                }
+//
+//                // Input Box
+//                OutlinedTextField(
+//                    value = redeemQuantity.coerceAtMost(5).toString(),
+////                    value = redeemQuantity.toString(),
+//                    onValueChange = {
+//                        // Handle the case when the user enters non-numeric characters
+//                        if (it.isDigitsOnly()) {
+////                            redeemQuantity = it.toInt()
+//                            redeemQuantity = it.toInt().coerceIn(0, minOf(5, reward.quantity))
+//                        }
+//                    },
+//                    label = { Text("Redeem Quantity") },
+//                    keyboardOptions = KeyboardOptions.Default.copy(
+//                        keyboardType = KeyboardType.Number
+//                    ),
+//                    modifier = Modifier
+//                        .padding(8.dp)
+//                        .width(150.dp),
+//                    textStyle = TextStyle.Default.copy(fontSize = 16.sp)
+//                )
+//
+//                IconButton(
+//                    onClick = { redeemQuantity++ },
+//                    modifier = Modifier.size(24.dp)
+//                ) {
+//                    Icon(imageVector = Icons.Default.Add, contentDescription = "Increase Quantity")
+//                }
+//            }
+//
+//            ButtonComponent(
+//                value = "Redeem",
+//                onButtonClicked = {
+//                    // Check if the user has enough points
+//                    val requiredPoints = redeemQuantity * reward.requiredPoints
+//                    errorMessage = if (requiredPoints > userRecord.accumulatedPoints) {
+//                        "Not enough points to redeem"
+//                    } else {
+//                        // Deduct points and update user data in Firebase
+//                        val newPoints = userRecord.accumulatedPoints - requiredPoints
+//                        updateAccumulatedPointsInFirebase(uid, newPoints) { success ->
+//                            if (success) {
+//                                // Update the local state
+//                                onUpdatePoints(newPoints)
+//                            } else {
+//                                errorMessage = "Failed to update points"
+//                            }
+//                        }
+//                        null
+//                    }
+//
+//                },
+//                isEnabled = redeemQuantity > 0,
+//                errorMessage = errorMessage
+//                )
+//        }
+//    }
+//}

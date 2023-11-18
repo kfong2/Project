@@ -9,6 +9,7 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.example.project.data.LoginViewModel
 import com.example.project.data.RegistrationViewModel
+import com.example.project.screens.Account
 import com.example.project.screens.Dashboard
 import com.example.project.screens.Login
 import com.example.project.screens.LoginFailure
@@ -43,6 +44,17 @@ fun PointGrowRouter() {
             RegFailure(navController)
         }
 
+        composable(route = "Account/{uid}") { backStackEntry ->
+            val arguments = requireNotNull(backStackEntry.arguments)
+            val uid = arguments.getString("uid", "")
+            Account(
+                registrationViewModel = RegistrationViewModel(navController),
+                navController,
+                uid
+            )
+        }
+
+
         composable(route = "Dashboard/{uid}") { backStackEntry ->
             val arguments = requireNotNull(backStackEntry.arguments)
             val uid = arguments.getString("uid", "")
@@ -53,22 +65,36 @@ fun PointGrowRouter() {
             )
         }
 
-        composable(route = "Rewards") {
-            Rewards(registrationViewModel = RegistrationViewModel(navController), navController)
+        composable(
+            route = "Rewards/{uid}",
+            arguments = listOf(navArgument("uid") { type = NavType.StringType })
+        ) { backStackEntry ->
+            val uid = backStackEntry.arguments?.getString("uid")
+            if (uid != null) {
+                // Pass the uid parameter to the Rewards composable
+                Rewards(registrationViewModel = RegistrationViewModel(navController), navController, uid)
+            } else {
+                // Stay in where the user is
+            }
         }
 
         composable(
-            route = "Redeem/{rewardId}",
-            arguments = listOf(navArgument("rewardId") { type = NavType.StringType })
+            route = "Redeem/{rewardId}/{uid}",
+            arguments = listOf(
+                navArgument("rewardId") { type = NavType.StringType },
+                navArgument("uid") { type = NavType.StringType }
+            )
+
         ) { backStackEntry ->
-            val rewardId = backStackEntry.arguments?.getString("rewardId") // Change from getInt to getString
-//            val rewardId = backStackEntry.arguments?.getInt("rewardId")
-            if (rewardId != null) {
+            val rewardId = backStackEntry.arguments?.getString("rewardId")
+            val uid = backStackEntry.arguments?.getString("uid")
+            if (rewardId != null && uid != null) {
                 // Pass rewardId as a parameter to Redeem composable
                 Redeem(
                     registrationViewModel = RegistrationViewModel(navController),
                     navController = navController,
                     rewardId = rewardId,
+                    uid = uid,
                     onBackClicked = {  }
 //                            onBackClicked = { navController.popBackStack() }
                 )
