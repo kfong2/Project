@@ -16,6 +16,9 @@ import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.outlined.Email
 import androidx.compose.material.icons.outlined.Face
 import androidx.compose.material.icons.outlined.Home
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardColors
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -40,9 +43,12 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import com.example.project.components.AppToolbar
+import com.example.project.components.GeneralGreeting
 import com.example.project.components.HeadingComponent
 import com.example.project.components.RewardsLazyRow
+import com.example.project.components.RewardsTextButtonComponent
 import com.example.project.components.TextButtonComponent
+import com.example.project.components.TitleComponent
 import com.example.project.components.WelcomeBackComponent
 import com.example.project.data.RegistrationViewModel
 import com.example.project.data.RewardData
@@ -72,7 +78,7 @@ fun Dashboard(
 
     val rewardsList by remember { mutableStateOf(mutableListOf<RewardData>()) }
 
-    // Fetch user data from Firebase when the screen is first created
+    // Fetch user data from Firebase when the screen is created
     LaunchedEffect(uid) {
 
         Log.d(TAG, "LaunchedEffect - UID: $uid")
@@ -171,73 +177,37 @@ fun Dashboard(
                 modifier = Modifier
                     .padding(contentPadding)
             ) {
-                WelcomeBackComponent(firstName = firstName, points = accumulatedPoints)
+                GeneralGreeting(firstName = firstName, points = accumulatedPoints)
 
-                Spacer(modifier = Modifier.height(20.dp))
+                Spacer(modifier = Modifier.height(5.dp))
 
-                HeadingComponent("Latest Rewards")
+                Card(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(16.dp, 5.dp),
+                    elevation = CardDefaults.cardElevation(),
+                    colors = CardDefaults.cardColors(containerColor = Color.Transparent)
+                ) {
+                    TitleComponent("Latest Rewards")
 
-                RewardsLazyRow(rewardsList = rewardsList, onItemClick = { reward ->
+                    RewardsLazyRow(rewardsList = rewardsList, onItemClick = { reward ->
 //                    Log.d("Navigation", "Navigating to Redeem with rewardId: $rewardId")
-                    if (reward != null) {
-                        navController.navigate("Redeem/${reward.rewardId}/$uid")
-                    } else {
-                        // Handle the case where rewardId is null or empty
-                        navController.navigate("Rewards/$uid")
+                        if (reward != null) {
+                            navController.navigate("Redeem/${reward.rewardId}/$uid")
+                        } else {
+                            // Handle the case where rewardId is null or empty
+                            navController.navigate("Rewards/$uid")
 
-                        Log.e("Navigation", "Invalid rewardId: ${reward.rewardId}")
-                    }
-                })
+                            Log.e("Navigation", "Invalid rewardId: ${reward.rewardId}")
+                        }
+                    })
 
-                TextButtonComponent(
-                    action = { navController.navigate("Rewards/$uid") },
-                    buttonText = "See all Rewards"
-                )
-
+                    RewardsTextButtonComponent(
+                        action = { navController.navigate("Rewards/$uid") },
+                        buttonText = "See all Rewards"
+                    )
+                }
             }
         }
     }
 }
-
-////@Composable
-//fun getUserDataFromFirebase(uid: String, onResult: (UserRecord?) -> Unit) {
-//    val database = FirebaseDatabase.getInstance()
-//    val usersRef = database.getReference("users")
-//
-//    usersRef.child(uid).addListenerForSingleValueEvent(object : ValueEventListener {
-//        override fun onDataChange(snapshot: DataSnapshot) {
-//            val userRecord = snapshot.getValue(UserRecord::class.java)
-//            onResult(userRecord)
-//        }
-//
-//        override fun onCancelled(error: DatabaseError) {
-//            // Handle error
-//            onResult(null)
-//        }
-//    })
-//}
-//
-//fun getRewardsDataFromFirebase(onResult: (List<RewardData>) -> Unit) {
-//    val database = FirebaseDatabase.getInstance()
-//    val rewardsRef = database.getReference("rewards")
-//
-//    rewardsRef.addListenerForSingleValueEvent(object : ValueEventListener {
-//        override fun onDataChange(snapshot: DataSnapshot) {
-//            val rewardsList = mutableListOf<RewardData>()
-//
-//            for (rewardSnapshot in snapshot.children) {
-//                val reward = rewardSnapshot.getValue(RewardData::class.java)
-//                reward?.let {
-//                    rewardsList.add(it)
-//                }
-//            }
-//
-//            onResult(rewardsList)
-//        }
-//
-//        override fun onCancelled(error: DatabaseError) {
-//            // Handle error
-//            onResult(emptyList()) // or null, depending on your error handling strategy
-//        }
-//    })
-//}

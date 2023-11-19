@@ -27,6 +27,7 @@ import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.AddCircle
 import androidx.compose.material.icons.filled.Discount
 import androidx.compose.material.icons.filled.Logout
 import androidx.compose.material.icons.filled.Menu
@@ -76,10 +77,12 @@ import androidx.core.text.isDigitsOnly
 import com.example.project.R
 import com.example.project.data.RewardData
 import com.example.project.data.UserRecord
+import com.example.project.functions.updateAccumulatedPoints
+import com.example.project.functions.updateRewardQuantity
 
 //import com.example.project.functions.updateAccumulatedPointsInFirebase
 
-
+// Login, LoginFailure, Registration, RegFailure
 @Composable
 fun HeadingComponent(value: String) {
     Text(
@@ -466,7 +469,6 @@ fun TextButtonComponent(action: () -> Unit, buttonText: String) {
     }
 }
 
-
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AppToolbar(toolbarTitle: String, logoutButtonClicked: () -> Unit) {
@@ -511,10 +513,9 @@ fun WelcomeBackComponent(firstName: String, points: Int) {
     ) {
         Column(
             modifier = Modifier
-                .padding(16.dp) // Internal padding for the content inside the card
+                .padding(16.dp)
         ) {
-            HeadingComponent("Welcome back,")
-            HeadingComponent(firstName) // Display the user's first name
+            HeadingComponent("Welcome back, $firstName")
             Row(
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.SpaceAround
@@ -527,13 +528,87 @@ fun WelcomeBackComponent(firstName: String, points: Int) {
 }
 
 
+// Dashboard
+@Composable
+fun GeneralGreeting(firstName: String, points: Int) {
+    Card(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(16.dp),
+        elevation = CardDefaults.cardElevation()
+    ) {
+        Row(
+            verticalAlignment = Alignment.CenterVertically
+        ){
+            Column(
+                modifier = Modifier
+                    .padding(20.dp)
+                    .fillMaxWidth()
+            ) {
+
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    verticalAlignment = Alignment.CenterVertically
+                ){
+                    Text(
+                        text = "Welcome back, $firstName",
+                        fontSize = 18.sp,
+                        fontWeight = FontWeight.Bold,
+                        fontStyle = FontStyle.Normal,
+                        color = MaterialTheme.colorScheme.tertiary
+                    )
+                }
+
+                Spacer(modifier = Modifier.height(10.dp))
+
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Text(
+                        text = "$points",
+                        fontSize = 16.sp,
+                        fontWeight = FontWeight.Bold,
+                        fontStyle = FontStyle.Normal,
+                        color = MaterialTheme.colorScheme.tertiary
+                    )
+                    Text(
+                        text = " Points",
+                        fontSize = 16.sp,
+                        fontWeight = FontWeight.Normal,
+                        fontStyle = FontStyle.Normal,
+                        color = MaterialTheme.colorScheme.tertiary
+                    )
+                    //                Spacer(modifier = Modifier.weight(1f))
+
+                }
+            }
+        }
+    }
+}
+
+// Dashboard
+@Composable
+fun TitleComponent(value: String) {
+    Text(
+        text = value,
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(10.dp, 0.dp),
+        fontSize = 18.sp,
+        fontWeight = FontWeight.Bold,
+        fontStyle = FontStyle.Normal,
+    )
+}
+
+// Dashboard
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun RewardsLazyRow(rewardsList: List<RewardData>, onItemClick: (RewardData) -> Unit) {
     LazyRow(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(16.dp),
+            .padding(2.dp),
         content = {
             items(rewardsList) { reward ->
                 Card(
@@ -574,14 +649,34 @@ fun RewardsLazyRow(rewardsList: List<RewardData>, onItemClick: (RewardData) -> U
     )
 }
 
+// Dashboard
+@Composable
+fun RewardsTextButtonComponent(action: () -> Unit, buttonText: String) {
+    Row(
+        modifier = Modifier
+            .fillMaxWidth(),
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        TextButton(
+            onClick = action
+        ) {
+            Text(
+                text = buttonText,
+                fontSize = 14.sp
+            )
+        }
+    }
+}
 
+
+// Rewards
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun RewardsLazyColumn(rewardsList: List<RewardData>, onItemClick: (RewardData) -> Unit) {
     LazyColumn(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(16.dp),
+            .padding(2.dp, 10.dp),
         content = {
             items(rewardsList) { reward ->
                 Card(
@@ -641,7 +736,6 @@ fun UserInfoTextComponent(greeting: String, message: String) {
             text = message,
             modifier = Modifier
                 .fillMaxWidth()
-//            .heightIn(min = 30.dp)
                 .padding(start = 10.dp, top = 2.dp),
             fontSize = 15.sp,
             fontWeight = FontWeight.Normal,
@@ -664,7 +758,7 @@ fun UserInfoComponent(firstName: String, points: Int) {
     ) {
         Column(
             modifier = Modifier
-                .padding(10.dp) // Internal padding for the content inside the card
+                .padding(10.dp)
         ) {
             UserInfoTextComponent(
                 greeting = "Hello, $firstName",
@@ -674,25 +768,22 @@ fun UserInfoComponent(firstName: String, points: Int) {
     }
 }
 
-
+// Account
 @Composable
 fun AccountGreeting(firstName: String, points: Int) {
-    
     Row(
         verticalAlignment = Alignment.CenterVertically
     ){
 
         Image(
             painter = painterResource(R.drawable.profile),
-            contentDescription = null, // Provide a meaningful description
+            contentDescription = null,
             modifier = Modifier
-                .size(40.dp) // Adjust the size as needed
-                .clip(CircleShape) // Optional: Clip the image into a circle
-//                .align(Alignment.End) // Align the image to the end (right) of the column
+                .size(40.dp)
+                .clip(CircleShape)
         )
 
         Spacer(modifier = Modifier.width(10.dp))
-
 
         Column(
             modifier = Modifier
@@ -712,7 +803,6 @@ fun AccountGreeting(firstName: String, points: Int) {
                     color = MaterialTheme.colorScheme.tertiary
                 )
             }
-            
 
             Spacer(modifier = Modifier.height(10.dp))
 
@@ -734,17 +824,13 @@ fun AccountGreeting(firstName: String, points: Int) {
                     fontStyle = FontStyle.Normal,
                     color = MaterialTheme.colorScheme.tertiary
                 )
-                Spacer(modifier = Modifier.weight(1f)) // Add this spacer to push the image to the right
+//                Spacer(modifier = Modifier.weight(1f))
             }
-
-
-        }  
-        
-        
+        }
     }
-
 }
 
+// Account
 @Composable
 fun ProfileInfoItem(label: String, value: String) {
     Row(
@@ -767,113 +853,107 @@ fun ProfileInfoItem(label: String, value: String) {
     }
 }
 
+// Redeem
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun RewardInfoCard(
+    uid: String,
+    accumulatedPoints: Int,
+    rewardKey: String,
+    rewardName: String,
+    requiredPoints: Int,
+    rewardQuantity: Int,
+    onUpdatePoints: (Int) -> Unit
+) {
+    var redeemQuantity by remember { mutableStateOf(0) }
 
-//@Composable
-//fun RewardInfoCard(
-//    reward: RewardData,
-//    userRecord: UserRecord,
-//    uid: String,
-//    onUpdatePoints: (Int) -> Unit
-//) {
-//    var redeemQuantity by remember { mutableStateOf(0) }
-//
-//    var errorMessage by remember { mutableStateOf<String?>(null) }
-//
-//    Card(
-//        modifier = Modifier
-//            .fillMaxWidth()
-//            .padding(16.dp),
-//        elevation = CardDefaults.cardElevation()
-//    ) {
-//        Column(
-//            modifier = Modifier.padding(16.dp),
-//            verticalArrangement = Arrangement.Center
-//        ) {
-//            Icon(imageVector = Icons.Filled.Discount, contentDescription = "",  modifier = Modifier.size(48.dp))
-//            Text(
-//                text = try {
-//                    "${reward.rewardName}"
-//                } catch (e: Exception) {
-//                    // Log the exception
-//                    e.printStackTrace()
-//                    "Reward Name: N/A"
-//                },
-//                fontWeight = FontWeight.Bold,
-//                fontSize = 18.sp
-//            )
-//            Spacer(modifier = Modifier.height(8.dp))
-//            Text(text = "Required Points: ${reward.requiredPoints}", fontSize = 16.sp)
-//            Spacer(modifier = Modifier.height(8.dp))
-//            Text(text = "${reward.quantity} left", fontSize = 14.sp)
-//
-//            Row(
-//                modifier = Modifier
-//                    .fillMaxWidth()
-//                    .padding(8.dp),
-//                verticalAlignment = Alignment.CenterVertically
-////                horizontalArrangement = Arrangement.Center
-//            ) {
-//                IconButton(
-//                    onClick = { if (redeemQuantity > 0) redeemQuantity-- },
-//                    modifier = Modifier.size(24.dp)
-//                ) {
-//                    Icon(imageVector = Icons.Default.Remove, contentDescription = "Decrease Quantity")
-//                }
-//
-//                // Input Box
-//                OutlinedTextField(
-//                    value = redeemQuantity.coerceAtMost(5).toString(),
-////                    value = redeemQuantity.toString(),
-//                    onValueChange = {
-//                        // Handle the case when the user enters non-numeric characters
-//                        if (it.isDigitsOnly()) {
-////                            redeemQuantity = it.toInt()
-//                            redeemQuantity = it.toInt().coerceIn(0, minOf(5, reward.quantity))
-//                        }
-//                    },
-//                    label = { Text("Redeem Quantity") },
-//                    keyboardOptions = KeyboardOptions.Default.copy(
-//                        keyboardType = KeyboardType.Number
-//                    ),
-//                    modifier = Modifier
-//                        .padding(8.dp)
-//                        .width(150.dp),
-//                    textStyle = TextStyle.Default.copy(fontSize = 16.sp)
-//                )
-//
-//                IconButton(
-//                    onClick = { redeemQuantity++ },
-//                    modifier = Modifier.size(24.dp)
-//                ) {
-//                    Icon(imageVector = Icons.Default.Add, contentDescription = "Increase Quantity")
-//                }
-//            }
-//
-//            ButtonComponent(
-//                value = "Redeem",
-//                onButtonClicked = {
-//                    // Check if the user has enough points
-//                    val requiredPoints = redeemQuantity * reward.requiredPoints
-//                    errorMessage = if (requiredPoints > userRecord.accumulatedPoints) {
-//                        "Not enough points to redeem"
-//                    } else {
-//                        // Deduct points and update user data in Firebase
-//                        val newPoints = userRecord.accumulatedPoints - requiredPoints
-//                        updateAccumulatedPointsInFirebase(uid, newPoints) { success ->
-//                            if (success) {
-//                                // Update the local state
-//                                onUpdatePoints(newPoints)
-//                            } else {
-//                                errorMessage = "Failed to update points"
-//                            }
-//                        }
-//                        null
-//                    }
-//
-//                },
-//                isEnabled = redeemQuantity > 0,
-//                errorMessage = errorMessage
-//                )
-//        }
-//    }
-//}
+    var errorMessage by remember { mutableStateOf<String?>(null) }
+
+    Card(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(16.dp),
+        elevation = CardDefaults.cardElevation()
+    ) {
+        Column(
+            modifier = Modifier.padding(16.dp),
+            verticalArrangement = Arrangement.Center
+        ) {
+            Icon(imageVector = Icons.Filled.Discount, contentDescription = "",  modifier = Modifier.size(48.dp))
+            Text(
+                text = try {
+                    rewardName
+                } catch (e: Exception) {
+                    // Log the exception
+                    e.printStackTrace()
+                    "Reward Name: N/A"
+                },
+                fontWeight = FontWeight.Bold,
+                fontSize = 18.sp
+            )
+            Spacer(modifier = Modifier.height(8.dp))
+            Text(text = "Required Points: $requiredPoints", fontSize = 16.sp)
+            Spacer(modifier = Modifier.height(8.dp))
+            Text(text = "$rewardQuantity left", fontSize = 14.sp)
+
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(8.dp),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                IconButton(
+                    onClick = { if (redeemQuantity > 0) redeemQuantity-- },
+                    modifier = Modifier.size(24.dp)
+                ) {
+                    Icon(imageVector = Icons.Default.Remove, contentDescription = "Decrease Quantity")
+                }
+
+                // Input Box
+                OutlinedTextField(
+                    value = redeemQuantity.coerceAtMost(5).toString(),
+                    onValueChange = {
+                        if (it.isDigitsOnly()) {
+                            redeemQuantity = it.toInt().coerceIn(0, minOf(5, rewardQuantity))
+                        }
+                    },
+                    label = { Text("Redeem Quantity") },
+                    keyboardOptions = KeyboardOptions.Default.copy(
+                        keyboardType = KeyboardType.Number
+                    ),
+                    modifier = Modifier
+                        .padding(8.dp)
+                        .width(150.dp),
+                    textStyle = TextStyle.Default.copy(fontSize = 16.sp)
+                )
+
+                IconButton(
+                    onClick = { redeemQuantity++ },
+                    modifier = Modifier.size(24.dp)
+                ) {
+                    Icon(imageVector = Icons.Default.Add, contentDescription = "Increase Quantity")
+                }
+            }
+
+            ButtonComponent(
+                value = "Redeem",
+                iconName = Icons.Default.AddCircle,
+                onButtonClicked = {
+                    // Check if the user has enough points
+                    val requiredPoints = redeemQuantity * requiredPoints
+                    if (requiredPoints > accumulatedPoints){
+                        errorMessage = "Not enough points to redeem"
+                    } else {
+                        // Deduct points and update user data in Firebase
+                        val newPoints = accumulatedPoints - requiredPoints
+                        val newQuantity = rewardQuantity - redeemQuantity
+                        updateAccumulatedPoints(uid, newPoints, onUpdatePoints = {})
+                        updateRewardQuantity(rewardKey, newQuantity, onUpdatePoints = {})
+                    }
+                },
+                isEnabled = redeemQuantity > 0,
+                errorMessage = errorMessage
+            )
+        }
+    }
+}

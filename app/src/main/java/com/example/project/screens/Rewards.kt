@@ -14,6 +14,8 @@ import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.outlined.Email
 import androidx.compose.material.icons.outlined.Face
 import androidx.compose.material.icons.outlined.Home
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -39,6 +41,7 @@ import androidx.navigation.NavHostController
 import com.example.project.components.AppToolbar
 import com.example.project.components.HeadingComponent
 import com.example.project.components.RewardsLazyColumn
+import com.example.project.components.TitleComponent
 import com.example.project.data.RegistrationViewModel
 import com.example.project.data.RewardData
 import com.example.project.functions.getRewardsDataFromFirebase
@@ -54,7 +57,11 @@ import com.example.project.functions.getRewardsDataFromFirebase
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun Rewards(registrationViewModel: RegistrationViewModel, navController: NavHostController, uid: String){
+fun Rewards(
+    registrationViewModel: RegistrationViewModel,
+    navController: NavHostController,
+    uid: String
+) {
 
     var uid = uid
 
@@ -86,9 +93,9 @@ fun Rewards(registrationViewModel: RegistrationViewModel, navController: NavHost
         )
     )
 
-    var bottomNavState by rememberSaveable { mutableStateOf(0)}
+    var bottomNavState by rememberSaveable { mutableStateOf(0) }
 
-    Scaffold (
+    Scaffold(
         topBar = {
             AppToolbar(
                 toolbarTitle = "PointGrow",
@@ -100,11 +107,11 @@ fun Rewards(registrationViewModel: RegistrationViewModel, navController: NavHost
 
 
         bottomBar = {
-            NavigationBar (
+            NavigationBar(
                 modifier = Modifier
                     .padding(10.dp)
                     .clip(RoundedCornerShape(20.dp)),
-                containerColor = MaterialTheme.colorScheme.secondary.copy (alpha = .5f)
+                containerColor = MaterialTheme.colorScheme.secondary.copy(alpha = .5f)
             ) {
                 items.forEachIndexed { index, item ->
                     NavigationBarItem(
@@ -128,33 +135,40 @@ fun Rewards(registrationViewModel: RegistrationViewModel, navController: NavHost
                 }
             }
         }
-    ){ contentPadding ->
+    ) { contentPadding ->
 
-        Surface (
+        Surface(
             modifier = Modifier.fillMaxWidth()
-        ){
+        ) {
 
-            Column (
+            Column(
                 modifier = Modifier
                     .padding(contentPadding)
             ) {
-                Spacer(modifier = Modifier.height(20.dp))
+                Card(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(16.dp, 5.dp),
+                    elevation = CardDefaults.cardElevation(),
+                    colors = CardDefaults.cardColors(containerColor = Color.Transparent)
+                ) {
+                    TitleComponent("All Rewards")
 
-                HeadingComponent("All Rewards")
-
-                RewardsLazyColumn(rewardsList = rewardsList , onItemClick = { reward ->
+                    RewardsLazyColumn(rewardsList = rewardsList, onItemClick = { reward ->
 //                    Log.d("Navigation", "Navigating to Redeem with rewardId: $rewardId")
 //                    navController.navigate("Redeem/$rewardId")
-                    if (reward != null) {
-                        navController.navigate("Redeem/${reward.rewardId}/$uid")
-                    } else {
-                        // Handle the case where rewardId is null or empty
-                        navController.navigate("Rewards/$uid")
+                        if (reward != null) {
+                            navController.navigate("Redeem/${reward.rewardId}/$uid")
+                        } else {
+                            // Handle the case where rewardId is null or empty
+                            navController.navigate("Rewards/$uid")
 
-                        Log.e("Navigation", "Invalid rewardId: ${reward.rewardId}")
-                    }
-            })
+                            Log.e("Navigation", "Invalid rewardId: ${reward.rewardId}")
+                        }
+                    })
+                }
+            }
         }
     }
-}}
+}
 

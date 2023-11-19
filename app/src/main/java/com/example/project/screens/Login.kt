@@ -2,7 +2,9 @@ package com.example.project.screens
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Lock
@@ -49,6 +51,8 @@ fun Login(loginViewModel: LoginViewModel, navController: NavHostController) {
                     errorStatus = loginViewModel.loginUIState.value.emailError
                 )
 
+                Spacer(modifier = Modifier.height(20.dp))
+
                 PasswordComponent(
                     labelValue = "Password",
                     iconName = Icons.Outlined.Lock,
@@ -57,6 +61,9 @@ fun Login(loginViewModel: LoginViewModel, navController: NavHostController) {
                 )
 
 //                AlignRightTextComponent(value = "Forgot Password?", nextScreen = "Register")
+
+                Spacer(modifier = Modifier.height(20.dp))
+
 
                 ButtonComponent(
                     value = "Login",

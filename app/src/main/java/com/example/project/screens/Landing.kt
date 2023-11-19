@@ -53,26 +53,6 @@ fun Landing(onLoginClicked: () -> Unit, onRegisterClicked: () -> Unit, navContro
 
             Spacer(modifier = Modifier.height(60.dp))
 
-            // Login Button
-//            Button(
-//                onClick = { onLoginClicked() },
-//                modifier = Modifier
-//                    .fillMaxWidth()
-//                    .padding(16.dp),
-//                colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFE2EEE4)),
-//                contentPadding = PaddingValues(16.dp),
-//                shape = MaterialTheme.shapes.medium
-//            ) {
-//                Row(
-//                    verticalAlignment = Alignment.CenterVertically,
-//                    horizontalArrangement = Arrangement.Center
-//                ) {
-//                    Icon(imageVector = Icons.Default.Lock, contentDescription = "Login")
-//                    Spacer(modifier = Modifier.width(8.dp))
-//                    Text(text = "Login")
-//                }
-//            }
-
             LandingButtonComponent(value = "Login", iconName = Icons.Default.Lock, onButtonClicked = { navController.navigate("Login") }, isEnabled = true )
 
 
@@ -80,25 +60,6 @@ fun Landing(onLoginClicked: () -> Unit, onRegisterClicked: () -> Unit, navContro
 
             // Register Button
             LandingButtonComponent(value = "Register", iconName = Icons.Default.PersonAdd, onButtonClicked = { navController.navigate("Register") }, isEnabled = true )
-
-//            Button(
-//                onClick = { onRegisterClicked() },
-//                modifier = Modifier
-//                    .fillMaxWidth()
-//                    .padding(16.dp),
-//                colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFE2EEE4)),
-//                contentPadding = PaddingValues(16.dp),
-//                shape = MaterialTheme.shapes.medium
-//            ) {
-//                Row(
-//                    verticalAlignment = Alignment.CenterVertically,
-//                    horizontalArrangement = Arrangement.Center
-//                ) {
-//                    Icon(imageVector = Icons.Default.PersonAdd, contentDescription = "Register")
-//                    Spacer(modifier = Modifier.width(8.dp))
-//                    Text(text = "Register")
-//                }
-//            }
         }
     }
 }

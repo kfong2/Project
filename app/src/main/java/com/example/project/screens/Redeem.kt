@@ -1,6 +1,7 @@
 package com.example.project.screens
 
 import android.content.ContentValues
+import android.content.ContentValues.TAG
 import android.util.Log
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -58,7 +59,10 @@ import androidx.core.text.isDigitsOnly
 import androidx.navigation.NavHostController
 import com.example.project.components.AppToolbar
 import com.example.project.components.ButtonComponent
+import com.example.project.components.GeneralGreeting
 import com.example.project.components.HeadingComponent
+import com.example.project.components.RewardInfoCard
+import com.example.project.components.TitleComponent
 //import com.example.project.components.RewardInfoCard
 import com.example.project.components.UserInfoComponent
 import com.example.project.components.WelcomeBackComponent
@@ -66,7 +70,10 @@ import com.example.project.data.RewardData
 import com.example.project.functions.getRewardsDataFromFirebase
 import com.example.project.data.RegistrationViewModel
 import com.example.project.data.UserRecord
+import com.example.project.functions.getRewardsDataFromFirebaseWithKeys
 import com.example.project.functions.getUserDataFromFirebase
+import com.example.project.functions.updateAccumulatedPoints
+import com.example.project.functions.updateRewardQuantity
 //import com.example.project.functions.updateAccumulatedPointsInFirebase
 import com.google.firebase.firestore.FirebaseFirestore
 
@@ -87,24 +94,40 @@ fun Redeem(
     var userRecord by remember { mutableStateOf<UserRecord?>(null) }
     var rewardsList by remember { mutableStateOf<List<RewardData>>(emptyList()) }
 
-    // Fetch user data from Firebase when the screen is first created
+    var selectedRewardKey by remember { mutableStateOf("") }
+    var selectedRewardId by remember { mutableStateOf("") }
+    var selectedRewardName by remember { mutableStateOf("") }
+    var selectedRequiredPoints by remember { mutableStateOf(0) }
+    var selectedRewardQuantity by remember { mutableStateOf(0) }
+
+
+    // Fetch user data from Firebase when the screen is created
     LaunchedEffect("fetchUserData", uid) {
         getUserDataFromFirebase(uid) { fetchedUserRecord ->
             fetchedUserRecord?.let {
                 firstName = it.firstName
                 accumulatedPoints = it.accumulatedPoints
-                userRecord = it // Update the outer userRecord variable
+                userRecord = it
             }
         }
     }
 
     // Fetch selected reward data based on rewardId
-    LaunchedEffect(rewardId) {
-        getRewardsDataFromFirebase { fetchedRewardsList ->
-            rewardsList = fetchedRewardsList
-            selectedReward = rewardsList.find { it.rewardId == rewardId }
+    LaunchedEffect("fetchRewardsData") {
+        getRewardsDataFromFirebaseWithKeys { fetchedRewardsList ->
+            rewardsList = fetchedRewardsList.map { it.second }
+            val selectedRewardPair = fetchedRewardsList.find { it.second.rewardId == rewardId }
+            selectedRewardPair?.let { (rewardKey, reward) ->
+                selectedReward = reward
+                selectedRewardKey = rewardKey
+                selectedRewardId = reward.rewardId
+                selectedRewardName = reward.rewardName
+                selectedRequiredPoints = reward.requiredPoints
+                selectedRewardQuantity = reward.quantity
+            }
         }
     }
+
 
     val items = listOf(
         NavItemState(
@@ -171,153 +194,30 @@ fun Redeem(
                 modifier = Modifier
                     .padding(contentPadding)
             ) {
-                Spacer(modifier = Modifier.height(20.dp))
+                GeneralGreeting(firstName = firstName, points = accumulatedPoints)
 
-                UserInfoComponent(firstName = firstName, points = accumulatedPoints)
+                Spacer(modifier = Modifier.height(5.dp))
 
-                HeadingComponent("Redeem Reward")
-
-                // Display the reward information
-                selectedReward?.let { reward ->
-                    RewardInfoCard(
-                        reward = reward,
-                        userRecord = userRecord ?: UserRecord(),
-                        uid = uid,
-                        onUpdatePoints = { newPoints ->
-                            // Update the local state
-                            accumulatedPoints = newPoints
-                        }
-                    )
-                }
-            }
-        }
-    }
-}
-
-
-@OptIn(ExperimentalMaterial3Api::class)
-@Composable
-fun RewardInfoCard(
-    reward: RewardData,
-    userRecord: UserRecord,
-    uid: String,
-    onUpdatePoints: (Int) -> Unit
-) {
-    var redeemQuantity by remember { mutableStateOf(0) }
-
-    var errorMessage by remember { mutableStateOf<String?>(null) }
-
-    Card(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(16.dp),
-        elevation = CardDefaults.cardElevation()
-    ) {
-        Column(
-            modifier = Modifier.padding(16.dp),
-            verticalArrangement = Arrangement.Center
-        ) {
-            Icon(imageVector = Icons.Filled.Discount, contentDescription = "",  modifier = Modifier.size(48.dp))
-            Text(
-                text = try {
-                    "${reward.rewardName}"
-                } catch (e: Exception) {
-                    // Log the exception
-                    e.printStackTrace()
-                    "Reward Name: N/A"
-                },
-                fontWeight = FontWeight.Bold,
-                fontSize = 18.sp
-            )
-            Spacer(modifier = Modifier.height(8.dp))
-            Text(text = "Required Points: ${reward.requiredPoints}", fontSize = 16.sp)
-            Spacer(modifier = Modifier.height(8.dp))
-            Text(text = "${reward.quantity} left", fontSize = 14.sp)
-
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(8.dp),
-                verticalAlignment = Alignment.CenterVertically
-//                horizontalArrangement = Arrangement.Center
-            ) {
-                IconButton(
-                    onClick = { if (redeemQuantity > 0) redeemQuantity-- },
-                    modifier = Modifier.size(24.dp)
-                ) {
-                    Icon(imageVector = Icons.Default.Remove, contentDescription = "Decrease Quantity")
-                }
-
-                // Input Box
-                OutlinedTextField(
-                    value = redeemQuantity.coerceAtMost(5).toString(),
-//                    value = redeemQuantity.toString(),
-                    onValueChange = {
-                        // Handle the case when the user enters non-numeric characters
-                        if (it.isDigitsOnly()) {
-//                            redeemQuantity = it.toInt()
-                            redeemQuantity = it.toInt().coerceIn(0, minOf(5, reward.quantity))
-                        }
-                    },
-                    label = { Text("Redeem Quantity") },
-                    keyboardOptions = KeyboardOptions.Default.copy(
-                        keyboardType = KeyboardType.Number
-                    ),
+                Card(
                     modifier = Modifier
-                        .padding(8.dp)
-                        .width(150.dp),
-                    textStyle = TextStyle.Default.copy(fontSize = 16.sp)
-                )
-
-                IconButton(
-                    onClick = { redeemQuantity++ },
-                    modifier = Modifier.size(24.dp)
+                        .fillMaxWidth()
+                        .padding(16.dp, 5.dp),
+                    elevation = CardDefaults.cardElevation(),
+                    colors = CardDefaults.cardColors(containerColor = Color.Transparent)
                 ) {
-                    Icon(imageVector = Icons.Default.Add, contentDescription = "Increase Quantity")
+                    TitleComponent("Redeem Reward")
                 }
+
+                RewardInfoCard(
+                    uid = uid,
+                    accumulatedPoints = accumulatedPoints,
+                    rewardKey = selectedRewardKey,
+                    rewardName = selectedRewardName,
+                    requiredPoints = selectedRequiredPoints,
+                    rewardQuantity = selectedRewardQuantity,
+                    onUpdatePoints = {}
+                )
             }
-
-            ButtonComponent(
-                value = "Redeem",
-                iconName = Icons.Default.AddCircle,
-                onButtonClicked = {
-                    // Check if the user has enough points
-                    val requiredPoints = redeemQuantity * reward.requiredPoints
-                    errorMessage = if (requiredPoints > userRecord.accumulatedPoints) {
-                        "Not enough points to redeem"
-                    } else {
-                        // Deduct points and update user data in Firebase
-                        val newPoints = userRecord.accumulatedPoints - requiredPoints
-                        updateAccumulatedPointsInFirebase(uid, newPoints) { success ->
-                            if (success) {
-                                // Update the local state
-                                onUpdatePoints(newPoints)
-                            } else {
-                                errorMessage = "Failed to update points"
-                            }
-                        }
-                        null
-                    }
-
-                },
-                isEnabled = redeemQuantity > 0,
-                errorMessage = errorMessage
-            )
         }
     }
-}
-
-fun updateAccumulatedPointsInFirebase(uid: String, newPoints: Int, onComplete: (Boolean) -> Unit) {
-    val db = FirebaseFirestore.getInstance()
-    val data = hashMapOf("accumulatedPoints" to newPoints)
-
-    db.collection("users").document(uid).set(data)
-        .addOnSuccessListener {
-            Log.d(ContentValues.TAG, "User data updated successfully")
-            onComplete(true) // Notify success
-        }
-        .addOnFailureListener { e ->
-            Log.e(ContentValues.TAG, "Error updating user data", e)
-            onComplete(false) // Notify failure
-        }
 }

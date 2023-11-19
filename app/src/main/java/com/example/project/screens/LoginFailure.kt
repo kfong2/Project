@@ -44,10 +44,7 @@ fun LoginFailure(navController: NavHostController){
                     action = { navController.navigate("Registration") },
                     buttonText = "Register"
                 )
-
             }
-
         }
     }
-
 }
