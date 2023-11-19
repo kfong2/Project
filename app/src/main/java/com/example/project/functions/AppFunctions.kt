@@ -1,6 +1,6 @@
 package com.example.project.functions
 
-import TransactionManager
+//import TransactionManager
 import android.content.ContentValues.TAG
 import android.util.Log
 import com.example.project.data.RewardData
@@ -164,16 +164,16 @@ private fun generateRandomString(length: Int = 8): String {
 }
 
 
-fun displayTransactionsForUser(uid: String) {
-    val transactionManager = TransactionManager()
-
-    transactionManager.getTransactionsForUser(uid) { transactions ->
-        // Now you have a list of transactions for the user
-        // Display them in your UI or perform any other operations
-        for (transaction in transactions) {
-            println("Transaction ID: ${transaction.transactionId}, Date: ${transaction.transactionDate}")
-            // Add code here to display other transaction details
-        }
-    }
-}
+//fun displayTransactionsForUser(uid: String) {
+//    val transactionManager = TransactionManager()
+//
+//    transactionManager.getTransactionsForUser(uid) { transactions ->
+//        // Now you have a list of transactions for the user
+//        // Display them in your UI or perform any other operations
+//        for (transaction in transactions) {
+//            println("Transaction ID: ${transaction.transactionId}, Date: ${transaction.transactionDate}")
+//            // Add code here to display other transaction details
+//        }
+//    }
+//}
 
