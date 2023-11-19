@@ -74,11 +74,13 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.core.text.isDigitsOnly
+import androidx.navigation.NavHostController
 import com.example.project.R
 import com.example.project.data.RewardData
 import com.example.project.data.UserRecord
 import com.example.project.functions.updateAccumulatedPoints
 import com.example.project.functions.updateRewardQuantity
+import com.example.project.functions.updateTransactionInFirebase
 
 //import com.example.project.functions.updateAccumulatedPointsInFirebase
 
@@ -863,6 +865,7 @@ fun RewardInfoCard(
     rewardName: String,
     requiredPoints: Int,
     rewardQuantity: Int,
+    navController: NavHostController,
     onUpdatePoints: (Int) -> Unit
 ) {
     var redeemQuantity by remember { mutableStateOf(0) }
@@ -949,6 +952,8 @@ fun RewardInfoCard(
                         val newQuantity = rewardQuantity - redeemQuantity
                         updateAccumulatedPoints(uid, newPoints, onUpdatePoints = {})
                         updateRewardQuantity(rewardKey, newQuantity, onUpdatePoints = {})
+                        updateTransactionInFirebase(uid, rewardKey, requiredPoints, redeemQuantity)
+                        navController.navigate("RedemptionSuccess/${requiredPoints}/${newPoints}/${uid}")
                     }
                 },
                 isEnabled = redeemQuantity > 0,

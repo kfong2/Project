@@ -18,6 +18,7 @@ import com.example.project.screens.RegFailure
 import com.example.project.screens.Registration
 import com.example.project.screens.Rewards
 import com.example.project.screens.Redeem
+import com.example.project.screens.RedemptionSuccess
 import com.example.project.screens.TestRetrieveUserDataScreen
 import com.example.project.screens.TestScreen
 
@@ -79,7 +80,11 @@ fun PointGrowRouter() {
             val uid = backStackEntry.arguments?.getString("uid")
             if (uid != null) {
                 // Pass the uid parameter to the Rewards composable
-                Rewards(registrationViewModel = RegistrationViewModel(navController), navController, uid)
+                Rewards(
+                    registrationViewModel = RegistrationViewModel(navController),
+                    navController,
+                    uid
+                )
             } else {
                 // Stay in where the user is
             }
@@ -102,13 +107,37 @@ fun PointGrowRouter() {
                     navController = navController,
                     rewardId = rewardId,
                     uid = uid,
-                    onBackClicked = {  }
+                    onBackClicked = { }
 //                            onBackClicked = { navController.popBackStack() }
                 )
             } else {
-                // Handle error case when rewardId is null
-                // You might want to navigate to an error screen or go back to the previous screen
+
             }
+        }
+
+
+
+        composable(
+            route = "RedemptionSuccess/{usedPoints}/{newPoints}/{uid}",
+            arguments = listOf(
+                navArgument("usedPoints") { type = NavType.IntType },
+                navArgument("newPoints") { type = NavType.IntType },
+                navArgument("uid") { type = NavType.StringType }
+            )
+        ) { backStackEntry ->
+            val usedPoints = backStackEntry.arguments?.getInt("usedPoints") ?: 0
+            val newPoints = backStackEntry.arguments?.getInt("newPoints") ?: 0
+            val uid = backStackEntry.arguments?.getString("uid") ?: ""
+
+            RedemptionSuccess(
+                usedPoints = usedPoints,
+                newPoints = newPoints,
+                uid = uid,
+                navController,
+                onRedeemMoreClicked = {
+                    navController.navigate("Rewards/$uid")
+                }
+            )
         }
     }
 }

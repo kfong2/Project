@@ -1,28 +1,17 @@
 package com.example.project.screens
 
-import android.content.ContentValues
-import android.content.ContentValues.TAG
-import android.util.Log
-import androidx.compose.foundation.layout.Arrangement
+//import com.example.project.components.RewardInfoCard
+//import com.example.project.functions.updateAccumulatedPointsInFirebase
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Add
-import androidx.compose.material.icons.filled.AddCircle
-import androidx.compose.material.icons.filled.Discount
 import androidx.compose.material.icons.filled.Email
 import androidx.compose.material.icons.filled.Face
 import androidx.compose.material.icons.filled.Home
-import androidx.compose.material.icons.filled.PersonAdd
-import androidx.compose.material.icons.filled.Remove
 import androidx.compose.material.icons.outlined.Email
 import androidx.compose.material.icons.outlined.Face
 import androidx.compose.material.icons.outlined.Home
@@ -30,12 +19,10 @@ import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.NavigationBarItemDefaults
-import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -46,36 +33,20 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.text.TextStyle
-import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
-import androidx.core.text.isDigitsOnly
 import androidx.navigation.NavHostController
 import com.example.project.components.AppToolbar
-import com.example.project.components.ButtonComponent
 import com.example.project.components.GeneralGreeting
-import com.example.project.components.HeadingComponent
 import com.example.project.components.RewardInfoCard
 import com.example.project.components.TitleComponent
-//import com.example.project.components.RewardInfoCard
-import com.example.project.components.UserInfoComponent
-import com.example.project.components.WelcomeBackComponent
-import com.example.project.data.RewardData
-import com.example.project.functions.getRewardsDataFromFirebase
 import com.example.project.data.RegistrationViewModel
+import com.example.project.data.RewardData
 import com.example.project.data.UserRecord
 import com.example.project.functions.getRewardsDataFromFirebaseWithKeys
 import com.example.project.functions.getUserDataFromFirebase
-import com.example.project.functions.updateAccumulatedPoints
-import com.example.project.functions.updateRewardQuantity
-//import com.example.project.functions.updateAccumulatedPointsInFirebase
-import com.google.firebase.firestore.FirebaseFirestore
 
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -87,7 +58,7 @@ fun Redeem(
     uid: String,
     onBackClicked: () -> Unit
 ) {
-    var uid by rememberSaveable { mutableStateOf(uid) }
+    var uid = uid
     var firstName by remember { mutableStateOf("") }
     var accumulatedPoints by remember { mutableStateOf(0) }
     var selectedReward by remember { mutableStateOf<RewardData?>(null) }
@@ -215,6 +186,7 @@ fun Redeem(
                     rewardName = selectedRewardName,
                     requiredPoints = selectedRequiredPoints,
                     rewardQuantity = selectedRewardQuantity,
+                    navController,
                     onUpdatePoints = {}
                 )
             }
