@@ -14,13 +14,12 @@ import com.example.project.screens.Dashboard
 import com.example.project.screens.Landing
 import com.example.project.screens.Login
 import com.example.project.screens.LoginFailure
+import com.example.project.screens.Redeem
+import com.example.project.screens.RedemptionSuccess
 import com.example.project.screens.RegFailure
 import com.example.project.screens.Registration
 import com.example.project.screens.Rewards
-import com.example.project.screens.Redeem
-import com.example.project.screens.RedemptionSuccess
-import com.example.project.screens.TestRetrieveUserDataScreen
-import com.example.project.screens.TestScreen
+import com.example.project.screens.Transaction
 
 
 @Composable
@@ -62,6 +61,12 @@ fun PointGrowRouter() {
             )
         }
 
+        composable(route = "Transaction/{uid}") { backStackEntry ->
+            val arguments = requireNotNull(backStackEntry.arguments)
+            val uid = arguments.getString("uid", "")
+            Transaction(registrationViewModel= RegistrationViewModel(navController), uid, navController)
+        }
+
 
         composable(route = "Dashboard/{uid}") { backStackEntry ->
             val arguments = requireNotNull(backStackEntry.arguments)
@@ -86,7 +91,7 @@ fun PointGrowRouter() {
                     uid
                 )
             } else {
-                // Stay in where the user is
+                // Stay in where the user is -> no action
             }
         }
 
@@ -101,21 +106,17 @@ fun PointGrowRouter() {
             val rewardId = backStackEntry.arguments?.getString("rewardId")
             val uid = backStackEntry.arguments?.getString("uid")
             if (rewardId != null && uid != null) {
-                // Pass rewardId as a parameter to Redeem composable
                 Redeem(
                     registrationViewModel = RegistrationViewModel(navController),
                     navController = navController,
                     rewardId = rewardId,
                     uid = uid,
                     onBackClicked = { }
-//                            onBackClicked = { navController.popBackStack() }
                 )
             } else {
-
+                // Stay in where the user is -> no action
             }
         }
-
-
 
         composable(
             route = "RedemptionSuccess/{usedPoints}/{newPoints}/{uid}",

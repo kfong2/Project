@@ -41,7 +41,7 @@ fun LoginFailure(navController: NavHostController){
 
                 TextButtonWithMessageComponent(
                     message = "Don't have an account?",
-                    action = { navController.navigate("Registration") },
+                    action = { navController.navigate("Register") },
                     buttonText = "Register"
                 )
             }

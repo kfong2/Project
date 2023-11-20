@@ -2,8 +2,6 @@
 
 package com.example.project.components
 
-import android.content.ContentValues.TAG
-import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -31,7 +29,6 @@ import androidx.compose.material.icons.filled.AddCircle
 import androidx.compose.material.icons.filled.Discount
 import androidx.compose.material.icons.filled.Logout
 import androidx.compose.material.icons.filled.Menu
-import androidx.compose.material.icons.filled.PersonAdd
 import androidx.compose.material.icons.filled.Remove
 import androidx.compose.material.icons.filled.Visibility
 import androidx.compose.material.icons.filled.VisibilityOff
@@ -77,7 +74,6 @@ import androidx.core.text.isDigitsOnly
 import androidx.navigation.NavHostController
 import com.example.project.R
 import com.example.project.data.RewardData
-import com.example.project.data.UserRecord
 import com.example.project.functions.updateAccumulatedPoints
 import com.example.project.functions.updateRewardQuantity
 import com.example.project.functions.updateTransactionInFirebase
@@ -316,7 +312,6 @@ fun LandingButtonComponent(
         colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF9DC8B5)),
         contentPadding = PaddingValues(16.dp),
         shape = MaterialTheme.shapes.medium,
-//        shape = RoundedCornerShape(10.dp),
         enabled = isEnabled
     ) {
         Row(
@@ -339,31 +334,6 @@ fun LandingButtonComponent(
         )
     }
 }
-
-
-
-@Composable
-fun RegisterButton(onClick: () -> Unit) {
-    Button(
-        onClick = { onClick() },
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(16.dp),
-        colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFE2EEE4)),
-        contentPadding = PaddingValues(16.dp),
-        shape = MaterialTheme.shapes.medium
-    ) {
-        Row(
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.Center
-        ) {
-            Icon(imageVector = Icons.Default.PersonAdd, contentDescription = "Register")
-            Spacer(modifier = Modifier.width(8.dp))
-            Text(text = "Register")
-        }
-    }
-}
-
 
 @Composable
 fun ButtonWithIconAndMessageComponent(
@@ -651,6 +621,7 @@ fun RewardsLazyRow(rewardsList: List<RewardData>, onItemClick: (RewardData) -> U
     )
 }
 
+
 // Dashboard
 @Composable
 fun RewardsTextButtonComponent(action: () -> Unit, buttonText: String) {
@@ -749,27 +720,6 @@ fun UserInfoTextComponent(greeting: String, message: String) {
 }
 
 
-@Composable
-fun UserInfoComponent(firstName: String, points: Int) {
-    Card(
-        modifier = Modifier
-            .padding(10.dp)
-            .fillMaxWidth(),
-        elevation = CardDefaults.cardElevation(8.dp),
-        shape = RoundedCornerShape(8.dp)
-    ) {
-        Column(
-            modifier = Modifier
-                .padding(10.dp)
-        ) {
-            UserInfoTextComponent(
-                greeting = "Hello, $firstName",
-                message = "You currently have $points points ready to unlock fantastic rewards. Explore and redeem your favorites now!\""
-            )
-        }
-    }
-}
-
 // Account
 @Composable
 fun AccountGreeting(firstName: String, points: Int) {
@@ -832,6 +782,7 @@ fun AccountGreeting(firstName: String, points: Int) {
     }
 }
 
+
 // Account
 @Composable
 fun ProfileInfoItem(label: String, value: String) {
@@ -855,6 +806,7 @@ fun ProfileInfoItem(label: String, value: String) {
     }
 }
 
+
 // Redeem
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -862,6 +814,7 @@ fun RewardInfoCard(
     uid: String,
     accumulatedPoints: Int,
     rewardKey: String,
+    rewardId: String,
     rewardName: String,
     requiredPoints: Int,
     rewardQuantity: Int,
@@ -952,7 +905,7 @@ fun RewardInfoCard(
                         val newQuantity = rewardQuantity - redeemQuantity
                         updateAccumulatedPoints(uid, newPoints, onUpdatePoints = {})
                         updateRewardQuantity(rewardKey, newQuantity, onUpdatePoints = {})
-                        updateTransactionInFirebase(uid, rewardKey, requiredPoints, redeemQuantity)
+                        updateTransactionInFirebase(uid, rewardId, rewardName, requiredPoints, redeemQuantity)
                         navController.navigate("RedemptionSuccess/${requiredPoints}/${newPoints}/${uid}")
                     }
                 },
@@ -960,5 +913,29 @@ fun RewardInfoCard(
                 errorMessage = errorMessage
             )
         }
+    }
+}
+
+@Composable
+fun TransactionInfo(label: String, value: String) {
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(8.dp),
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        Text(
+            text = "$label:",
+            fontSize = 15.sp,
+            fontWeight = FontWeight.Bold,
+            color = MaterialTheme.colorScheme.primary,
+            modifier = Modifier.width(120.dp)
+        )
+        Text(
+            text = value,
+            fontSize = 15.sp,
+            fontWeight = FontWeight.Bold,
+            color = Color.Black
+        )
     }
 }

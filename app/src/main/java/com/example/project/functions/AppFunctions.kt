@@ -1,21 +1,15 @@
 package com.example.project.functions
 
-//import TransactionManager
 import android.content.ContentValues.TAG
 import android.util.Log
 import com.example.project.data.RewardData
+import com.example.project.data.TransactionData
 import com.example.project.data.UserRecord
-import com.google.common.math.Quantiles
+import com.google.firebase.Timestamp
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
-import com.google.firebase.firestore.FieldValue
-import com.google.firebase.firestore.FirebaseFirestore
-import com.google.firebase.firestore.SetOptions
-import com.google.firebase.firestore.ktx.firestore
-import com.google.firebase.ktx.Firebase
-import com.google.firebase.Timestamp
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
@@ -129,7 +123,8 @@ fun updateRewardQuantity(rewardKey: String, newQuantity: Int, onUpdatePoints: ()
 // Redeem
 fun updateTransactionInFirebase(
     uid: String,
-    rewardKey: String,
+    rewardId: String,
+    rewardName: String,
     requiredPoints: Int,
     redeemedQuantity: Int
 ) {
@@ -138,12 +133,12 @@ fun updateTransactionInFirebase(
 
     val database = FirebaseDatabase.getInstance()
     val transactionsRef = database.getReference("transactions")
-
     val transactionRef = transactionsRef.child(transactionId)
 
     transactionRef.child("transactionId").setValue(transactionId)
-    transactionRef.child("userId").setValue(uid)
-    transactionRef.child("rewardId").setValue(rewardKey)
+    transactionRef.child("uid").setValue(uid)
+    transactionRef.child("rewardId").setValue(rewardId)
+    transactionRef.child("rewardName").setValue(rewardName)
     transactionRef.child("requiredPoints").setValue(requiredPoints)
     transactionRef.child("redeemedQuantity").setValue(redeemedQuantity)
     transactionRef.child("transactionDate").setValue(transactionDate)
@@ -163,17 +158,24 @@ private fun generateRandomString(length: Int = 8): String {
         .joinToString("")
 }
 
+fun getTransactionsForUser(uid: String, onResult: (List<TransactionData>) -> Unit) {
+    val databaseReference = FirebaseDatabase.getInstance().getReference("transactions")
+    val query = databaseReference.orderByChild("uid").equalTo(uid)
 
-//fun displayTransactionsForUser(uid: String) {
-//    val transactionManager = TransactionManager()
-//
-//    transactionManager.getTransactionsForUser(uid) { transactions ->
-//        // Now you have a list of transactions for the user
-//        // Display them in your UI or perform any other operations
-//        for (transaction in transactions) {
-//            println("Transaction ID: ${transaction.transactionId}, Date: ${transaction.transactionDate}")
-//            // Add code here to display other transaction details
-//        }
-//    }
-//}
+    query.addListenerForSingleValueEvent(object : ValueEventListener {
+        override fun onDataChange(snapshot: DataSnapshot) {
+            val transactionsList = mutableListOf<TransactionData>()
+            for (transactionSnapshot in snapshot.children.reversed()) {
+                val transaction = transactionSnapshot.getValue(TransactionData::class.java)
+                transaction?.let {
+                    transactionsList.add(it)
+                }
+            }
+            onResult(transactionsList)
+        }
+        override fun onCancelled(error: DatabaseError) {
 
+            error.toException().printStackTrace()
+        }
+    })
+}

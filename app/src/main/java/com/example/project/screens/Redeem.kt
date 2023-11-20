@@ -1,7 +1,5 @@
 package com.example.project.screens
 
-//import com.example.project.components.RewardInfoCard
-//import com.example.project.functions.updateAccumulatedPointsInFirebase
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -183,6 +181,7 @@ fun Redeem(
                     uid = uid,
                     accumulatedPoints = accumulatedPoints,
                     rewardKey = selectedRewardKey,
+                    rewardId = selectedRewardId,
                     rewardName = selectedRewardName,
                     requiredPoints = selectedRequiredPoints,
                     rewardQuantity = selectedRewardQuantity,
