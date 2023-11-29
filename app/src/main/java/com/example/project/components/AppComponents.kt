@@ -28,7 +28,6 @@ import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.AddCircle
 import androidx.compose.material.icons.filled.Discount
 import androidx.compose.material.icons.filled.Logout
-import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material.icons.filled.Remove
 import androidx.compose.material.icons.filled.Visibility
 import androidx.compose.material.icons.filled.VisibilityOff
@@ -81,7 +80,6 @@ import com.example.project.functions.updateAccumulatedPoints
 import com.example.project.functions.updateRewardQuantity
 import com.example.project.functions.updateTransactionInFirebase
 import com.example.project.navigation.NavItemState
-import com.example.project.navigation.defaultNavItems
 
 //import com.example.project.functions.updateAccumulatedPointsInFirebase
 
@@ -264,13 +262,24 @@ fun ButtonComponent(
     isEnabled: Boolean = false,
     errorMessage: String? = null
 ) {
+
+    // Display an error message if provided
+    errorMessage?.let {
+        Text(
+            text = it,
+            color = Color.Red,
+            fontSize = 14.sp
+//            modifier = Modifier.padding(top = 2.dp)
+        )
+    }
+
     Button(
         onClick = {
             onButtonClicked.invoke()
         },
         modifier = Modifier
             .fillMaxWidth()
-            .padding(16.dp),
+            .padding(6.dp),
         colors = ButtonDefaults.buttonColors(),
         contentPadding = PaddingValues(16.dp),
         shape = MaterialTheme.shapes.medium,
@@ -285,16 +294,6 @@ fun ButtonComponent(
             Spacer(modifier = Modifier.width(8.dp))
             Text(text = value)
         }
-    }
-
-    // Display an error message if provided
-    errorMessage?.let {
-        Text(
-            text = it,
-            color = Color.Red,
-            fontSize = 14.sp,
-            modifier = Modifier.padding(top = 8.dp)
-        )
     }
 }
 
@@ -502,9 +501,6 @@ fun BottomNavigationBar(
         }
     }
 }
-
-
-
 
 
 @Composable
