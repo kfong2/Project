@@ -141,13 +141,19 @@ fun updateTransactionInFirebase(
 }
 
 
-private fun generateUniqueTransactionId(): String {
+fun generateUniqueTransactionId(): String {
     val timestamp = Timestamp.now().toDate().time
     val uniqueIdentifier = generateRandomString()
     return "$timestamp-$uniqueIdentifier"
 }
 
-private fun generateRandomString(length: Int = 8): String {
+fun generateUniqueReceiptId(): String {
+    val timestamp = Timestamp.now().toDate().time
+    val uniqueIdentifier = generateRandomString()
+    return "$timestamp-$uniqueIdentifier"
+}
+
+fun generateRandomString(length: Int = 8): String {
     val charset = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789"
     return (1..length)
         .map { charset.random() }
@@ -174,4 +180,24 @@ fun getTransactionsForUser(uid: String, onResult: (List<TransactionData>) -> Uni
             error.toException().printStackTrace()
         }
     })
+}
+
+fun updateReceiptsCollection(
+    shopName: String,
+    uid: String,
+    purchaseAmount: Int,
+    purchaseDate: Date
+) {
+    val receiptId = generateUniqueReceiptId()
+    val receiptDate = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(purchaseDate)
+
+    val database = FirebaseDatabase.getInstance()
+    val receiptsRef = database.getReference("receipts")
+    val receiptRef = receiptsRef.child(receiptId)
+
+    receiptRef.child("receiptId").setValue(receiptId)
+    receiptRef.child("uid").setValue(uid)
+    receiptRef.child("shopName").setValue(shopName)
+    receiptRef.child("purchaseAmount").setValue(purchaseAmount)
+    receiptRef.child("purchaseDate").setValue(receiptDate)
 }

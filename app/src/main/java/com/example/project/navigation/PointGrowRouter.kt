@@ -79,7 +79,6 @@ fun PointGrowRouter() {
             )
         }
 
-
         composable(
             route = "ReceiptInput/{uid}",
             arguments = listOf(navArgument("uid") { type = NavType.StringType })
@@ -88,13 +87,14 @@ fun PointGrowRouter() {
             if (uid != null) {
                 // Pass the uid parameter to the Rewards composable
                 ReceiptInput(
-                    uid, navController
+                    registrationViewModel = RegistrationViewModel(navController),
+                    uid,
+                    navController
                 )
             } else {
                 // Stay in where the user is -> no action
             }
         }
-
 
         composable(
             route = "Rewards/{uid}",
@@ -149,6 +149,7 @@ fun PointGrowRouter() {
             val uid = backStackEntry.arguments?.getString("uid") ?: ""
 
             RedemptionSuccess(
+                registrationViewModel = RegistrationViewModel(navController),
                 usedPoints = usedPoints,
                 newPoints = newPoints,
                 uid = uid,

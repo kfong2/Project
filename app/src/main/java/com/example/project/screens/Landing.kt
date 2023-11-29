@@ -55,7 +55,6 @@ fun Landing(onLoginClicked: () -> Unit, onRegisterClicked: () -> Unit, navContro
 
             LandingButtonComponent(value = "Login", iconName = Icons.Default.Lock, onButtonClicked = { navController.navigate("Login") }, isEnabled = true )
 
-
             Spacer(modifier = Modifier.height(16.dp))
 
             // Register Button

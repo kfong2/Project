@@ -80,7 +80,8 @@ import com.example.project.data.RewardData
 import com.example.project.functions.updateAccumulatedPoints
 import com.example.project.functions.updateRewardQuantity
 import com.example.project.functions.updateTransactionInFirebase
-import com.example.project.screens.NavItemState
+import com.example.project.navigation.NavItemState
+import com.example.project.navigation.defaultNavItems
 
 //import com.example.project.functions.updateAccumulatedPointsInFirebase
 
@@ -452,15 +453,6 @@ fun AppToolbar(toolbarTitle: String, logoutButtonClicked: () -> Unit) {
         title = {
             Text(text = toolbarTitle)
         },
-        navigationIcon = {
-            Icon(
-                imageVector = Icons.Filled.Menu,
-                contentDescription = "Menu",
-//                tint = Color.White,
-
-//                modifier = Modifier.clickable {  }
-            )
-        },
         actions = {
             IconButton(
                 onClick = {
@@ -472,7 +464,6 @@ fun AppToolbar(toolbarTitle: String, logoutButtonClicked: () -> Unit) {
                     contentDescription = "Logout"
                 )
             }
-
         }
     )
 }

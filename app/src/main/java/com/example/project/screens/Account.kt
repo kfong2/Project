@@ -8,13 +8,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Email
-import androidx.compose.material.icons.filled.Face
-import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.List
-import androidx.compose.material.icons.outlined.Email
-import androidx.compose.material.icons.outlined.Face
-import androidx.compose.material.icons.outlined.Home
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -23,6 +17,7 @@ import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
@@ -37,7 +32,7 @@ import com.example.project.components.LandingButtonComponent
 import com.example.project.components.ProfileInfoItem
 import com.example.project.data.RegistrationViewModel
 import com.example.project.functions.getUserDataFromFirebase
-
+import com.example.project.navigation.defaultNavItems
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -46,17 +41,15 @@ fun Account(
     navController: NavHostController,
     uid: String
 ) {
-
     var uid = uid
     var firstName by remember { mutableStateOf("") }
     var lastName by remember { mutableStateOf("") }
     var email by remember { mutableStateOf("") }
     var registrationDate by remember { mutableStateOf("") }
-    var accumulatedPoints by remember { mutableStateOf(0) }
+    var accumulatedPoints by remember { mutableIntStateOf(0) }
 
     // Fetch user data from Firebase
     LaunchedEffect("fetchUserData", uid) {
-        Log.d(ContentValues.TAG, "LaunchedEffect - UID: $uid")
         getUserDataFromFirebase(uid) { fetchedUserRecord ->
             fetchedUserRecord?.let {
                 firstName = it.firstName
@@ -72,25 +65,7 @@ fun Account(
         }
     }
 
-    val items = listOf(
-        NavItemState(
-            title = "Dashboard",
-            selectedIcon = Icons.Filled.Home,
-            unselectedIcon = Icons.Outlined.Home
-        ),
-        NavItemState(
-            title = "Register",
-            selectedIcon = Icons.Filled.Email,
-            unselectedIcon = Icons.Outlined.Email
-        ),
-        NavItemState(
-            title = "Account",
-            selectedIcon = Icons.Filled.Face,
-            unselectedIcon = Icons.Outlined.Face
-        )
-    )
-
-    var bottomNavState by rememberSaveable { mutableStateOf(0) }
+    var bottomNavState by rememberSaveable { mutableIntStateOf(0) }
 
     Scaffold(
         topBar = {
@@ -101,57 +76,20 @@ fun Account(
                 }
             )
         },
-
         bottomBar = {
             BottomNavigationBar(
-                items = items,
+                items = defaultNavItems,
                 selectedIndex = bottomNavState,
                 onItemSelected = { index ->
-                    when (items[index].title) {
+                    bottomNavState = index
+                    when (defaultNavItems[index].title) {
                         "Dashboard" -> navController.navigate("Dashboard/$uid")
-                        "Register" -> navController.navigate("Register/$uid")
+                        "Rewards" -> navController.navigate("Rewards/$uid")
                         "Account" -> navController.navigate("Account/$uid")
                     }
                 }
             )
         }
-
-
-//        bottomBar = {
-//            NavigationBar(
-//                modifier = Modifier
-//                    .padding(10.dp)
-//                    .clip(RoundedCornerShape(20.dp)),
-//                containerColor = MaterialTheme.colorScheme.secondary.copy(alpha = .5f)
-//            ) {
-//                items.forEachIndexed { index, item ->
-//                    NavigationBarItem(
-//                        selected = bottomNavState == index,
-//                        onClick = {
-//                            when (item.title) {
-//                                "Dashboard" -> navController.navigate("Dashboard/$uid")
-//                                "Register" -> navController.navigate("Register/$uid")
-//                                "Account" -> navController.navigate("Account/$uid")
-//                            }
-//                        },
-//
-//                        icon = {
-//                            Icon(
-//                                imageVector = if (bottomNavState == index) item.selectedIcon
-//                                else item.unselectedIcon,
-//                                contentDescription = item.title
-//                            )
-//                        },
-//                        label = {
-//                            Text(text = item.title)
-//                        },
-//                        colors = NavigationBarItemDefaults.colors(
-//                            selectedTextColor = Color(0xFF131F0D)
-//                        )
-//                    )
-//                }
-//            }
-//        }
     ) { contentPadding ->
 
         Surface(
