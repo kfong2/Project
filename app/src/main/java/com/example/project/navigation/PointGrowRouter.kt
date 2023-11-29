@@ -14,6 +14,7 @@ import com.example.project.screens.Dashboard
 import com.example.project.screens.Landing
 import com.example.project.screens.Login
 import com.example.project.screens.LoginFailure
+import com.example.project.screens.ReceiptInput
 import com.example.project.screens.Redeem
 import com.example.project.screens.RedemptionSuccess
 import com.example.project.screens.RegFailure
@@ -77,6 +78,23 @@ fun PointGrowRouter() {
                 uid
             )
         }
+
+
+        composable(
+            route = "ReceiptInput/{uid}",
+            arguments = listOf(navArgument("uid") { type = NavType.StringType })
+        ) { backStackEntry ->
+            val uid = backStackEntry.arguments?.getString("uid")
+            if (uid != null) {
+                // Pass the uid parameter to the Rewards composable
+                ReceiptInput(
+                    uid, navController
+                )
+            } else {
+                // Stay in where the user is -> no action
+            }
+        }
+
 
         composable(
             route = "Rewards/{uid}",

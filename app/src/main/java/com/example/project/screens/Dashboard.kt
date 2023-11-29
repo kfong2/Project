@@ -10,9 +10,11 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.AddChart
 import androidx.compose.material.icons.filled.Email
 import androidx.compose.material.icons.filled.Face
 import androidx.compose.material.icons.filled.Home
+import androidx.compose.material.icons.filled.Lock
 import androidx.compose.material.icons.outlined.Email
 import androidx.compose.material.icons.outlined.Face
 import androidx.compose.material.icons.outlined.Home
@@ -45,6 +47,7 @@ import androidx.navigation.NavHostController
 import com.example.project.components.AppToolbar
 import com.example.project.components.GeneralGreeting
 import com.example.project.components.HeadingComponent
+import com.example.project.components.LandingButtonComponent
 import com.example.project.components.RewardsLazyRow
 import com.example.project.components.RewardsTextButtonComponent
 import com.example.project.components.TextButtonComponent
@@ -206,6 +209,8 @@ fun Dashboard(
                         action = { navController.navigate("Rewards/$uid") },
                         buttonText = "See all Rewards"
                     )
+                    LandingButtonComponent(value = "Input Receipt", iconName = Icons.Default.AddChart, onButtonClicked = { navController.navigate("ReceiptInput/$uid") }, isEnabled = true )
+
                 }
             }
         }

@@ -7,7 +7,6 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Email
 import androidx.compose.material.icons.filled.Face
@@ -19,14 +18,8 @@ import androidx.compose.material.icons.outlined.Home
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.Icon
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.NavigationBar
-import androidx.compose.material3.NavigationBarItem
-import androidx.compose.material3.NavigationBarItemDefaults
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -35,12 +28,11 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import com.example.project.components.AccountGreeting
 import com.example.project.components.AppToolbar
+import com.example.project.components.BottomNavigationBar
 import com.example.project.components.LandingButtonComponent
 import com.example.project.components.ProfileInfoItem
 import com.example.project.data.RegistrationViewModel
@@ -103,7 +95,7 @@ fun Account(
     Scaffold(
         topBar = {
             AppToolbar(
-                toolbarTitle = "PointGrow",
+                toolbarTitle = "Account",
                 logoutButtonClicked = {
                     registrationViewModel.logout()
                 }
@@ -111,34 +103,55 @@ fun Account(
         },
 
         bottomBar = {
-            NavigationBar(
-                modifier = Modifier
-                    .padding(10.dp)
-                    .clip(RoundedCornerShape(20.dp)),
-                containerColor = MaterialTheme.colorScheme.secondary.copy(alpha = .5f)
-            ) {
-                items.forEachIndexed { index, item ->
-                    NavigationBarItem(
-                        selected = bottomNavState == index,
-                        onClick = { },
-
-                        icon = {
-                            Icon(
-                                imageVector = if (bottomNavState == index) item.selectedIcon
-                                else item.unselectedIcon,
-                                contentDescription = item.title
-                            )
-                        },
-                        label = {
-                            Text(text = item.title)
-                        },
-                        colors = NavigationBarItemDefaults.colors(
-                            selectedTextColor = Color(0xFF131F0D)
-                        )
-                    )
+            BottomNavigationBar(
+                items = items,
+                selectedIndex = bottomNavState,
+                onItemSelected = { index ->
+                    when (items[index].title) {
+                        "Dashboard" -> navController.navigate("Dashboard/$uid")
+                        "Register" -> navController.navigate("Register/$uid")
+                        "Account" -> navController.navigate("Account/$uid")
+                    }
                 }
-            }
+            )
         }
+
+
+//        bottomBar = {
+//            NavigationBar(
+//                modifier = Modifier
+//                    .padding(10.dp)
+//                    .clip(RoundedCornerShape(20.dp)),
+//                containerColor = MaterialTheme.colorScheme.secondary.copy(alpha = .5f)
+//            ) {
+//                items.forEachIndexed { index, item ->
+//                    NavigationBarItem(
+//                        selected = bottomNavState == index,
+//                        onClick = {
+//                            when (item.title) {
+//                                "Dashboard" -> navController.navigate("Dashboard/$uid")
+//                                "Register" -> navController.navigate("Register/$uid")
+//                                "Account" -> navController.navigate("Account/$uid")
+//                            }
+//                        },
+//
+//                        icon = {
+//                            Icon(
+//                                imageVector = if (bottomNavState == index) item.selectedIcon
+//                                else item.unselectedIcon,
+//                                contentDescription = item.title
+//                            )
+//                        },
+//                        label = {
+//                            Text(text = item.title)
+//                        },
+//                        colors = NavigationBarItemDefaults.colors(
+//                            selectedTextColor = Color(0xFF131F0D)
+//                        )
+//                    )
+//                }
+//            }
+//        }
     ) { contentPadding ->
 
         Surface(
@@ -160,6 +173,8 @@ fun Account(
                             .padding(contentPadding)
                             .padding(16.dp)
                     ) {
+                        Spacer(modifier = Modifier.height(20.dp))
+
                         AccountGreeting(firstName = firstName, points = accumulatedPoints)
 
                         Spacer(modifier = Modifier.height(20.dp))

@@ -137,7 +137,14 @@ fun Redeem(
                 items.forEachIndexed { index, item ->
                     NavigationBarItem(
                         selected = bottomNavState == index,
-                        onClick = { bottomNavState = index },
+                        onClick = {
+                            when (item.title) {
+                                "Dashboard" -> navController.navigate("Dashboard/$uid")
+                                "Register" -> navController.navigate("Register/$uid")
+                                "Account" -> navController.navigate("Account/$uid")
+                            }
+                        },
+
                         icon = {
                             Icon(
                                 imageVector = if (bottomNavState == index) item.selectedIcon

@@ -116,7 +116,13 @@ fun Rewards(
                 items.forEachIndexed { index, item ->
                     NavigationBarItem(
                         selected = bottomNavState == index,
-                        onClick = { },
+                        onClick = {
+                            when (item.title) {
+                                "Dashboard" -> navController.navigate("Dashboard/$uid")
+                                "Register" -> navController.navigate("Register/$uid")
+                                "Account" -> navController.navigate("Account/$uid")
+                            }
+                        },
 
                         icon = {
                             Icon(

@@ -26,7 +26,6 @@ fun getUserDataFromFirebase(uid: String, onResult: (UserRecord?) -> Unit) {
         }
 
         override fun onCancelled(error: DatabaseError) {
-            // Handle error
             onResult(null)
         }
     })
@@ -46,10 +45,8 @@ fun getRewardsDataFromFirebase(onResult: (List<RewardData>) -> Unit) {
                     rewardsList.add(it)
                 }
             }
-
             onResult(rewardsList)
         }
-
         override fun onCancelled(error: DatabaseError) {
         }
     })
@@ -73,7 +70,6 @@ fun getRewardsDataFromFirebaseWithKeys(onDataFetched: (List<Pair<String, RewardD
             }
             onDataFetched(rewardsList)
         }
-
         override fun onCancelled(error: DatabaseError) {
         }
     })

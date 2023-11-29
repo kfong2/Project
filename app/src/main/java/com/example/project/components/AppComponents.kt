@@ -42,6 +42,9 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.NavigationBar
+import androidx.compose.material3.NavigationBarItem
+import androidx.compose.material3.NavigationBarItemDefaults
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
@@ -77,6 +80,7 @@ import com.example.project.data.RewardData
 import com.example.project.functions.updateAccumulatedPoints
 import com.example.project.functions.updateRewardQuantity
 import com.example.project.functions.updateTransactionInFirebase
+import com.example.project.screens.NavItemState
 
 //import com.example.project.functions.updateAccumulatedPointsInFirebase
 
@@ -472,6 +476,44 @@ fun AppToolbar(toolbarTitle: String, logoutButtonClicked: () -> Unit) {
         }
     )
 }
+
+
+@Composable
+fun BottomNavigationBar(
+    items: List<NavItemState>,
+    selectedIndex: Int,
+    onItemSelected: (Int) -> Unit
+) {
+    NavigationBar(
+        modifier = Modifier
+            .padding(10.dp)
+            .clip(RoundedCornerShape(20.dp)),
+        containerColor = MaterialTheme.colorScheme.secondary.copy(alpha = .5f)
+    ) {
+        items.forEachIndexed { index, item ->
+            NavigationBarItem(
+                selected = selectedIndex == index,
+                onClick = { onItemSelected(index) },
+                icon = {
+                    Icon(
+                        imageVector = if (selectedIndex == index) item.selectedIcon
+                        else item.unselectedIcon,
+                        contentDescription = item.title
+                    )
+                },
+                label = {
+                    Text(text = item.title)
+                },
+                colors = NavigationBarItemDefaults.colors(
+                    selectedTextColor = Color(0xFF131F0D)
+                )
+            )
+        }
+    }
+}
+
+
+
 
 
 @Composable
