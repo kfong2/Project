@@ -52,7 +52,7 @@ fun Rewards(
         }
     }
 
-    var bottomNavState by rememberSaveable { mutableIntStateOf(0) }
+    var bottomNavState by rememberSaveable { mutableIntStateOf(1) }
 
     Scaffold(
         topBar = {

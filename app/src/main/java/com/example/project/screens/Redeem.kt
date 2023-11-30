@@ -85,7 +85,7 @@ fun Redeem(
         }
     }
 
-    var bottomNavState by rememberSaveable { mutableIntStateOf(0) }
+    var bottomNavState by rememberSaveable { mutableIntStateOf(100) }
 
     Scaffold(
         topBar = {

@@ -65,7 +65,7 @@ fun Account(
         }
     }
 
-    var bottomNavState by rememberSaveable { mutableIntStateOf(0) }
+    var bottomNavState by rememberSaveable { mutableIntStateOf(2) }
 
     Scaffold(
         topBar = {

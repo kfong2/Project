@@ -67,7 +67,7 @@ fun ReceiptInput(
 
 //    val context = LocalContext.current
     val keyboardController = LocalSoftwareKeyboardController.current
-    var bottomNavState by rememberSaveable { mutableIntStateOf(0) }
+    var bottomNavState by rememberSaveable { mutableIntStateOf(100) }
 
 
     Scaffold(
