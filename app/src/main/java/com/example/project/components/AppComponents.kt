@@ -3,6 +3,7 @@
 package com.example.project.components
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -883,41 +884,48 @@ fun myRewardsLazyColumn(
                     shape = RoundedCornerShape(8.dp),
                     elevation = CardDefaults.cardElevation()
                 ) {
-                    Column(
-                        modifier = Modifier
-                            .padding(20.dp)
-                            .height(250.dp)
-                            .fillMaxWidth(), // Adjusted to fill the width
-                        horizontalAlignment = Alignment.CenterHorizontally,
-                        verticalArrangement = Arrangement.Center
-                    ) {
-                        Icon(
-                            imageVector = Icons.Outlined.Discount,
-                            contentDescription = "",
-                            modifier = Modifier.size(48.dp)
-                        )
-                        Text(
-                            text = myreward.rewardName,
-                            fontSize = 18.sp,
-                            fontWeight = FontWeight.Bold,
-                            softWrap = true,
-                            textAlign = TextAlign.Center
-                        )
-                        Spacer(modifier = Modifier.height(8.dp))
-                        Text(text = "Expiry Date: ${myreward.expiryDate}", fontSize = 16.sp)
-                        Spacer(modifier = Modifier.height(8.dp))
-                        Text(text = "Status: ${myreward.rewardStatus}", fontSize = 14.sp)
+                    Box(modifier = Modifier
+                        .padding(20.dp)
+                        .fillMaxWidth()
+                        .height(300.dp)
+                        .border(1.dp, Color.Gray, shape = RoundedCornerShape(8.dp)),
+                        contentAlignment = Alignment.Center
+                    ){
+                        Column(
+                            modifier = Modifier
+                                .padding(20.dp)
+                                .fillMaxWidth(), // Adjusted to fill the width
+                            horizontalAlignment = Alignment.CenterHorizontally,
+                            verticalArrangement = Arrangement.Center
+                        ) {
+                            Icon(
+                                imageVector = Icons.Outlined.Discount,
+                                contentDescription = "",
+                                modifier = Modifier.size(48.dp)
+                            )
+                            Text(
+                                text = myreward.rewardName,
+                                fontSize = 18.sp,
+                                fontWeight = FontWeight.Bold,
+                                softWrap = true,
+                                textAlign = TextAlign.Center
+                            )
+                            Spacer(modifier = Modifier.height(8.dp))
+                            Text(text = "Expiry Date: ${myreward.expiryDate}", fontSize = 16.sp)
+                            Spacer(modifier = Modifier.height(8.dp))
+                            Text(text = "Status: ${myreward.rewardStatus}", fontSize = 14.sp)
 
-                        ButtonComponent(
-                            value = "Use Reward",
-                            iconName = Icons.Filled.Celebration,
-                            onButtonClicked = {
-                                updateMyRewardStatus(myreward.myRewardId)
-                                navController.navigate("myRewards/${uid}")
-                            },
-                            isEnabled = true,
-                            errorMessage = ""
-                        )
+                            ButtonComponent(
+                                value = "Use Reward",
+                                iconName = Icons.Filled.Celebration,
+                                onButtonClicked = {
+                                    updateMyRewardStatus(myreward.myRewardId)
+                                    navController.navigate("myRewards/${uid}")
+                                },
+                                isEnabled = myreward.rewardStatus == "Active",
+                                errorMessage = ""
+                            )
+                        }
                     }
                 }
             }

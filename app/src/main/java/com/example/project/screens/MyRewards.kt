@@ -3,9 +3,7 @@ package com.example.project.screens
 import android.content.ContentValues
 import android.util.Log
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
@@ -112,10 +110,7 @@ fun MyRewards(
                     elevation = CardDefaults.cardElevation()
                 ) {
                     Column(
-                        modifier = Modifier
-                            .padding(8.dp)
                     ) {
-                        Spacer(modifier = Modifier.height(10.dp))
                         GeneralGreeting(firstName = firstName, points = accumulatedPoints)
                     }
                 }
@@ -127,7 +122,7 @@ fun MyRewards(
                 ) {
                     Column(
                         modifier = Modifier
-                            .padding(8.dp)
+                            .padding(4.dp)
                     ) {
                           myRewardsLazyColumn(myRewardsList = myRewardsList, uid = uid, navController)
                     }
