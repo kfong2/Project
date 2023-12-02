@@ -20,8 +20,10 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
+import com.example.project.R
 import com.example.project.components.AppToolbar
 import com.example.project.components.BottomNavigationBar
 import com.example.project.components.RewardsLazyColumn
@@ -53,6 +55,7 @@ fun Rewards(
     }
 
     var bottomNavState by rememberSaveable { mutableIntStateOf(1) }
+    var context = LocalContext.current
 
     Scaffold(
         topBar = {
@@ -69,10 +72,18 @@ fun Rewards(
                 selectedIndex = bottomNavState,
                 onItemSelected = { index ->
                     bottomNavState = index
-                    when (defaultNavItems[index].title) {
+/*                    when (defaultNavItems[index].title) {
                         "Dashboard" -> navController.navigate("Dashboard/$uid")
                         "Rewards" -> navController.navigate("Rewards/$uid")
                         "Account" -> navController.navigate("Account/$uid")
+                    }*/
+                    when(defaultNavItems[index].title){
+                        context.resources.getString(R.string.nav_dashboard) -> navController.navigate(context.resources.getString(
+                            R.string.nav_dashboard) + "/$uid")
+                        context.resources.getString(R.string.nav_rewards) -> navController.navigate(context.resources.getString(
+                            R.string.nav_rewards) + "/$uid")
+                        context.resources.getString(R.string.nav_account) -> navController.navigate(context.resources.getString(
+                            R.string.nav_account) + "/$uid")
                     }
                 }
             )
