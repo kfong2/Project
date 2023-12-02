@@ -2,14 +2,11 @@ package com.example.project.screens
 
 import android.content.ContentValues
 import android.util.Log
-import androidx.annotation.StringRes
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.List
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -27,29 +24,26 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
-import androidx.compose.ui.res.stringResource
 import com.example.project.R
-import com.example.project.components.AccountGreeting
 import com.example.project.components.AppToolbar
 import com.example.project.components.BottomNavigationBar
-import com.example.project.components.LandingButtonComponent
-import com.example.project.components.ProfileInfoItem
+import com.example.project.components.GeneralGreeting
+import com.example.project.components.myRewardsLazyColumn
+import com.example.project.data.MyRewardData
 import com.example.project.data.RegistrationViewModel
+import com.example.project.functions.getMyRewardsDataFromFirebase
 import com.example.project.functions.getUserDataFromFirebase
 import com.example.project.navigation.defaultNavItems
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun Account(
+fun MyRewards(
     registrationViewModel: RegistrationViewModel,
-    navController: NavHostController,
-    uid: String
+    uid: String,
+    navController: NavHostController
 ) {
     var uid = uid
     var firstName by remember { mutableStateOf("") }
-    var lastName by remember { mutableStateOf("") }
-    var email by remember { mutableStateOf("") }
-    var registrationDate by remember { mutableStateOf("") }
     var accumulatedPoints by remember { mutableIntStateOf(0) }
 
     // Fetch user data from Firebase
@@ -57,15 +51,22 @@ fun Account(
         getUserDataFromFirebase(uid) { fetchedUserRecord ->
             fetchedUserRecord?.let {
                 firstName = it.firstName
-                lastName = it.lastName
-                email = it.email
-                registrationDate = it.registrationDate
                 accumulatedPoints = it.accumulatedPoints
                 Log.d(
                     ContentValues.TAG,
                     "Fetched user data: firstName=$firstName, accumulatedPoints=$accumulatedPoints, uid: $uid"
                 )
             }
+        }
+    }
+
+    val myRewardsList by remember { mutableStateOf(mutableListOf<MyRewardData>()) }
+
+    // Fetch user data from Firebase when the screen is first created
+    LaunchedEffect(myRewardsList) {
+        getMyRewardsDataFromFirebase { myRewardsData ->
+            myRewardsList.clear()
+            myRewardsList.addAll(myRewardsData)
         }
     }
 
@@ -87,28 +88,19 @@ fun Account(
                 selectedIndex = bottomNavState,
                 onItemSelected = { index ->
                     bottomNavState = index
-/*                    when (defaultNavItems[index].title) {
-                        "Dashboard" -> navController.navigate("Dashboard/$uid")
-                        "Rewards" -> navController.navigate("Rewards/$uid")
-                        "Account" -> navController.navigate("Account/$uid")
-                    }*/
 
                     when(defaultNavItems[index].title){
                         context.resources.getString(R.string.nav_dashboard) -> navController.navigate(context.resources.getString(R.string.nav_dashboard) + "/$uid")
                         context.resources.getString(R.string.nav_rewards) -> navController.navigate(context.resources.getString(R.string.nav_rewards) + "/$uid")
                         context.resources.getString(R.string.nav_account) -> navController.navigate(context.resources.getString(R.string.nav_account) + "/$uid")
                     }
-
-
                 }
             )
         }
     ) { contentPadding ->
-
         Surface(
             modifier = Modifier.fillMaxWidth()
         ) {
-
             Column(
                 modifier = Modifier.fillMaxWidth()
                     .padding(contentPadding)
@@ -116,42 +108,30 @@ fun Account(
                 Card(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(16.dp),
+                        .padding(8.dp),
                     elevation = CardDefaults.cardElevation()
                 ) {
                     Column(
                         modifier = Modifier
-                            .padding(12.dp)
+                            .padding(8.dp)
                     ) {
-                        Spacer(modifier = Modifier.height(20.dp))
-
-                        AccountGreeting(firstName = firstName, points = accumulatedPoints)
-
-                        Spacer(modifier = Modifier.height(20.dp))
-
-                        // Display other user data
-                        ProfileInfoItem("First Name", firstName)
-                        ProfileInfoItem("Last Name", lastName)
-                        ProfileInfoItem("Email", email)
-                        ProfileInfoItem("Registration Date", registrationDate)
+                        Spacer(modifier = Modifier.height(10.dp))
+                        GeneralGreeting(firstName = firstName, points = accumulatedPoints)
                     }
                 }
-
-                // Button: Navigate to MyRewards Screen
-                LandingButtonComponent(
-                    value = "My Rewards",
-                    iconName = Icons.Default.List,
-                    onButtonClicked = { navController.navigate("MyRewards/$uid") },
-                    isEnabled = true
-                )
-
-                // Button: Navigate to Redemption History
-                LandingButtonComponent(
-                    value = "View Redemption History",
-                    iconName = Icons.Default.List,
-                    onButtonClicked = { navController.navigate("Transaction/$uid") },
-                    isEnabled = true
-                )
+                Card(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(8.dp),
+                    elevation = CardDefaults.cardElevation()
+                ) {
+                    Column(
+                        modifier = Modifier
+                            .padding(8.dp)
+                    ) {
+                          myRewardsLazyColumn(myRewardsList = myRewardsList, uid = uid, navController)
+                    }
+                }
             }
         }
     }

@@ -7,6 +7,5 @@ data class RewardData(
     val requiredPoints: Int,
     val rewardName: String,
 ){
-    // Add a no-argument constructor
-    constructor() : this("","", 0, 0, "") // Modify the default values based on your requirements
+    constructor() : this("","", 0, 0, "")
 }

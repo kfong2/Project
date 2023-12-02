@@ -2,6 +2,7 @@ package com.example.project.functions
 
 import android.content.ContentValues.TAG
 import android.util.Log
+import com.example.project.data.MyRewardData
 import com.example.project.data.RewardData
 import com.example.project.data.TransactionData
 import com.example.project.data.UserRecord
@@ -11,6 +12,7 @@ import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
 import java.text.SimpleDateFormat
+import java.util.Calendar
 import java.util.Date
 import java.util.Locale
 
@@ -140,6 +142,70 @@ fun updateTransactionInFirebase(
     transactionRef.child("transactionDate").setValue(transactionDate)
 }
 
+fun updateMyRewardInFirebase(
+    uid: String,
+    rewardId: String,
+    rewardName: String
+) {
+    val myRewardId = rewardId + generateRewardId()
+    val transactionDate = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(Date())
+
+    val calendar = Calendar.getInstance()
+    calendar.time = Date()
+    calendar.add(Calendar.YEAR, 1)
+
+    val expiryDate = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(calendar.time)
+
+    val database = FirebaseDatabase.getInstance()
+    val myRewardsRef = database.getReference("myRewards")
+    val myRewardRef = myRewardsRef.child(myRewardId)
+
+    myRewardRef.child("myRewardId").setValue(myRewardId)
+    myRewardRef.child("uid").setValue(uid)
+    myRewardRef.child("rewardId").setValue(rewardId)
+    myRewardRef.child("rewardName").setValue(rewardName)
+    myRewardRef.child("transactionDate").setValue(transactionDate)
+    myRewardRef.child("expiryDate").setValue(expiryDate)
+    myRewardRef.child("rewardStatus").setValue("Active")
+}
+
+fun getMyRewardsDataFromFirebase(onResult: (List<MyRewardData>) -> Unit) {
+    val database = FirebaseDatabase.getInstance()
+    val myRewardsRef = database.getReference("myRewards")
+
+    myRewardsRef.addListenerForSingleValueEvent(object : ValueEventListener {
+        override fun onDataChange(snapshot: DataSnapshot) {
+            val myRewardsList = mutableListOf<MyRewardData>()
+
+            for (myRewardSnapshot in snapshot.children) {
+                val myReward = myRewardSnapshot.getValue(MyRewardData::class.java)
+                myReward?.let {
+                    myRewardsList.add(it)
+                }
+            }
+            onResult(myRewardsList)
+        }
+        override fun onCancelled(error: DatabaseError) {
+        }
+    })
+}
+
+fun updateMyRewardStatus(myRewardId: String) {
+    val database = FirebaseDatabase.getInstance()
+    val myRewardsRef = database.getReference("myRewards")
+
+    val myRewardRef = myRewardsRef.child(myRewardId)
+
+    myRewardRef.child("rewardStatus").setValue("Used")
+        .addOnSuccessListener {
+            Log.d(TAG, "rewardStatus updated successfully to used")
+        }
+        .addOnFailureListener { e ->
+            Log.e(TAG, "Error updating rewardStatus to used", e)
+        }
+}
+
+
 
 fun generateUniqueTransactionId(): String {
     val timestamp = Timestamp.now().toDate().time
@@ -148,6 +214,12 @@ fun generateUniqueTransactionId(): String {
 }
 
 fun generateUniqueReceiptId(): String {
+    val timestamp = Timestamp.now().toDate().time
+    val uniqueIdentifier = generateRandomString()
+    return "$timestamp-$uniqueIdentifier"
+}
+
+fun generateRewardId(): String {
     val timestamp = Timestamp.now().toDate().time
     val uniqueIdentifier = generateRandomString()
     return "$timestamp-$uniqueIdentifier"
