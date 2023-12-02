@@ -26,6 +26,7 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.AddCircle
+import androidx.compose.material.icons.filled.Celebration
 import androidx.compose.material.icons.filled.Discount
 import androidx.compose.material.icons.filled.Logout
 import androidx.compose.material.icons.filled.Remove
@@ -75,13 +76,14 @@ import androidx.compose.ui.unit.sp
 import androidx.core.text.isDigitsOnly
 import androidx.navigation.NavHostController
 import com.example.project.R
+import com.example.project.data.MyRewardData
 import com.example.project.data.RewardData
 import com.example.project.functions.updateAccumulatedPoints
+import com.example.project.functions.updateMyRewardInFirebase
+import com.example.project.functions.updateMyRewardStatus
 import com.example.project.functions.updateRewardQuantity
 import com.example.project.functions.updateTransactionInFirebase
 import com.example.project.navigation.NavItemState
-
-//import com.example.project.functions.updateAccumulatedPointsInFirebase
 
 // Login, LoginFailure, Registration, RegFailure
 @Composable
@@ -495,7 +497,9 @@ fun BottomNavigationBar(
                     Text(text = item.title)
                 },
                 colors = NavigationBarItemDefaults.colors(
-                    selectedTextColor = Color(0xFF131F0D)
+                    selectedTextColor = Color(0xFF131F0D),
+                    selectedIconColor = Color(0xFF552A27),
+                    indicatorColor = Color(0xFFF1F1EA)
                 )
             )
         }
@@ -836,6 +840,92 @@ fun ProfileInfoItem(label: String, value: String) {
 }
 
 
+// myRewards
+@Composable
+fun myRewardsItem(label: String, value: String) {
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(8.dp),
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        Text(
+            text = "$label:",
+            fontWeight = FontWeight.Bold,
+            color = MaterialTheme.colorScheme.primary,
+            modifier = Modifier.width(120.dp)
+        )
+        Text(
+            text = value,
+            fontWeight = FontWeight.Bold,
+            color = Color.Black
+        )
+    }
+}
+
+// MyRewards
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun myRewardsLazyColumn(
+    myRewardsList: List<MyRewardData>,
+    uid: String,
+    navController: NavHostController
+) {
+    LazyColumn(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(2.dp, 10.dp),
+        content = {
+            items(myRewardsList) { myreward ->
+                Card(
+                    modifier = Modifier
+                        .padding(8.dp),
+                    shape = RoundedCornerShape(8.dp),
+                    elevation = CardDefaults.cardElevation()
+                ) {
+                    Column(
+                        modifier = Modifier
+                            .padding(20.dp)
+                            .height(250.dp)
+                            .fillMaxWidth(), // Adjusted to fill the width
+                        horizontalAlignment = Alignment.CenterHorizontally,
+                        verticalArrangement = Arrangement.Center
+                    ) {
+                        Icon(
+                            imageVector = Icons.Outlined.Discount,
+                            contentDescription = "",
+                            modifier = Modifier.size(48.dp)
+                        )
+                        Text(
+                            text = myreward.rewardName,
+                            fontSize = 18.sp,
+                            fontWeight = FontWeight.Bold,
+                            softWrap = true,
+                            textAlign = TextAlign.Center
+                        )
+                        Spacer(modifier = Modifier.height(8.dp))
+                        Text(text = "Expiry Date: ${myreward.expiryDate}", fontSize = 16.sp)
+                        Spacer(modifier = Modifier.height(8.dp))
+                        Text(text = "Status: ${myreward.rewardStatus}", fontSize = 14.sp)
+
+                        ButtonComponent(
+                            value = "Use Reward",
+                            iconName = Icons.Filled.Celebration,
+                            onButtonClicked = {
+                                updateMyRewardStatus(myreward.myRewardId)
+                                navController.navigate("myRewards/${uid}")
+                            },
+                            isEnabled = true,
+                            errorMessage = ""
+                        )
+                    }
+                }
+            }
+        }
+    )
+}
+
+
 // Redeem
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -935,6 +1025,9 @@ fun RewardInfoCard(
                         updateAccumulatedPoints(uid, newPoints, onUpdatePoints = {})
                         updateRewardQuantity(rewardKey, newQuantity, onUpdatePoints = {})
                         updateTransactionInFirebase(uid, rewardId, rewardName, requiredPoints, redeemQuantity)
+                        repeat(redeemQuantity) {
+                            updateMyRewardInFirebase(uid, rewardId, rewardName)
+                        }
                         navController.navigate("RedemptionSuccess/${requiredPoints}/${newPoints}/${uid}")
                     }
                 },
