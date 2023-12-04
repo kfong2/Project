@@ -4,7 +4,7 @@ package com.example.project.api
 import android.util.Log
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material.CircularProgressIndicator
@@ -98,7 +98,7 @@ fun TemperatureComponent(
 
     Card(
         modifier = Modifier
-            .fillMaxSize()
+            .fillMaxWidth()
             .padding(start = 30.dp),
         elevation = CardDefaults.cardElevation(),
         colors = CardDefaults.cardColors(containerColor = Color.Transparent)
