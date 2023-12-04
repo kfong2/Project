@@ -28,6 +28,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
+import com.example.project.BuildConfig
 import com.example.project.R
 import com.example.project.components.AppToolbar
 import com.example.project.components.BottomNavigationBar
@@ -35,7 +36,9 @@ import com.example.project.components.GeneralGreeting
 import com.example.project.components.LandingButtonComponent
 import com.example.project.components.RewardsLazyRow
 import com.example.project.components.RewardsTextButtonComponent
+import com.example.project.api.TemperatureComponent
 import com.example.project.components.TitleComponent
+import com.example.project.api.fetchTemperature
 import com.example.project.data.RegistrationViewModel
 import com.example.project.data.RewardData
 import com.example.project.functions.getRewardsDataFromFirebase
@@ -74,6 +77,32 @@ fun Dashboard(
             rewardsList.clear()
             rewardsList.addAll(rewardsData)
         }
+    }
+
+    val APIKEY = BuildConfig.API_KEY
+
+    // State for temperature data
+    var temperature by remember { mutableStateOf(0.0) }
+    var isLoading by remember { mutableStateOf(false) }
+
+
+    LaunchedEffect(Unit) {
+        fetchTemperature(
+            latitude = 49.8844,
+            longitude = -97.147,
+            onSuccess = { newTemperature ->
+                // Update the state variable or perform any action with the new temperature
+                temperature = newTemperature
+                isLoading = false
+            },
+            onError = {
+                // Handle the case where fetching the temperature failed
+                Log.e("Temperature", "Failed to fetch current temperature")
+                isLoading = false
+            },
+            apiKey = APIKEY,
+            units = "metric"
+        )
     }
 
     var bottomNavState by rememberSaveable { mutableIntStateOf(0) }
@@ -119,7 +148,11 @@ fun Dashboard(
                 modifier = Modifier
                     .padding(contentPadding)
             ) {
+                TemperatureComponent(temperature, isLoading, APIKEY, {})
+
                 GeneralGreeting(firstName = firstName, points = accumulatedPoints)
+
+//                TemperatureComponent(temperature, isLoading, APIKEY, {})
 
                 Spacer(modifier = Modifier.height(5.dp))
 
@@ -153,3 +186,5 @@ fun Dashboard(
         }
     }
 }
+
+

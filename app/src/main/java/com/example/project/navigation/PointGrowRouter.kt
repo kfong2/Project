@@ -33,7 +33,6 @@ fun PointGrowRouter() {
             Landing(onLoginClicked = {}, onRegisterClicked = {}, navController)
         }
 
-
         composable(route = "Login") {
             Login(loginViewModel = LoginViewModel(navController), navController)
         }

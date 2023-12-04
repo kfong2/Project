@@ -273,3 +273,4 @@ fun updateReceiptsCollection(
     receiptRef.child("purchaseAmount").setValue(purchaseAmount)
     receiptRef.child("purchaseDate").setValue(receiptDate)
 }
+

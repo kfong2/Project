@@ -4,12 +4,17 @@ plugins {
 
     // Add the Google services Gradle plugin
     id("com.google.gms.google-services")
+
+    id ("com.google.secrets_gradle_plugin") version "0.6.1"
 }
 
 android {
     namespace = "com.example.project"
     compileSdk = 34
 
+    buildFeatures {
+        buildConfig = true
+    }
     defaultConfig {
         applicationId = "com.example.project"
         minSdk = 24
@@ -21,6 +26,7 @@ android {
         vectorDrawables {
             useSupportLibrary = true
         }
+        buildConfigField("String", "API_KEY", "\"${findProperty("API_KEY") ?: "default_api_key"}\"")
     }
 
     buildTypes {
@@ -109,4 +115,58 @@ dependencies {
     // Navigating with Compose
     implementation("androidx.navigation:navigation-compose:2.7.5")
 
+
+
+    implementation ("com.fasterxml.jackson.core:jackson-databind:2.13.0")
+
+    // Splash API
+    implementation ("androidx.core:core-splashscreen:1.0.1")
+
+    // Pager and Indicators - Accompanist
+    implementation ("com.google.accompanist:accompanist-pager: 0.24.2-alpha")
+    implementation ("com.google.accompanist:accompanist-pager-indicators: 0.24.2-alpha")
+
+
+    // Datastore Preferences
+    implementation ("androidx.datastore:datastore-preferences-core:1.0.0")
+
+    //Dagger Hilt
+    implementation ("com.google.dagger:hilt-android:2.49")
+    implementation ("androidx.hilt:hilt-lifecycle-viewmodel:1.0.0-alpha03")
+    implementation ("androidx.hilt:hilt-navigation-compose:1.1.0")
+//
+//    // Location Service
+//    implementation ("com.google.android.gms:play-services-location:21.0.1")
+//
+    // Retrofit
+    implementation ("com.squareup.retrofit2:retrofit:2.9.0")
+    implementation ("com.squareup.retrofit2:converter-moshi: 2.9.0")
+    implementation ("com.squareup.okhttp3:logging-interceptor:5.0.0-alpha.3")
+
+    // KotlinX Serialization
+    implementation ("org.jetbrains.kotlinx:kotlinx-serialization-json:1.6.0")
+
+    // Room components
+    implementation ("androidx.room:room-runtime:2.6.1")
+//    kapt ("androidx.room:room-compiler:2.4.0")
+    implementation ("androidx.room:room-ktx:2.6.1")
+    implementation ("androidx.room:room-paging:2.6.1")
+
+    // Paging 3.0
+    implementation ("androidx.paging:paging-compose:3.3.0-alpha02")
+
+//    // Dagger - Hilt
+//    implementation "com.google.dagger:hilt-android:2.38.1"
+//    kapt "com.google.dagger:hilt-android-compiler:2.38.1"
+//    kapt 'androidx.hilt:hilt-compiler:1.0.0'
+//    implementation 'androidx.hilt:hilt-navigation-compose:1.0.0-rc01'
+
+    // Coil
+    implementation("io.coil-kt:coil-compose:1.3.2")
+
+    implementation ("com.google.accompanist:accompanist-pager:0.33.2-alpha")
+    implementation ("com.google.accompanist:accompanist-pager-indicators:0.33.2-alpha")
+    implementation ("com.squareup.retrofit2:converter-moshi:2.9.0")
+
 }
+

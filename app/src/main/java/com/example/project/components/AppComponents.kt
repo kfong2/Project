@@ -77,6 +77,7 @@ import androidx.compose.ui.unit.sp
 import androidx.core.text.isDigitsOnly
 import androidx.navigation.NavHostController
 import com.example.project.R
+import com.example.project.api.TemperatureComponent
 import com.example.project.data.MyRewardData
 import com.example.project.data.RewardData
 import com.example.project.functions.updateAccumulatedPoints
@@ -545,7 +546,7 @@ fun GeneralGreeting(firstName: String, points: Int) {
     ) {
         Row(
             verticalAlignment = Alignment.CenterVertically
-        ){
+        ) {
             Column(
                 modifier = Modifier
                     .padding(20.dp)
@@ -555,7 +556,7 @@ fun GeneralGreeting(firstName: String, points: Int) {
                 Row(
                     modifier = Modifier.fillMaxWidth(),
                     verticalAlignment = Alignment.CenterVertically
-                ){
+                ) {
                     Text(
                         text = "Welcome back, $firstName",
                         fontSize = 18.sp,
@@ -592,6 +593,7 @@ fun GeneralGreeting(firstName: String, points: Int) {
         }
     }
 }
+
 
 // Dashboard
 @Composable
@@ -759,7 +761,7 @@ fun UserInfoTextComponent(greeting: String, message: String) {
 fun AccountGreeting(firstName: String, points: Int) {
     Row(
         verticalAlignment = Alignment.CenterVertically
-    ){
+    ) {
 
         Image(
             painter = painterResource(R.drawable.profile),
@@ -776,11 +778,11 @@ fun AccountGreeting(firstName: String, points: Int) {
                 .padding(8.dp)
                 .fillMaxWidth()
         ) {
-            
+
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 verticalAlignment = Alignment.CenterVertically
-            ){
+            ) {
                 Text(
                     text = "Welcome back, $firstName",
                     fontSize = 18.sp,
@@ -884,13 +886,14 @@ fun myRewardsLazyColumn(
                     shape = RoundedCornerShape(8.dp),
                     elevation = CardDefaults.cardElevation()
                 ) {
-                    Box(modifier = Modifier
-                        .padding(20.dp)
-                        .fillMaxWidth()
-                        .height(300.dp)
-                        .border(1.dp, Color.Gray, shape = RoundedCornerShape(8.dp)),
+                    Box(
+                        modifier = Modifier
+                            .padding(20.dp)
+                            .fillMaxWidth()
+                            .height(300.dp)
+                            .border(1.dp, Color.Gray, shape = RoundedCornerShape(8.dp)),
                         contentAlignment = Alignment.Center
-                    ){
+                    ) {
                         Column(
                             modifier = Modifier
                                 .padding(20.dp)
@@ -962,7 +965,11 @@ fun RewardInfoCard(
             modifier = Modifier.padding(16.dp),
             verticalArrangement = Arrangement.Center
         ) {
-            Icon(imageVector = Icons.Filled.Discount, contentDescription = "",  modifier = Modifier.size(48.dp))
+            Icon(
+                imageVector = Icons.Filled.Discount,
+                contentDescription = "",
+                modifier = Modifier.size(48.dp)
+            )
             Text(
                 text = try {
                     rewardName
@@ -989,7 +996,10 @@ fun RewardInfoCard(
                     onClick = { if (redeemQuantity > 0) redeemQuantity-- },
                     modifier = Modifier.size(24.dp)
                 ) {
-                    Icon(imageVector = Icons.Default.Remove, contentDescription = "Decrease Quantity")
+                    Icon(
+                        imageVector = Icons.Default.Remove,
+                        contentDescription = "Decrease Quantity"
+                    )
                 }
 
                 // Input Box
@@ -1024,7 +1034,7 @@ fun RewardInfoCard(
                 onButtonClicked = {
                     // Check if the user has enough points
                     val requiredPoints = redeemQuantity * requiredPoints
-                    if (requiredPoints > accumulatedPoints){
+                    if (requiredPoints > accumulatedPoints) {
                         errorMessage = "Not enough points to redeem"
                     } else {
                         // Deduct points and update user data in Firebase
@@ -1032,7 +1042,13 @@ fun RewardInfoCard(
                         val newQuantity = rewardQuantity - redeemQuantity
                         updateAccumulatedPoints(uid, newPoints, onUpdatePoints = {})
                         updateRewardQuantity(rewardKey, newQuantity, onUpdatePoints = {})
-                        updateTransactionInFirebase(uid, rewardId, rewardName, requiredPoints, redeemQuantity)
+                        updateTransactionInFirebase(
+                            uid,
+                            rewardId,
+                            rewardName,
+                            requiredPoints,
+                            redeemQuantity
+                        )
                         repeat(redeemQuantity) {
                             updateMyRewardInFirebase(uid, rewardId, rewardName)
                         }
