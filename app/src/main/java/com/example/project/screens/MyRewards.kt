@@ -74,7 +74,7 @@ fun MyRewards(
     Scaffold(
         topBar = {
             AppToolbar(
-                toolbarTitle = "Account",
+                toolbarTitle = "My Rewards",
                 logoutButtonClicked = {
                     registrationViewModel.logout()
                 }
