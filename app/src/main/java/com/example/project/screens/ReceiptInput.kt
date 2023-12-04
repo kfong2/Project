@@ -107,10 +107,11 @@ fun ReceiptInput(
                 }
             )
         }
-    ) {
+    ) {contentPadding ->
         Column(
             modifier = Modifier
-                .fillMaxSize()
+                .fillMaxWidth()
+                .padding(contentPadding)
                 .padding(16.dp)
         ) {
             // Dropdown for shopName
