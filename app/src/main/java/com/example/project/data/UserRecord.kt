@@ -5,6 +5,7 @@ data class UserRecord(
     val firstName: String = "",
     val lastName: String = "",
     val email: String = "",
+    val birthday: String = "",
     val registrationDate: String = "",
     val accumulatedPoints: Int = 0
 )

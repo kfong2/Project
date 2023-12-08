@@ -57,6 +57,7 @@ fun Rewards(
     var bottomNavState by rememberSaveable { mutableIntStateOf(1) }
     var context = LocalContext.current
 
+
     Scaffold(
         topBar = {
             AppToolbar(
