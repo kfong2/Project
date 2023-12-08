@@ -6,6 +6,8 @@ import androidx.activity.compose.setContent
 import com.example.project.app.PointGrow
 import com.example.project.ui.theme.ProjectTheme
 
+
+
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

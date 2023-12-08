@@ -56,6 +56,7 @@ android {
             excludes += "/META-INF/{AL2.0,LGPL2.1}"
         }
     }
+
 }
 
 dependencies {
@@ -87,7 +88,7 @@ dependencies {
     implementation("com.firebaseui:firebase-ui-auth:7.2.0")
     implementation("com.google.firebase:firebase-auth-ktx")
 
-    implementation ("com.google.firebase:firebase-firestore:24.9.1")
+    implementation("com.google.firebase:firebase-firestore:24.9.1")
 
     // Import the BoM for the Firebase platform
     implementation(platform("com.google.firebase:firebase-bom:32.6.0"))
@@ -117,43 +118,43 @@ dependencies {
 
 
 
-    implementation ("com.fasterxml.jackson.core:jackson-databind:2.13.0")
+    implementation("com.fasterxml.jackson.core:jackson-databind:2.13.0")
 
     // Splash API
-    implementation ("androidx.core:core-splashscreen:1.0.1")
+    implementation("androidx.core:core-splashscreen:1.0.1")
 
     // Pager and Indicators - Accompanist
-    implementation ("com.google.accompanist:accompanist-pager: 0.24.2-alpha")
-    implementation ("com.google.accompanist:accompanist-pager-indicators: 0.24.2-alpha")
+    implementation("com.google.accompanist:accompanist-pager: 0.24.2-alpha")
+    implementation("com.google.accompanist:accompanist-pager-indicators: 0.24.2-alpha")
 
 
     // Datastore Preferences
-    implementation ("androidx.datastore:datastore-preferences-core:1.0.0")
+    implementation("androidx.datastore:datastore-preferences-core:1.0.0")
 
     //Dagger Hilt
-    implementation ("com.google.dagger:hilt-android:2.49")
-    implementation ("androidx.hilt:hilt-lifecycle-viewmodel:1.0.0-alpha03")
-    implementation ("androidx.hilt:hilt-navigation-compose:1.1.0")
+    implementation("com.google.dagger:hilt-android:2.49")
+    implementation("androidx.hilt:hilt-lifecycle-viewmodel:1.0.0-alpha03")
+    implementation("androidx.hilt:hilt-navigation-compose:1.1.0")
 //
 //    // Location Service
 //    implementation ("com.google.android.gms:play-services-location:21.0.1")
 //
     // Retrofit
-    implementation ("com.squareup.retrofit2:retrofit:2.9.0")
-    implementation ("com.squareup.retrofit2:converter-moshi: 2.9.0")
-    implementation ("com.squareup.okhttp3:logging-interceptor:5.0.0-alpha.3")
+    implementation("com.squareup.retrofit2:retrofit:2.9.0")
+    implementation("com.squareup.retrofit2:converter-moshi: 2.9.0")
+    implementation("com.squareup.okhttp3:logging-interceptor:5.0.0-alpha.3")
 
     // KotlinX Serialization
-    implementation ("org.jetbrains.kotlinx:kotlinx-serialization-json:1.6.0")
+    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.6.0")
 
     // Room components
-    implementation ("androidx.room:room-runtime:2.6.1")
+    implementation("androidx.room:room-runtime:2.6.1")
 //    kapt ("androidx.room:room-compiler:2.4.0")
-    implementation ("androidx.room:room-ktx:2.6.1")
-    implementation ("androidx.room:room-paging:2.6.1")
+    implementation("androidx.room:room-ktx:2.6.1")
+    implementation("androidx.room:room-paging:2.6.1")
 
     // Paging 3.0
-    implementation ("androidx.paging:paging-compose:3.3.0-alpha02")
+    implementation("androidx.paging:paging-compose:3.3.0-alpha02")
 
 //    // Dagger - Hilt
 //    implementation "com.google.dagger:hilt-android:2.38.1"
@@ -164,9 +165,10 @@ dependencies {
     // Coil
     implementation("io.coil-kt:coil-compose:1.3.2")
 
-    implementation ("com.google.accompanist:accompanist-pager:0.33.2-alpha")
-    implementation ("com.google.accompanist:accompanist-pager-indicators:0.33.2-alpha")
-    implementation ("com.squareup.retrofit2:converter-moshi:2.9.0")
+    implementation("com.google.accompanist:accompanist-pager:0.33.2-alpha")
+    implementation("com.google.accompanist:accompanist-pager-indicators:0.33.2-alpha")
+    implementation("com.squareup.retrofit2:converter-moshi:2.9.0")
 
+    //Date & time picker
 }
 
