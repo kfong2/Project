@@ -21,20 +21,20 @@ import java.util.Locale
 
 //@Composable
 fun getUserDataFromFirebase(uid: String, onResult: (UserRecord?) -> Unit) {
-    val database = FirebaseDatabase.getInstance()
-    val usersRef = database.getReference("users")
+    FirebaseDatabase.getInstance().getReference("users")
+        .child(uid)
+        .addListenerForSingleValueEvent(object : ValueEventListener {
+            override fun onDataChange(snapshot: DataSnapshot) {
+                onResult(snapshot.getValue(UserRecord::class.java))
+            }
 
-    usersRef.child(uid).addListenerForSingleValueEvent(object : ValueEventListener {
-        override fun onDataChange(snapshot: DataSnapshot) {
-            val userRecord = snapshot.getValue(UserRecord::class.java)
-            onResult(userRecord)
-        }
-
-        override fun onCancelled(error: DatabaseError) {
-            onResult(null)
-        }
-    })
+            override fun onCancelled(error: DatabaseError) {          
+                Log.e("Firebase", "Error fetching data", error.toException())
+                onResult(null)
+            }
+        })
 }
+
 
 fun getRewardsDataFromFirebase(onResult: (List<RewardData>) -> Unit) {
     val database = FirebaseDatabase.getInstance()
