@@ -1,7 +1,10 @@
 package com.example.project.screens
 
 import android.annotation.SuppressLint
+import android.app.DatePickerDialog
+import android.content.DialogInterface
 import android.util.Log
+import android.widget.DatePicker
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -251,6 +254,27 @@ fun ShopNameDropdown(
 @Composable
 fun DateInputTextField(onDateSelected: (Date) -> Unit) {
     var dateInputted by remember { mutableStateOf(TextFieldValue()) }
+    val context = LocalContext.current
+    val dateFormatter = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
+
+    //Showing date picker dialog
+    fun showDatePickerDialog() {
+        val calendar = Calendar.getInstance()
+        DatePickerDialog(
+            context,
+            { datePicker: DatePicker, year: Int, month: Int, dayOfMonth: Int ->
+                val calendar = Calendar.getInstance().apply {
+                    set(year, month, dayOfMonth)
+                }
+                val formattedDate = dateFormatter.format(calendar.time)
+                dateInputted = TextFieldValue(formattedDate)
+                onDateSelected(calendar.time)
+            },
+            calendar.get(Calendar.YEAR),
+            calendar.get(Calendar.MONTH),
+            calendar.get(Calendar.DAY_OF_MONTH)
+        ).show()
+    }
 
     OutlinedTextField(
         value = dateInputted,
@@ -267,12 +291,14 @@ fun DateInputTextField(onDateSelected: (Date) -> Unit) {
             }
         },
         label = { Text("Purchase Date") },
-        keyboardOptions = KeyboardOptions(
-            keyboardType = KeyboardType.Password,
+        keyboardOptions = KeyboardOptions.Default.copy(
+            keyboardType = KeyboardType.Number,
             imeAction = ImeAction.Done
         ),
         singleLine = true,
-        modifier = Modifier.fillMaxWidth(),
+        modifier = Modifier
+            .fillMaxWidth()
+            .clickable { showDatePickerDialog() }, // Open date picker on click
         placeholder = { Text("yyyy-mm-dd") }
     )
 }

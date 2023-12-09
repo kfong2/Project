@@ -3,7 +3,6 @@ package com.example.project.screens
 import android.app.DatePickerDialog
 import android.content.ContentValues
 import android.util.Log
-import android.os.Button
 import android.widget.DatePicker
 import androidx.annotation.StringRes
 import androidx.compose.foundation.layout.Column
@@ -64,7 +63,6 @@ fun Account(
                 firstName = it.firstName
                 lastName = it.lastName
                 email = it.email
-                birthday = it.birthday
                 registrationDate = it.registrationDate
                 accumulatedPoints = it.accumulatedPoints
                 Log.d(
@@ -77,35 +75,6 @@ fun Account(
 
     var bottomNavState by rememberSaveable { mutableIntStateOf(2) }
     var context = LocalContext.current
-
-    // Declaring integer values
-    // for year, month and day
-    val mYear: Int
-    val mMonth: Int
-    val mDay: Int
-
-    // Initializing a Calendar
-    val mCalendar = Calendar.getInstance()
-
-    // Fetching current year, month and day
-    mYear = mCalendar.get(Calendar.YEAR)
-    mMonth = mCalendar.get(Calendar.MONTH)
-    mDay = mCalendar.get(Calendar.DAY_OF_MONTH)
-
-    mCalendar.time = Date()
-
-    // Declaring a string value to
-    // store date in string format
-    val mDate = remember { mutableStateOf("") }
-    // Declaring DatePickerDialog and setting
-    // initial values as current values (present year, month and day)
-    val mDatePickerDialog = DatePickerDialog(
-        mContext,
-        { _: DatePicker, mYear: Int, mMonth: Int, mDayOfMonth: Int ->
-            mDate.value = "$mDayOfMonth/${mMonth+1}/$mYear"
-        }, mYear, mMonth, mDay
-    )
-
 
     Scaffold(
         topBar = {
@@ -168,22 +137,6 @@ fun Account(
                         ProfileInfoItem("First Name", firstName)
                         ProfileInfoItem("Last Name", lastName)
                         ProfileInfoItem("Email", email)
-                        ProfileInfoItem("Birthday", birthday)
-                        Column(modifier = Modifier.fillMaxSize(), verticalArrangement = Arrangement.Center, horizontalAlignment = Alignment.CenterHorizontally) {
-
-                            // Creating a button that on
-                            // click displays/shows the DatePickerDialog
-                            Button(onClick = {
-                                mDatePickerDialog.show()
-                            }, colors = ButtonDefaults.buttonColors(backgroundColor = Color(0XFF0F9D58)) ) {
-                                Text(text = "Open Date Picker", color = Color.White)
-                            }
-
-                            // Adding a space of 100dp height
-                            Spacer(modifier = Modifier.size(100.dp))
-
-                            // Displaying the mDate value in the Text
-                            Text(text = "Selected Date: ${mDate.value}", fontSize = 30.sp, textAlign = TextAlign.Center)
                         }
                         ProfileInfoItem("Registration Date", registrationDate)
                     }
@@ -207,9 +160,6 @@ fun Account(
             }
         }
     }
-}
 
-@Composable
-fun Button(onClick: () -> Unit, colors: Any, content: @Composable () -> Unit) {
-    TODO("Not yet implemented")
-}
+
+
