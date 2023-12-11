@@ -6,15 +6,13 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowBack
-import androidx.compose.material.icons.filled.Logout
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
+import com.example.project.components.AppToolbar
 import com.example.project.components.BottomNavigationBar
 import com.example.project.components.TransactionInfo
 import com.example.project.data.RegistrationViewModel
@@ -46,25 +44,12 @@ fun Transaction(
 
     Scaffold(
         topBar = {
-            TopAppBar(
-                title = { Text("Redemption History") },
-                navigationIcon = {
-                    IconButton(onClick = { navController.popBackStack() }) {
-                        Icon(Icons.Default.ArrowBack, contentDescription = null)
-                    }
+            AppToolbar(
+                toolbarTitle = "Redemption History",
+                logoutButtonClicked = {
+                    registrationViewModel.logout()
                 },
-                actions = {
-                    IconButton(
-                        onClick = {
-                            registrationViewModel.logout()
-                        }
-                    ) {
-                        Icon(
-                            imageVector = Icons.Filled.Logout,
-                            contentDescription = "Logout"
-                        )
-                    }
-                }
+                navController
             )
         },
         bottomBar = {

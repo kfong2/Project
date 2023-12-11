@@ -25,11 +25,12 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.icons.automirrored.filled.Logout
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.AddCircle
 import androidx.compose.material.icons.filled.Celebration
 import androidx.compose.material.icons.filled.Discount
-import androidx.compose.material.icons.filled.Logout
 import androidx.compose.material.icons.filled.Remove
 import androidx.compose.material.icons.filled.Visibility
 import androidx.compose.material.icons.filled.VisibilityOff
@@ -75,9 +76,9 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.core.text.isDigitsOnly
+import androidx.navigation.NavController
 import androidx.navigation.NavHostController
 import com.example.project.R
-import com.example.project.api.TemperatureComponent
 import com.example.project.data.MyRewardData
 import com.example.project.data.RewardData
 import com.example.project.functions.updateAccumulatedPoints
@@ -451,10 +452,15 @@ fun TextButtonComponent(action: () -> Unit, buttonText: String) {
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun AppToolbar(toolbarTitle: String, logoutButtonClicked: () -> Unit) {
+fun AppToolbar(toolbarTitle: String, logoutButtonClicked: () -> Unit, navController: NavController) {
     TopAppBar(
         title = {
             Text(text = toolbarTitle)
+        },
+        navigationIcon = {
+            IconButton(onClick = { navController.popBackStack() }) {
+                Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = null)
+            }
         },
         actions = {
             IconButton(
@@ -463,7 +469,7 @@ fun AppToolbar(toolbarTitle: String, logoutButtonClicked: () -> Unit) {
                 }
             ) {
                 Icon(
-                    imageVector = Icons.Filled.Logout,
+                    imageVector = Icons.AutoMirrored.Filled.Logout,
                     contentDescription = "Logout"
                 )
             }

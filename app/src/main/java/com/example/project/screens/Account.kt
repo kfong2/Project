@@ -1,22 +1,14 @@
 package com.example.project.screens
 
-import android.app.DatePickerDialog
 import android.content.ContentValues
 import android.util.Log
-import android.widget.DatePicker
-import androidx.annotation.StringRes
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.List
-import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.Card
-import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.Scaffold
+import androidx.compose.material.icons.automirrored.filled.List
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -30,7 +22,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
-import androidx.compose.ui.res.stringResource
 import com.example.project.R
 import com.example.project.components.AccountGreeting
 import com.example.project.components.AppToolbar
@@ -82,7 +73,8 @@ fun Account(
                 toolbarTitle = "Account",
                 logoutButtonClicked = {
                     registrationViewModel.logout()
-                }
+                },
+                navController
             )
         },
         bottomBar = {
@@ -91,16 +83,24 @@ fun Account(
                 selectedIndex = bottomNavState,
                 onItemSelected = { index ->
                     bottomNavState = index
-/*                    when (defaultNavItems[index].title) {
-                        "Dashboard" -> navController.navigate("Dashboard/$uid")
-                        "Rewards" -> navController.navigate("Rewards/$uid")
-                        "Account" -> navController.navigate("Account/$uid")
-                    }*/
+                    /*                    when (defaultNavItems[index].title) {
+                                            "Dashboard" -> navController.navigate("Dashboard/$uid")
+                                            "Rewards" -> navController.navigate("Rewards/$uid")
+                                            "Account" -> navController.navigate("Account/$uid")
+                                        }*/
 
-                    when(defaultNavItems[index].title){
-                        context.resources.getString(R.string.nav_dashboard) -> navController.navigate(context.resources.getString(R.string.nav_dashboard) + "/$uid")
-                        context.resources.getString(R.string.nav_rewards) -> navController.navigate(context.resources.getString(R.string.nav_rewards) + "/$uid")
-                        context.resources.getString(R.string.nav_account) -> navController.navigate(context.resources.getString(R.string.nav_account) + "/$uid")
+                    when (defaultNavItems[index].title) {
+                        context.resources.getString(R.string.nav_dashboard) -> navController.navigate(
+                            context.resources.getString(R.string.nav_dashboard) + "/$uid"
+                        )
+
+                        context.resources.getString(R.string.nav_rewards) -> navController.navigate(
+                            context.resources.getString(R.string.nav_rewards) + "/$uid"
+                        )
+
+                        context.resources.getString(R.string.nav_account) -> navController.navigate(
+                            context.resources.getString(R.string.nav_account) + "/$uid"
+                        )
                     }
 
 
@@ -114,7 +114,8 @@ fun Account(
         ) {
 
             Column(
-                modifier = Modifier.fillMaxWidth()
+                modifier = Modifier
+                    .fillMaxWidth()
                     .padding(contentPadding)
             ) {
                 Card(
@@ -137,15 +138,15 @@ fun Account(
                         ProfileInfoItem("First Name", firstName)
                         ProfileInfoItem("Last Name", lastName)
                         ProfileInfoItem("Email", email)
-                        }
-                        ProfileInfoItem("Registration Date", registrationDate)
                     }
+                    ProfileInfoItem("Registration Date", registrationDate)
                 }
+
 
                 // Button: Navigate to MyRewards Screen
                 LandingButtonComponent(
                     value = "My Rewards",
-                    iconName = Icons.Default.List,
+                    iconName = Icons.AutoMirrored.Filled.List,
                     onButtonClicked = { navController.navigate("MyRewards/$uid") },
                     isEnabled = true
                 )
@@ -153,13 +154,14 @@ fun Account(
                 // Button: Navigate to Redemption History
                 LandingButtonComponent(
                     value = "View Redemption History",
-                    iconName = Icons.Default.List,
+                    iconName = Icons.AutoMirrored.Filled.List,
                     onButtonClicked = { navController.navigate("Transaction/$uid") },
                     isEnabled = true
                 )
             }
         }
     }
+}
 
 
 

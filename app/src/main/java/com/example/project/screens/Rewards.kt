@@ -64,7 +64,8 @@ fun Rewards(
                 toolbarTitle = "Rewards",
                 logoutButtonClicked = {
                     registrationViewModel.logout()
-                }
+                },
+                navController
             )
         },
         bottomBar = {

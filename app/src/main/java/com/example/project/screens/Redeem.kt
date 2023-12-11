@@ -93,7 +93,8 @@ fun Redeem(
                 toolbarTitle = "Redeem Rewards",
                 logoutButtonClicked = {
                     registrationViewModel.logout()
-                }
+                },
+                navController
             )
         },
         bottomBar = {

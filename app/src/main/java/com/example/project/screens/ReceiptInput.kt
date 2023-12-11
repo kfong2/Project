@@ -2,7 +2,6 @@ package com.example.project.screens
 
 import android.annotation.SuppressLint
 import android.app.DatePickerDialog
-import android.content.DialogInterface
 import android.util.Log
 import android.widget.DatePicker
 import androidx.compose.foundation.background
@@ -10,8 +9,7 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowBack
-import androidx.compose.material.icons.filled.Logout
+import androidx.compose.material.icons.filled.DateRange
 import androidx.compose.material.icons.outlined.ArrowDropDown
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
@@ -26,6 +24,7 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
+import com.example.project.components.AppToolbar
 import com.example.project.components.BottomNavigationBar
 import com.example.project.data.RegistrationViewModel
 import com.example.project.data.UserRecord
@@ -63,37 +62,20 @@ fun ReceiptInput(
         }
     }
 
-
     var shopName by remember { mutableStateOf("") }
     var purchaseAmount by remember { mutableStateOf("") }
     var purchaseDate by remember { mutableStateOf(Date()) }
-
-//    val context = LocalContext.current
     val keyboardController = LocalSoftwareKeyboardController.current
     var bottomNavState by rememberSaveable { mutableIntStateOf(100) }
 
-
     Scaffold(
         topBar = {
-            TopAppBar(
-                title = { Text("Redemption History") },
-                navigationIcon = {
-                    IconButton(onClick = { navController.popBackStack() }) {
-                        Icon(Icons.Default.ArrowBack, contentDescription = null)
-                    }
+            AppToolbar(
+                toolbarTitle = "Input Receipt",
+                logoutButtonClicked = {
+                    registrationViewModel.logout()
                 },
-                actions = {
-                    IconButton(
-                        onClick = {
-                            registrationViewModel.logout()
-                        }
-                    ) {
-                        Icon(
-                            imageVector = Icons.Filled.Logout,
-                            contentDescription = "Logout"
-                        )
-                    }
-                }
+                navController
             )
         },
         bottomBar = {
@@ -276,29 +258,41 @@ fun DateInputTextField(onDateSelected: (Date) -> Unit) {
         ).show()
     }
 
-    OutlinedTextField(
-        value = dateInputted,
-        onValueChange = {
-            dateInputted = it
-            // Parse the date and invoke the callback
-            try {
-                val parsedDate = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).parse(it.text)
-                if (parsedDate != null) {
-                    onDateSelected(parsedDate)
+    Row(
+        modifier = Modifier.fillMaxWidth(),
+        horizontalArrangement = Arrangement.SpaceBetween
+    ) {
+        OutlinedTextField(
+            value = dateInputted,
+            onValueChange = {
+                dateInputted = it
+                // Parse the date and invoke the callback
+                try {
+                    val parsedDate = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).parse(it.text)
+                    if (parsedDate != null) {
+                        onDateSelected(parsedDate)
+                    }
+                } catch (e: ParseException) {
+                    //
                 }
-            } catch (e: ParseException) {
-                //
-            }
-        },
-        label = { Text("Purchase Date") },
-        keyboardOptions = KeyboardOptions.Default.copy(
-            keyboardType = KeyboardType.Number,
-            imeAction = ImeAction.Done
-        ),
-        singleLine = true,
-        modifier = Modifier
-            .fillMaxWidth()
-            .clickable { showDatePickerDialog() }, // Open date picker on click
-        placeholder = { Text("yyyy-mm-dd") }
-    )
+            },
+            label = { Text("Purchase Date") },
+            keyboardOptions = KeyboardOptions.Default.copy(
+                keyboardType = KeyboardType.Number,
+                imeAction = ImeAction.Done
+            ),
+            singleLine = true,
+            placeholder = { Text("yyyy-mm-dd") }
+        )
+
+        IconButton(
+            onClick = { showDatePickerDialog() },
+            modifier = Modifier.padding(start = 8.dp)
+        ) {
+            Icon(
+                imageVector = Icons.Default.DateRange,
+                contentDescription = "Date Picker"
+            )
+        }
+    }
 }

@@ -114,7 +114,8 @@ fun Dashboard(
                 toolbarTitle = "Point Grow",
                 logoutButtonClicked = {
                     registrationViewModel.logout()
-                }
+                },
+                navController
             )
         },
         bottomBar = {
