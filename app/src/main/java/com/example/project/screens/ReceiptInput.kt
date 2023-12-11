@@ -68,10 +68,12 @@ fun ReceiptInput(
     val keyboardController = LocalSoftwareKeyboardController.current
     var bottomNavState by rememberSaveable { mutableIntStateOf(100) }
 
+    var showToast by remember { mutableStateOf(false) }
+
     Scaffold(
         topBar = {
             AppToolbar(
-                toolbarTitle = "Input Receipt",
+                toolbarTitle = "Submit Receipt",
                 logoutButtonClicked = {
                     registrationViewModel.logout()
                 },
@@ -142,7 +144,6 @@ fun ReceiptInput(
                     )
                     val newPoints = accumulatedPoints + purchaseAmount.toInt()
                     updateAccumulatedPoints(uid, newPoints, onUpdatePoints = {})
-
                     navController.navigate("Dashboard/$uid")
                 },
                 modifier = Modifier

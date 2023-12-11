@@ -1,7 +1,5 @@
 package com.example.project.functions
 
-import android.app.DatePickerDialog
-import android.app.TimePickerDialog
 import android.content.ContentValues.TAG
 import android.util.Log
 import com.example.project.data.MyRewardData
@@ -261,7 +259,7 @@ fun updateReceiptsCollection(
     shopName: String,
     uid: String,
     purchaseAmount: Int,
-    purchaseDate: Date
+    purchaseDate: Date,
 ) {
     val receiptId = generateUniqueReceiptId()
     val receiptDate = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(purchaseDate)
