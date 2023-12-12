@@ -10,6 +10,7 @@ import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -61,8 +62,8 @@ fun MyRewards(
     val myRewardsList by remember { mutableStateOf(mutableListOf<MyRewardData>()) }
 
     // Fetch user data from Firebase when the screen is first created
-    LaunchedEffect(myRewardsList) {
-        getMyRewardsDataFromFirebase { myRewardsData ->
+    LaunchedEffect(uid) {
+        getMyRewardsDataFromFirebase(uid) { myRewardsData ->
             myRewardsList.clear()
             myRewardsList.addAll(myRewardsData)
         }
@@ -125,7 +126,15 @@ fun MyRewards(
                         modifier = Modifier
                             .padding(4.dp)
                     ) {
-                          myRewardsLazyColumn(myRewardsList = myRewardsList, uid = uid, navController)
+                        if (myRewardsList.isNotEmpty()) {
+                            myRewardsLazyColumn(myRewardsList = myRewardsList, uid = uid, navController)
+                        } else {
+                            // Display a message when the list is empty
+                            Text(
+                                text = "You have no rewards.",
+                                modifier = Modifier.padding(16.dp)
+                            )
+                        }
                     }
                 }
             }

@@ -6,8 +6,8 @@ data class MyRewardData(
     val rewardName: String,
     val transactionDate: String?,
     val expiryDate: String?,
-    var rewardStatus: String
-
+    var rewardStatus: String,
+    val uid: String
 ){
-    constructor() : this("","", "", "", "", "")
+    constructor() : this("","", "", "", "", "", "")
 }

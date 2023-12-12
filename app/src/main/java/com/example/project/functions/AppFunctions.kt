@@ -170,7 +170,7 @@ fun updateMyRewardInFirebase(
     myRewardRef.child("rewardStatus").setValue("Active")
 }
 
-fun getMyRewardsDataFromFirebase(onResult: (List<MyRewardData>) -> Unit) {
+fun getMyRewardsDataFromFirebase(uid: String, onResult: (List<MyRewardData>) -> Unit) {
     val database = FirebaseDatabase.getInstance()
     val myRewardsRef = database.getReference("myRewards")
 
@@ -180,8 +180,12 @@ fun getMyRewardsDataFromFirebase(onResult: (List<MyRewardData>) -> Unit) {
 
             for (myRewardSnapshot in snapshot.children) {
                 val myReward = myRewardSnapshot.getValue(MyRewardData::class.java)
-                myReward?.let {
-                    myRewardsList.add(it)
+
+                // Check if the uid in the retrieved reward matches the desired uid
+                if (myReward?.uid == uid) {
+                    myReward?.let {
+                        myRewardsList.add(it)
+                    }
                 }
             }
             onResult(myRewardsList)
@@ -190,6 +194,8 @@ fun getMyRewardsDataFromFirebase(onResult: (List<MyRewardData>) -> Unit) {
         }
     })
 }
+
+
 
 fun updateMyRewardStatus(myRewardId: String) {
     val database = FirebaseDatabase.getInstance()
