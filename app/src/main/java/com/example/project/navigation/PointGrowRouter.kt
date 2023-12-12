@@ -16,6 +16,7 @@ import com.example.project.screens.Login
 import com.example.project.screens.LoginFailure
 import com.example.project.screens.MyRewards
 import com.example.project.screens.ReceiptInput
+import com.example.project.screens.ReceiptSubmitted
 import com.example.project.screens.Redeem
 import com.example.project.screens.RedemptionSuccess
 import com.example.project.screens.RegFailure
@@ -99,6 +100,19 @@ fun PointGrowRouter() {
             } else {
                 // Stay in where the user is -> no action
             }
+        }
+
+        composable(route = "ReceiptSubmitted/{uid}") { backStackEntry ->
+            val arguments = requireNotNull(backStackEntry.arguments)
+            val uid = arguments.getString("uid", "")
+            ReceiptSubmitted(
+                registrationViewModel = RegistrationViewModel(navController),
+                navController,
+                uid,
+                onSubmitMoreClicked = {
+                    navController.navigate("ReceiptInput/$uid")
+                }
+            )
         }
 
         composable(

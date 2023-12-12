@@ -138,8 +138,8 @@ fun Account(
                         ProfileInfoItem("First Name", firstName)
                         ProfileInfoItem("Last Name", lastName)
                         ProfileInfoItem("Email", email)
+                        ProfileInfoItem("Registration Date", registrationDate)
                     }
-                    ProfileInfoItem("Registration Date", registrationDate)
                 }
 
 

@@ -144,7 +144,7 @@ fun ReceiptInput(
                     )
                     val newPoints = accumulatedPoints + purchaseAmount.toInt()
                     updateAccumulatedPoints(uid, newPoints, onUpdatePoints = {})
-                    navController.navigate("Dashboard/$uid")
+                    navController.navigate("ReceiptSubmitted/$uid")
                 },
                 modifier = Modifier
                     .fillMaxWidth()
