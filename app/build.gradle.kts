@@ -100,6 +100,7 @@ dependencies {
     implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.6.2")
     implementation("com.google.firebase:firebase-database:20.3.0")
     implementation("com.google.android.material:material:1.10.0")
+    implementation("com.google.android.gms:play-services-vision-common:19.1.3")
 
 
     testImplementation("junit:junit:4.13.2")
@@ -169,6 +170,12 @@ dependencies {
     implementation("com.google.accompanist:accompanist-pager-indicators:0.33.2-alpha")
     implementation("com.squareup.retrofit2:converter-moshi:2.9.0")
 
-    //Date & time picker
+//    implementation ("com.google.android.gms:play-services-mlkit-text-recognition:24.0.1")
+    implementation ("com.google.android.gms:play-services-mlkit-text-recognition:19.0.0")
+    implementation ("org.tensorflow:tensorflow-lite-task-vision-play-services:0.4.2")
+
+//    implementation ("com.google.mlkit:ocr:17.0.0")
+
+//    implementation ("com.google.android.gms:play-services-vision:23.0.0")
 }
 
