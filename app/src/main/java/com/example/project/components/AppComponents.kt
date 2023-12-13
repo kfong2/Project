@@ -452,14 +452,16 @@ fun TextButtonComponent(action: () -> Unit, buttonText: String) {
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun AppToolbar(toolbarTitle: String, logoutButtonClicked: () -> Unit, navController: NavController) {
+fun AppToolbar(toolbarTitle: String, logoutButtonClicked: () -> Unit, navController: NavController, isDashboardScreen: Boolean) {
     TopAppBar(
         title = {
             Text(text = toolbarTitle)
         },
         navigationIcon = {
-            IconButton(onClick = { navController.popBackStack() }) {
-                Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = null)
+            if (!isDashboardScreen) {
+                IconButton(onClick = { navController.popBackStack() }) {
+                    Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = null)
+                }
             }
         },
         actions = {

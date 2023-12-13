@@ -111,7 +111,8 @@ fun ReceiptInput(
                 logoutButtonClicked = {
                     registrationViewModel.logout()
                 },
-                navController
+                navController,
+                isDashboardScreen = false
             )
         },
         bottomBar = {

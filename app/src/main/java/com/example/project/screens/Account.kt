@@ -74,7 +74,8 @@ fun Account(
                 logoutButtonClicked = {
                     registrationViewModel.logout()
                 },
-                navController
+                navController,
+                isDashboardScreen = false
             )
         },
         bottomBar = {

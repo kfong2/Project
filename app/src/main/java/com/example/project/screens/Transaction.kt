@@ -49,7 +49,8 @@ fun Transaction(
                 logoutButtonClicked = {
                     registrationViewModel.logout()
                 },
-                navController
+                navController,
+                isDashboardScreen = false
             )
         },
         bottomBar = {

@@ -94,7 +94,8 @@ fun Redeem(
                 logoutButtonClicked = {
                     registrationViewModel.logout()
                 },
-                navController
+                navController,
+                isDashboardScreen = false
             )
         },
         bottomBar = {

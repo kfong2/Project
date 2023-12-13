@@ -52,7 +52,8 @@ fun RedemptionSuccess(
                 logoutButtonClicked = {
                     registrationViewModel.logout()
                 },
-                navController
+                navController,
+                isDashboardScreen = false
             )
         },
         bottomBar = {

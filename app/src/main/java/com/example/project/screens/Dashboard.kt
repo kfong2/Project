@@ -115,7 +115,8 @@ fun Dashboard(
                 logoutButtonClicked = {
                     registrationViewModel.logout()
                 },
-                navController
+                navController,
+                isDashboardScreen = true
             )
         },
         bottomBar = {
